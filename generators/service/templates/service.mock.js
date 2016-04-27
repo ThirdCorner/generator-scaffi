@@ -1,8 +1,7 @@
 'use strict';
 
 import fixture from './<%= serviceFileName %>.fixtures';
-import MockHttp from 'app/core/classes/mock-http';
-import {Run} from 'app/ng-decorators'; // jshint unused: false
+import {MockHttp, Run} from 'scaffi-ui-core';
 
 class <%= className %>ServiceMock extends MockHttp {
 	//start-non-standard

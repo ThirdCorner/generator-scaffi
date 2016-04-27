@@ -16,6 +16,7 @@ import './theme/theme';
 import './directives/directives';
 import './components/components';
 import './routes/routes';
+import './services/mock-services';
 import './services/services';
 import './factories/factories';
 

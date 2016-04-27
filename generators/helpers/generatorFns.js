@@ -272,7 +272,7 @@ module.exports = {
 
 			var filePath = path.join(folder, filename + '.' + type);
 
-			var output = "";
+			var output = " ";
 
 			_.each(results, function(file) {
 				if(file != filename + "." + type) {

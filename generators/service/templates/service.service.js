@@ -1,8 +1,6 @@
 'use strict';
 
-import AbstractService from 'app/core/classes/abstract-service';
-import {Service} from 'app/ng-decorators';
-import <%= className %>Model from './<%= serviceName %>.model'; // jshint unused: false
+import {AbstractService, Service} from 'scaffi-ui-core';
 
 //start-non-standard
 @Service({
@@ -10,13 +8,20 @@ import <%= className %>Model from './<%= serviceName %>.model'; // jshint unused
 })
 //end-non-standard
 class <%= className %>Service extends AbstractService {
-	constructor($http, $state, $rootScope, $injector) {
-		super($http, '<%= restRoute %>', $state, $rootScope, $injector);
-		this.setModel(<%= className %>Model);
-		this.namespace = '<%= className %>';
+	/*
+	 Tacked on to what the base route for any api request is
+	 */
+	getApiRouteName(){
+		return '<%= restRoute %>';
 	}
-
-
+	/*
+	 This lets me inject the service into the DataModel so that you can
+	 CRUD a json object without directly going through a service. 
+	 If you want to socket something to a subsequent DataCollection or DataModel, this is the namespace you send.
+	 */
+	getPropertyName(){
+		return '<%= className %>'
+	}
 }
 
 export default <%= className %>Service;

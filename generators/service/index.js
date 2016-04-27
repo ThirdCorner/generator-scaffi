@@ -69,12 +69,7 @@ module.exports = yeoman.Base.extend({
 			this.templatePath('service.service.js'),
 			this.destinationPath("ui/src/app/services/" + folderName + this.serviceName + ".service.js"),
 			serviceParams);
-
-		this.fs.copyTpl(
-			this.templatePath('service.model.js'),
-			this.destinationPath("ui/src/app/services/" + folderName + this.serviceName + ".model.js"),
-			serviceParams);
-
+		
 		// Generate Mock Service
 		var mockParams = {
 			className: className, // UserProfile
