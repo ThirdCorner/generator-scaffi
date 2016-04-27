@@ -506,11 +506,9 @@ module.exports = yeoman.Base.extend({
 		process.chdir(this.destinationPath());
 		
 		
-		
 		// Save root project config
 		this.config.save();
 		
-		//this.composeWith("scaffi:component", {options: {optionType: "server"}}, {local: require.resolve('../component')});
 		this.composeWith("scaffi:route", {options: {route: "index"}}, {local: require.resolve('../route')})
 	},
 	_writeAddBoth: function(){

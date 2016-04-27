@@ -11,10 +11,11 @@ body {
   #header > *, #footer > * {
     padding: 0 5% 0 5%;
   }
-  & > md-content {
+  #theme-body {
     margin: 15px 20% 15px 20%;
     position: relative;
 
+    background-color: inherit;
 
   }
 }

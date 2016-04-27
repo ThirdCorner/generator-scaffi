@@ -1,6 +1,6 @@
 'use strict';
 
-import {RouteConfig} from 'app/ng-decorators';  // jshint unused: false
+import {RouteConfig} from 'scaffi-ui-core';  // jshint unused: false
 
 // export-params-start
 const ROUTE = 'app.<%= routePath %>';
