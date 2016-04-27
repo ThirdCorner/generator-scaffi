@@ -576,6 +576,7 @@ module.exports = yeoman.Base.extend({
 		this.installDependencies({callback: function(){
 			process.chdir(that.destinationPath('server'));
 			that.installDependencies({callback: function(){
+				process.chdir(that.destinationPath());
 				done();
 			}});
 		}});

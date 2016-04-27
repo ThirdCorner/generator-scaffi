@@ -41,42 +41,50 @@ var addTestCases = {
 		}
 		
 	},
-	// Server:
-	// {
-	// 	input: {
-	// 		mainOption: "add",
-	// 		addFeature: "server",
-	// 		projectName: "Mannerwell",
-	// 		authorName: "JJ",
-	// 		apiRoute: "apiserver",
-	// 		serverLocalhostPort: "4550",
-	// 		customizeDataStructure: true,
-	//
-	// 		variedIdName: false,
-	// 		idName: "Id",
-	// 		tableNameStandard: "camelCase",
-	// 		columnNameStandard: "pascalCase",
-	// 		columnMultiWordStandard: "underscore",
-	// 		idCapitalizeStandard: "upperCase",
-	// 		routeLowercaseStandard: false
-	// 	},
-	// 	result: {
-	// 		projectName: "Mannerwell",
-	// 		authorName: "JJ",
-	// 		apiRoute: "/apiserver/",
-	// 		serverLocalhostPort: "4550",
-	//
-	// 		variedIdName: false,
-	// 		idName: "Id",
-	// 		tableNameStandard: "camelCase",
-	// 		columnNameStandard: "pascalCase",
-	// 		columnMultiWordStandard: "underscore",
-	// 		idCapitalizeStandard: "upperCase",
-	// 		routeLowercaseStandard: false
-	// 	}
-	//
-	// }
+	Server:
+	{
+		input: {
+			mainOption: "add",
+			addFeature: "server",
+			projectName: "Mannerwell",
+			authorName: "JJ",
+			apiRoute: "apiserver",
+			serverLocalhostPort: "4550",
+			customizeDataStructure: true,
+	
+			variedIdName: false,
+			idName: "Id",
+			tableNameStandard: "camelCase",
+			columnNameStandard: "pascalCase",
+			columnMultiWordStandard: "underscore",
+			idCapitalizeStandard: "upperCase",
+			routeLowercaseStandard: false
+		},
+		result: {
+			projectName: "Mannerwell",
+			authorName: "JJ",
+			apiRoute: "/apiserver/",
+			serverLocalhostPort: "4550",
+	
+			variedIdName: false,
+			idName: "Id",
+			tableNameStandard: "camelCase",
+			columnNameStandard: "pascalCase",
+			columnMultiWordStandard: "underscore",
+			idCapitalizeStandard: "upperCase",
+			routeLowercaseStandard: false
+		}
+	
+	}
 };
+
+function basePath(name) {
+	var names = [__dirname, 'temp'];
+	_.each(arguments, function(name){
+		names.push(name);
+	});
+	return path.join.apply(path, names);
+}
 
 describe.only("Generator:App", function(){
 
@@ -131,11 +139,9 @@ describe.only("Generator:App", function(){
 							'projectDetails': data.result
 						}
 					};
-					assert.JSONFileContent('.yo-rc.json', testStructure);
+					assert.JSONFileContent(basePath(name, data.result.projectName, '.yo-rc.json'), testStructure);
 				});
-				it('created a project folder named ui', function () {
-					assert.equal(path.basename(process.cwd()), data.result.projectName);
-				});
+
 				/*
 					Test server file generations
 				 */
@@ -180,7 +186,12 @@ describe.only("Generator:App", function(){
 							'ui/.gitignore',
 							'ui/gulpfile.js',
 							'ui/jspm.conf.js',
-							'ui/protractor.conf.js'
+							'ui/protractor.conf.js',
+							'ui/src/app/components/components.js',
+							'ui/src/app/components/components.scss',
+							'ui/src/app/directives/directives.js',
+							'ui/src/app/factories/factories.js',
+							'ui/src/app/services/services.js',
 						])
 					});
 					it('created filled in the package.json', function(){
