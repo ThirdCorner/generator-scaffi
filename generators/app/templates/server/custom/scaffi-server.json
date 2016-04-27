@@ -1,0 +1,18 @@
+{
+  "components": {
+    "app": {
+      "port": 3000
+    },
+    "session": {
+      "secretKey": "make 1t ra1n $salter",
+      "resave": true,
+      "saveUninitialized": true
+    },
+    "bull": {},
+    "epilogue": {},
+    "redis": {},
+    "redis-connect": {},
+    "sequelize": {},
+    "socket-io": {}
+  }
+}

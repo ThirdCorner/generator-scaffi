@@ -1,0 +1,7 @@
+node_modules
+coverage
+.idea/*
+test/tmp
+test/temp
+latest-test
+.idea

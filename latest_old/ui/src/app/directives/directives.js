@@ -1,0 +1,12 @@
+'use strict';
+import './equal-validator/equal-validator.directive.js';
+import './form/form.directive.js';
+import './input/input.directive.js';
+import './md-select/md-select.directive.js';
+import './modal-really-click/modal-really-click.directive.js';
+import './modal-unsaved-changes/modal-unsaved-changes.directive.js';
+import './restrict-data/restrict-data.directive.js';
+import './scroll-up/scroll-up.directive.js';
+import './select/select.directive.js';
+import './state-change/state-change.directive.js';
+import './textarea/textarea.directive.js';

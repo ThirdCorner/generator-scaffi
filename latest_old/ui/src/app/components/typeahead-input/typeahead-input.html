@@ -1,0 +1,15 @@
+<div class="typeahead" style="position: relative;" ng-class="{'open': getDropdownVisible()}" >
+    <input class="typeahead-input form-control" type="text"
+           ng-model="vm.model"
+           ng-keydown="keydown($event)"
+           ng-keyup="keyup($event)"
+           ng-focus="focus($event)"/>
+    <ul class="dropdown-menu" style="padding-left: 0; margin-left:0;">
+       <li class="dropdown-item" id="{{vm.name}}-{{$index}}" ng-repeat="item in vm.displayOptions" ng-class="{'active': $index === vm.currentItem}" ng-click="vm.selectItem(null, item)">
+           <a>{{item['_display']}}</a>
+       </li>
+        <li class="dropdown-item" ng-if="vm.displayOptions.length == 0">
+            <a><em>No options available</em></a>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,4 @@
+generators/app/templates/base/test
+generators/app/templates/base/jspm.conf.js
+**/*.conf.js
+**/*.e2e.js

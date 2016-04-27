@@ -1,0 +1,17 @@
+header-menu-bar .visiting {
+   border-bottom: 3px solid $linkColor;
+
+}
+
+.header-menu-bar-menu.visiting a span:before {
+  font: normal normal normal 14px/1 FontAwesome;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  content: "\f054";
+  padding-right:6px;
+
+  display: inline-block;
+  font-weight: bold;
+}
+
+

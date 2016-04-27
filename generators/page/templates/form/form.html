@@ -1,0 +1,16 @@
+<div class="route route-<%= routePath %>">
+    <section>
+        <h1><%= prettyRouteName %> {{vm.pageMode}} Page</h1>
+        <md-content>
+            <form on-submit="vm.submit()" name="<%= prettyRouteName %>">
+                <md-input-container>
+                    <label>Edit Me</label>
+                    <input type="text" name="editMe" ng-model="vm.formItem.editMe" required />
+                </md-input-container>
+                <md-content>
+                    <md-button class="md-raised md-primary" type="submit">Submit</md-button>
+                </md-content>
+            </form>
+        </md-content>
+    </section>
+</div>

@@ -1,0 +1,14 @@
+<div class="component component-routes-side-nav">
+    <ul class="link-list" ng-if="vm.isDisplayable">
+        <li ng-repeat="route in vm.routes" ng-if="route.isDisplayable">
+            <div class="route-link"><i class="fa" ng-class="{'fa-caret-right': route.sref == vm.selectedRoute}"></i><a ui-sref="{{route.sref}}">{{route.displayText}}</a></div>
+            <div class="route-children">
+                <ul class="link-list">
+                    <li ng-repeat="child in route.routes" ng-if="child.isDisplayable">
+                        <div class="route-link"><i class="fa" ng-class="{'fa-caret-right': child.sref == vm.selectedRoute}"></i><a ui-sref="{{child.sref}}">{{child.displayText}}</a></div>
+                    </li>
+                </ul>
+            </div>
+        </li>
+    </ul>
+</div>

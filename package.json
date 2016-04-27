@@ -1,0 +1,53 @@
+{
+  "name": "generator-scaffi",
+  "version": "0.0.0",
+  "description": "Overall scaffold generator for Third Corner",
+  "homepage": "www.thirdcorner.com",
+  "author": {
+    "name": "Joseph Blake",
+    "email": "jblake@thirdcorner.com",
+    "url": ""
+  },
+  "repository": "ThirdCorner/generator-scaffi",
+  "files": [
+    "generators"
+  ],
+  "scripts": {
+    "prepublish": "gulp prepublish",
+    "test": "gulp",
+    "mocha": "mocha"
+  },
+  "private": true,
+  "main": "generators\\index.js",
+  "keywords": [
+    "scaffi",
+    "scaffold"
+  ],
+  "dependencies": {
+    "babel": "^6.5.2",
+    "babel-eslint": "^4.1.8",
+    "babel-runtime": "^6.5.0",
+    "chalk": "^1.1.1",
+    "eslint-config-angular": "^0.4.0",
+    "eslint-plugin-angular": "^0.15.0",
+    "fs-extra": "^0.26.5",
+    "lodash":"^4.6.0",
+    "mockery": "^1.4.0",
+    "yeoman-assert": "^2.1.1",
+    "yeoman-generator": "^0.22.5",
+    "yeoman-test": "^1.1.0",
+    "yosay": "^1.1.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5",
+    "eslint-config-xo-space": "^0.7.0",
+    "gulp": "^3.9.0",
+    "gulp-eslint": "^1.0.0",
+    "gulp-exclude-gitignore": "^1.0.0",
+    "gulp-istanbul": "^0.10.3",
+    "gulp-mocha": "^2.0.0",
+    "gulp-nsp": "^2.1.0",
+    "gulp-plumber": "^1.0.0"
+  }
+}

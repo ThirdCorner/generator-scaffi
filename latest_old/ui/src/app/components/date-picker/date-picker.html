@@ -1,0 +1,22 @@
+
+<div class="date-picker">
+    <div class="input-group">
+        <input type="text" class="form-control date-input"
+               uib-datepicker-popup="{{format}}" ng-model="ngModel"
+               is-open="vm.opened" datepicker-options="dateOptions"
+               close-text="Close"/>
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="vm.opened = true;"><i class="fa fa-calendar"></i></button>
+        </span>
+    </div>
+    <div ng-if="required">
+        <input type="hidden" name="datepicker-{{name}}" ng-model="ngModel" required required-message="'This form item is required'" />
+    </div>
+    <div ng-if="!required">
+        <input type="hidden" name="datepicker-{{name}}" ng-model="ngModel" invalid-message="'Invalid Date'"/>
+    </div>
+    <div ng-if="vm.validator">
+        <input type="hidden" name="datepicker-{{name}}-validator" ng-model="ngModel"
+               validator="vm.validator" invalid-message="{{vm.showInvalidMessage()}}" />
+    </div>
+</div>

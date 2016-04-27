@@ -1,0 +1,5 @@
+<div class="database-select">
+    <select ng-model="vm.model" class="form-control" ng-options="option[vm.idName] as (option.Name + (!option.IsActive ? ' (Inactive)' : '')) for option in vm.options">
+        <option></option>
+    </select>
+</div>

@@ -1,0 +1,19 @@
+<div class="component component-header-menu-bar">
+    <md-menu-bar id="header-links">
+        <!-- Get Started -->
+        <md-menu ng-repeat="route in vm.routes" ng-if="route.isDisplayable">
+            <button ng-click="$mdOpenMenu()" aria-label="{{route.displayText}}" ng-class="{'visiting': vm.parentActive == route.id }">
+                {{route.displayText}}
+            </button>
+            <md-menu-content>
+                <md-menu-item class="header-menu-bar-menu" ng-class="{'visiting': vm.childActive == 'index' && vm.parentActive == route.id }">
+                    <md-button ui-sref="{{route.sref}}">{{route.displayText}}</md-button>
+                </md-menu-item>
+                <md-menu-item class="header-menu-bar-menu" ng-repeat="child in route.routes"  ng-if="child.isDisplayable" ng-class="{'visiting': vm.childActive == child.id }">
+                    <md-button ui-sref="{{child.sref}}">{{child.displayText}}</md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
+    </md-menu-bar>
+
+</div>

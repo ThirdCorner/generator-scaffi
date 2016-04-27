@@ -1,0 +1,68 @@
+{
+  "app": [
+    {
+      "id": "home",
+      "displayText": "Home",
+      "sref": "app.home",
+      "icon": "",
+      "isDisplayable": false
+    },
+    {
+      "id": "starting",
+      "displayText": "Getting Started",
+      "sref": "app.starting",
+      "icon": "",
+      "isDisplayable": true,
+      "routes": [
+        {
+          "id": "installation",
+          "displayText": "Installation",
+          "sref": "app.starting.installation",
+          "icon": "",
+          "isDisplayable": true,
+          "routes": []
+        },
+        {
+          "id": "publishing",
+          "displayText": "Publishing",
+          "sref": "app.starting.publishing",
+          "icon": "",
+          "isDisplayable": true,
+          "routes": []
+        },
+        {
+          "id": "test",
+          "displayText": "Test",
+          "sref": "app.starting.test",
+          "isDisplayable": true,
+          "icon": "",
+          "routes": []
+        },
+        {
+          "id": "edit",
+          "displayText": "Edit Starting",
+          "sref": "app.starting.edit",
+          "isDisplayable": false,
+          "icon": "",
+          "routes": []
+        },
+        {
+          "id": "add",
+          "displayText": "Add Starting",
+          "sref": "app.starting.add",
+          "isDisplayable": true,
+          "icon": "",
+          "routes": []
+        }
+      ]
+    },
+    {
+      "id": "yeoman",
+      "displayText": "yo scaffi",
+      "sref": "app.yeoman",
+      "isDisplayable": true,
+      "icon": "",
+      "routes": []
+    }
+  ]
+}
