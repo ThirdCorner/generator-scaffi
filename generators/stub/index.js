@@ -114,7 +114,12 @@ module.exports = yeoman.Base.extend({
 		var pageName = routeSplit.pop();
 		var routeName = routeSplit.pop();
 
-		var name = routeName + "-" + pageName + "-" + this.stubName.replace(" ", "-");
+		var name;
+		if(routeName) {
+			name = routeName + "-" + pageName + "-" + this.stubName.replace(" ", "-");
+		} else {
+			name = pageName + "-" + this.stubName.replace(" ", "-");
+		}
 
 		var htmlParams = {
 			stubPath: this.route + "." + name

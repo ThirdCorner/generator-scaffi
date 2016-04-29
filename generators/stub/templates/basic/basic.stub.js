@@ -1,6 +1,6 @@
 'use strict';
 
-import {Component, View} from 'app/ng-decorators'; // jshint unused: false
+import {Component, View, AbstractStubPage} from 'scaffi-ui-core'; // jshint unused: false
 import _ from 'lodash';
 import template from './<%= stubName %>.html!text';
 
@@ -15,14 +15,13 @@ import template from './<%= stubName %>.html!text';
 })
 //end-non-standard
 
-class <%= className %> {
+class <%= className %> extends AbstractStubPage {
 	constructor($scope, $state){
+		super($scope);
 
+		
 	}
 
 }
 
 export default <%= className %>;
-
-
-/* .GULP-IMPORTS-START */ /* .GULP-IMPORTS-END */

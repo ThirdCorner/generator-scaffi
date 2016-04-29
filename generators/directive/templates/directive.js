@@ -1,6 +1,6 @@
 'use strict';
 
-import {Directive} from 'app/ng-decorators'; // jshint unused: false;
+import {Directive} from 'scaffi-ui-core'; // jshint unused: false;
 //start-non-standard
 @Directive({
 	selector: '<%= directiveName %>'
