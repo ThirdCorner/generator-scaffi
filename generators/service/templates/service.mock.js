@@ -8,7 +8,7 @@ class <%= className %>ServiceMock extends MockHttp {
 	@Run()
 	//end-non-standard
 	runFactory($httpBackend, <%= className %>Service){
-		var route = <%= className %>Service.getRoute();
+		var route = <%= className %>Service.getApiRouteName();
 
 		super.init($httpBackend, route, fixture);
 	}
