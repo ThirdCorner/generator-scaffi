@@ -32,29 +32,31 @@ if(!ENV.match(new RegExp(/prod|dev|prototype|test|TEST|DEV|prototype|PROD/))) {
  */
 gulp.task('vendor-css', ()=>{
     var vendorResources = [];
-    // if(_.isArray(NPM_RESOURCE_PACKAGES)) {
-    //     _.each(NPM_RESOURCE_PACKAGES, function(projectName){
-    //         /*
-    //             Either it'll just be a project folder
-    //             or it'll be individual file names
-    //          */
-    //         console.log(projectName)
-    //         switch(true) {
-    //             case projectName.indexOf("/") !== -1:
-    //                 projectName = projectName.replace("/", "*/");
-    //                 vendorResources.push(path.root + '/jspm_packages/**/'+ projectName);
-    //                 break;
-    //
-    //             case projectName.indexOf(".") !== -1:
-    //                 vendorResources.push(path.root + '/jspm_packages/**/'+ projectName);
-    //                 break;
-    //
-    //             default:
-    //                 vendorResources.push(path.root + '/jspm_packages/**/'+projectName+'*/**/*.min.css');
-    //         }
-    //     }, this);
-    // }
-
+    var NPM_RESOURCE_PACKAGES = [ 'bower-material/*.min.css',
+        'font-awesome'];
+    if(_.isArray(NPM_RESOURCE_PACKAGES)) {
+        _.each(NPM_RESOURCE_PACKAGES, function(projectName){
+            /*
+             Either it'll just be a project folder
+             or it'll be individual file names
+             */
+            console.log(projectName)
+            switch(true) {
+                case projectName.indexOf("/") !== -1:
+                    projectName = projectName.replace("/", "*/");
+                    vendorResources.push(path.root + '/jspm_packages/**/'+ projectName);
+                    break;
+                
+                case projectName.indexOf(".") !== -1:
+                    vendorResources.push(path.root + '/jspm_packages/**/'+ projectName);
+                    break;
+                
+                default:
+                    vendorResources.push(path.root + '/jspm_packages/**/'+projectName+'*/**/*.min.css');
+            }
+        }, this);
+    }
+    
     console.log("VENDOR RESOURCE", vendorResources);
     return gulp.src(vendorResources)
         .pipe(debug({title: "css"}))

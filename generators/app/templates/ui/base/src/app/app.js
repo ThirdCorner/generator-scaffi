@@ -37,6 +37,13 @@ mainModule.config( ($mdThemingProvider) =>{
 	$mdThemingProvider.theme("success-toast");
 	$mdThemingProvider.theme("error-toast");
 });
+/*
+	Allow MD to reference font awesome icons via md-icon
+    <md-icon class="fa fa-user md-avatar"></md-icon>
+ */
+mainModule.config( ($mdIconProvider)=>{
+	$mdIconProvider.defaultFontSet("fontawesome");
+});
 mainModule.run((ngTableDefaults) =>{
     ngTableDefaults.params.count = 10;
 
