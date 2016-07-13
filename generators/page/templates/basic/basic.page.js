@@ -1,6 +1,6 @@
 'use strict';
 
-import {RouteConfig} from 'scaffi-ui-core'; // jshint unused: false
+import {RouteConfig, AbstractPage} from 'scaffi-ui-core'; // jshint unused: false
 import template from './<%= routeTemplateName %>.html!text';
 
 // export-params-start
@@ -21,9 +21,12 @@ const PARAMS = {
 @RouteConfig(ROUTE, PARAMS)
 //end-non-standard
 
-class <%= routeClassName %> {
-	constructor(){
-
+class <%= routeClassName %> extends AbstractPage {
+	constructor($state, $scope){
+		super($scope);
+		
+		this.$state = $state;
+		this.$scope = $scope;
 	}
 
 }

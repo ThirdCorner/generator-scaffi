@@ -13,8 +13,7 @@ class <%= className %> {
 	 */
 	constructor($rootScope, $state){
 		this.restrict = 'A';
-		this.scope = {
-		};
+		this.scope = false;
 
 
 	}

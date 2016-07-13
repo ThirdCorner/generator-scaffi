@@ -83,15 +83,15 @@ gulp.task('bundle', ['jshint'], (cb) => {
     const ENV = !!util.env.env ? util.env.env : 'DEV';
     const Builder = require('systemjs-builder');
     const builder = new Builder();
-    const inputPath = 'src/app/app';
+    const inputPath = 'app/app';
     const outputFile = `${path.tmp.scripts}build.js`;
     const outputOptions = {sourceMaps: true, config: {sourceRoot: path.tmp.scripts}, conditions: { 'ENV|mock': ENV.toLowerCase() === 'prototype','ENV|test': ENV.toLowerCase() === 'test', 'ENV|environment': ENV.toLowerCase()} };
 
     var systemNormalize = builder.loader.normalize;
     builder.loader.normalize = function(name, parentName, parentAddress) {
-      if(name.startsWith("app/")) {
-        name = "src\\" + name;
-      }
+      // if(name.startsWith("app/")) {
+      //   name = "src\\" + name;
+      // }
       //if (name === 'APP') name = path.app.app;
 
       return systemNormalize.call(this, name, parentName, parentAddress);

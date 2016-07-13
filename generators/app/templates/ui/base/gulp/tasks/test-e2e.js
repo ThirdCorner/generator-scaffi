@@ -45,6 +45,6 @@ gulp.task('test:e2e', ['webdriver_update'], () => {
         //});
 });
 gulp.task('watch:test:e2e', ['serve'], ()=>{
-    gulp.watch(['src/**', 'app.js'], ['test:e2e']);
+    gulp.watch(['app/**', 'app.js'], ['test:e2e']);
     gulp.start('test:e2e');
 });

@@ -3,6 +3,7 @@ var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
 var _ = require('lodash');
+var path = require("path");
 
 var fs = require('fs');
 
@@ -165,16 +166,16 @@ module.exports = yeoman.Base.extend({
 
 		var routeFilePath;
 		if(this.route) {
-			routeFilePath =  helperFns.join(this.route, this.routeName, ".").replace(".", "/") + "/";
+			routeFilePath =  path.join(helperFns.join(this.route, this.routeName, ".").replace(".", "/"), routeFileName);
 		} else {
-			routeFilePath =  this.routeName + "/";
+			routeFilePath =  path.join(this.routeName, routeFileName);
 		}
 
 		/*
 			We don't want to add the index page to the site route map because we're adding the route parent
 		 */
 		if(this.routeName !== "index") {
-			var destPath = this.destinationPath('ui/src/app/routes/');
+			var destPath = this.destinationPath(path.join("src", "ui", "app", "routes"));
 			switch(this.pageType) {
 				case "form":
 					if(this.enableEdit) {
@@ -198,12 +199,12 @@ module.exports = yeoman.Base.extend({
 		}
 
 		this.fs.copyTpl(
-			this.templatePath(this.pageType + '/' + this.pageType + '.html'),
-			this.destinationPath("ui/src/app/routes/" + routeFilePath + routeFileName + ".html"),
+			this.templatePath(path.join(this.pageType, this.pageType + '.html')),
+			this.destinationPath(path.join("src", "ui", "app", "routes", routeFilePath + ".html")),
 			htmlParams);
 		this.fs.copyTpl(
-			this.templatePath(this.pageType + '/' + this.pageType + '.page.js'),
-			this.destinationPath("ui/src/app/routes/" + routeFilePath + routeFileName + ".page.js"),
+			this.templatePath(path.join(this.pageType, this.pageType + '.page.js')),
+			this.destinationPath(path.join("src", "ui", "app", "routes", routeFilePath + ".page.js")),
 			jsParams);
 
 
@@ -212,9 +213,8 @@ module.exports = yeoman.Base.extend({
 		// This needs to be here because copyTpl is async and includes won't find new files if run
 		// in the writing phase
 		var done = this.async();
-		var destPath = this.destinationPath('ui/src/app/routes/');
+		var destPath = this.destinationPath(path.join("src", "ui", "app", "routes"));
 		helperFns.generateGenericScssInclude(destPath, "routes");
-
 		helperFns.generateGenericJsIncludes(destPath, done, "routes.js");
-	},
+	}
 });

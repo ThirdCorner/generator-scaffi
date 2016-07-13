@@ -256,6 +256,8 @@ module.exports = {
 
 			});
 
+			console.log(output);
+
 			fs.outputFile(filePath, output, function(){
 				done();
 			});
@@ -295,7 +297,7 @@ module.exports = {
 		} catch(e) {
 			// couldn't get file so assuming it doesn't exist
 			json = {
-				config: {}
+				components: {}
 			};
 			
 		};
@@ -304,26 +306,39 @@ module.exports = {
 			json.components = {
 				"app": {
 					"port": 3000
-				},
-				"session": {
-					"secretKey": "make 1t ra1n $salter",
-					"resave": true,
-					"saveUninitialized": true
-				},
-				"bull": {},
-				"epilogue": {},
-				"redis": {},
-				"redis-connect": {},
-				"sequelize": {},
-				"socket-io": {}
+				}
 			};
+			json.services = {};
 		}
+		
+		
 		
 		fs.outputJsonSync(filename, json);
 		
 	},
-	updateConfig: function(basePath, type, projectDetails){
-		var filename = path.join(basePath, type, `scaffi-${type}.json`);
+	updatePrivateConfig: function(basePath, filename, projectDetails){
+		filename = path.join(basePath, `${filename}.json`);
+		
+		var json;
+		try {
+			json = fs.readJsonSync(filename, {});
+		} catch(e) {
+			// couldn't get file so assuming it doesn't exist
+			json = {
+				config: {}
+			};
+			
+		}
+		
+		_.each(projectDetails, function(value, name){
+			json.config[name] = value;
+			
+		});
+				
+		fs.outputJsonSync(filename, json);
+	},
+	updateConfig: function(basePath, filename, projectDetails){
+		filename = path.join(basePath, `${filename}.json`);
 		var writeProps = [
 			"apiRoute",
 			"uiLocalhostPort",
@@ -334,7 +349,8 @@ module.exports = {
 			"columnNameStandard",
 			"columnMultiWorkStandard",
 			"idCapitalizeStandard",
-			"routeLowercaseStandard"
+			"routeLowercaseStandard",
+			"environment"
 		];
 
 
@@ -348,9 +364,14 @@ module.exports = {
 			};
 
 		}
-		
+
+
 		_.each(writeProps, function(name){
-			json.config[name] = projectDetails[name] || null;
+			if(_.has(projectDetails, name)) {
+				json.config[name] = projectDetails[name];
+			} else if(!_.has(json.config, name)){
+				json.config[name] = null;
+			}
 		});
 
 

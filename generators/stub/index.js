@@ -129,17 +129,17 @@ module.exports = yeoman.Base.extend({
 			className: helperFns.makeDisplayName(name)
 		};
 
-		var filePath = this.route.replace(".", "/") + "/";
-		var templateUrl = this.templatePath(this.stubType + "/");
+		var filePath = this.route.replace(".", "/");
+		var templateUrl = this.templatePath(this.stubType);
 
 		this.fs.copyTpl(
-			templateUrl + "/" + this.stubType + ".html",
-			this.destinationPath("ui/src/app/routes/" + filePath + name + ".html"),
+			path.join(templateUrl, this.stubType + ".html"),
+			this.destinationPath(path.join("src", "ui", "app", "routes", filePath , name + ".html")),
 			htmlParams
 		);
 		this.fs.copyTpl(
-			templateUrl + "/" + this.stubType + ".stub.js",
-			this.destinationPath("ui/src/app/routes/" + filePath + name + ".stub.js"),
+			path.join(templateUrl,  this.stubType + ".stub.js"),
+			this.destinationPath(path.join("src", "ui", "app", "routes", filePath, name + ".stub.js")),
 			jsParams
 		);
 
@@ -150,7 +150,7 @@ module.exports = yeoman.Base.extend({
 		// This needs to be here because copyTpl is async and includes won't find new files if run
 		// in the writing phase
 		var done = this.async();
-		var destPath = this.destinationPath('ui/src/app/routes/');
+		var destPath = this.destinationPath(path.join("src", "ui", "app", "routes"));
 		helperFns.generateGenericScssInclude(destPath, "routes");
 
 		helperFns.generateGenericJsIncludes(destPath, done, "routes.js");

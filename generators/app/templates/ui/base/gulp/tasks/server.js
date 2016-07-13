@@ -75,7 +75,7 @@ function proxyMiddleware(req, res, next) {
 function startBrowserSync(baseDir, files, browser) {
     browser = browser === undefined ? 'default' : browser;
     files = files === undefined ? 'default' : files;
-console.log(ScaffiConfig.config.uiLocalhostPort);
+
     browserSync({
         files: files,
         open: OPEN_BROWSER,
@@ -131,7 +131,7 @@ gulp.task('startBrowserSync', () => {
         case 'dev':
         case 'PROTOTYPE':
         case 'prototype':
-            startBrowserSyncTask = startBrowserSync(['.tmp', 'src', 'jspm_packages', './' ]);
+            startBrowserSyncTask = startBrowserSync(['build/.tmp', 'app', 'jspm_packages', './' ]);
             break;
         case 'PROD':
         case 'prod':

@@ -37,8 +37,8 @@ module.exports = yeoman.Base.extend({
 			columnNameStandard: "pascalCase",
 			columnMultiWordStandard: "none",
 			idCapitalizeStandard: "pascalCase",
-			routeLowercaseStandard: true
-
+			routeLowercaseStandard: true,
+			environment: "prototype"
 
 		};
 
@@ -486,6 +486,8 @@ module.exports = yeoman.Base.extend({
 			this.destinationRoot(this.destinationPath(this.projectDetails.projectName));
 		}
 
+		this._writeBase();
+
 		switch(this.addFeature) {
 			case "both":
 				this._writeAddBoth();
@@ -508,8 +510,13 @@ module.exports = yeoman.Base.extend({
 		
 		// Save root project config
 		this.config.save();
-		
-		this.composeWith("scaffi:route", {options: {route: "index"}}, {local: require.resolve('../route')})
+
+	},
+	_writeBase: function(){
+		this.fs.copy(this.templatePath("base"), this.destinationPath());
+		this.fs.move(this.destinationPath("_gitignore"), this.destinationPath(path.join(".gitignore")));
+		this.fs.move(this.destinationPath("_gitconfig"), this.destinationPath(path.join(".gitconfig")));
+
 	},
 	_writeAddBoth: function(){
 
@@ -521,28 +528,30 @@ module.exports = yeoman.Base.extend({
 
 		var serverOptions = {};
 		
-		var serverRoute = path.join("server");
-		this.fs.copy(this.templatePath("server/base"), this.destinationPath(serverRoute));
+		var serverRoute = path.join("src", "server");
+		this.fs.copy(this.templatePath( path.join("server", "base")), this.destinationPath(serverRoute));
 		
 		// Copy some hidden files because this has to be done manually
 		this.fs.move( this.destinationPath(path.join(serverRoute, "_gitignore")), this.destinationPath(path.join(serverRoute, ".gitignore")));
 		
 		var npmProjectName = helperFns.parseNpmName(this.projectDetails.projectName);
-		this.fs.copyTpl(this.templatePath("server/custom/package.json"), this.destinationPath(path.join(serverRoute, "package.json")), {
+		this.fs.copyTpl(this.templatePath( path.join("server", "custom", "package.json")), this.destinationPath(path.join(serverRoute, "package.json")), {
 			projectName: npmProjectName,
 			projectDescription: `${this.projectDetails.projectName} Server Component`,
 			projectAuthor: this.projectDetails.authorName
 		});
 		
-		helperFns.updateConfig(this.destinationPath(), "server", this.projectDetails);
-		helperFns.updateServerComponents(this.destinationPath(), this.projectDetails);
+		helperFns.updateConfig(this.destinationPath(path.join("src", "server")), "scaffi-server", this.projectDetails);
+		helperFns.updatePrivateConfig(this.destinationPath(path.join("src", "server")), "scaffi-server.private", {environment: "localhost"});
+		helperFns.updateServerComponents(this.destinationPath("src"), this.projectDetails);
+
 
 	},
 	_writeAddUi: function(){
 
-		var uiRoute = path.join("ui");
+		var uiRoute = path.join("src","ui");
 		// // Copy all the static files
-		this.fs.copy(this.templatePath("ui/base"), this.destinationPath(uiRoute));
+		this.fs.copy(this.templatePath( path.join("ui", "base")), this.destinationPath(uiRoute));
 
 
 		// Copy some hidden files because this has to be done manually
@@ -554,30 +563,40 @@ module.exports = yeoman.Base.extend({
 		var npmProjectName = helperFns.parseNpmName(this.projectDetails.projectName);
 
 		// Copy template files
-		this.fs.copyTpl(this.templatePath("ui/custom/package.json"), this.destinationPath(path.join(uiRoute, "package.json")), {
+		this.fs.copyTpl(this.templatePath( path.join("ui", "custom", "package.json")), this.destinationPath(path.join(uiRoute, "package.json")), {
 			projectName: npmProjectName,
 			projectDescription: `${this.projectDetails.projectName} UI Component`,
 			projectAuthor: this.projectDetails.authorName
 		});
 		
-		helperFns.updateConfig(this.destinationPath(), "ui", this.projectDetails);
+		helperFns.updateConfig(this.destinationPath(path.join("src", "ui")), "scaffi-ui", this.projectDetails);
+		helperFns.updatePrivateConfig(this.destinationPath(path.join("src", "ui")), "scaffi-ui.private", {environment: "localhost"});
 
 
 
 	},
-	install: function () {
-
-		var done = this.async();
-		var that = this;
-		// This will run npm install and jspm from the ui folder
-		process.chdir(this.destinationPath('ui'));
-		this.installDependencies({callback: function(){
-			process.chdir(that.destinationPath('server'));
-			that.installDependencies({callback: function(){
-				process.chdir(that.destinationPath());
-				done();
-			}});
-		}});
-
+	// install: function () {
+	//
+	// 	/*
+	// 		This is breaking so taking out for now
+	// 	 */
+	// 	console.log("INTSALL AP>P!");
+	// 	// var done = this.async();
+	// 	// var that = this;
+	// 	// This will run npm install and jspm from the ui folder
+	// 	// process.chdir(this.destinationPath('ui'));
+	// 	// this.installDependencies({callback: function(){
+	// 	// 	process.chdir(that.destinationPath('server'));
+	// 	// 	that.installDependencies({callback: function(){
+	// 	// 		process.chdir(that.destinationPath());
+	// 	// 		done();
+	// 	// 	}});
+	// 	// }});
+	//
+	// },
+	end: function(){
+		if(this.addFeature == "both" || this.addFeature == "ui") {
+			this.composeWith("scaffi:route", {options: {route: "index"}}, {local: require.resolve('../route')});
+		}
 	}
 });

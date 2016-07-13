@@ -2,7 +2,7 @@
     <section>
         <h1><%= prettyRouteName %> {{vm.pageMode}} Page</h1>
         <md-content>
-            <form on-submit="vm.submit()" name="<%= prettyRouteName %>">
+            <form on-submit="vm.submit()" name="form">
                 <md-input-container>
                     <label>Edit Me</label>
                     <input type="text" name="editMe" ng-model="vm.formItem.editMe" required />

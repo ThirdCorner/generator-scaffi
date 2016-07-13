@@ -4,7 +4,10 @@ require("babel-register")({
 
 var path = require('path');
 
-require('scaffi-server-core').initialize({
-	config: path.join(__dirname, 'scaffi-server.json' )
-});
+var opts = {
+	config: {},
+	components: {},
+	services: {}
+};
 
+require('scaffi-server-core').initialize(opts);

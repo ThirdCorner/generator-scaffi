@@ -1,0 +1,8 @@
+{
+	"dependencies": ["app"],
+	"params": {
+		"public": {},
+		"private": {}
+	}
+
+}

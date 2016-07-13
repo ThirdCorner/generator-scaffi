@@ -1,0 +1,85 @@
+.idea/*
+
+#Ignore local settings for web app
+LocalSettings.json
+
+#Ignore files built by Visual Studio
+*.obj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+[Dd]ebug*/*
+*.lib
+*.sbr
+*.refactorlog
+*.dbmdl
+obj/
+[Rr]elease*/*
+_ReSharper*/
+[Tt]est[Rr]esult*
+
+#Ignore packages directory
+packages/
+
+#Allow NuGet.exe
+!NuGet.exe
+
+#Ignore generated nupkg files
+*.nupkg
+
+#Allow released nupkg files
+!MyProjectName.1.0.nupkg
+
+#Ignore local testsettings
+Local.testsettings
+
+#Allow R# .DotSettings
+!*.csproj.DotSettings
+
+#Ignore Azure build csdef & Pubxml files
+ServiceDefinition.build.csdef
+*.azurePubxml
+
+#Ignore email files delivered to specified pickup directory
+*.eml
+
+#Allow chromedriver.exe
+!chromedriver.exe
+
+#Ignore _vti folders in ExpressionWeb
+desktop.ini
+_vti_cnf/
+_vti_pvt/
+
+#Ignore private folder
+/Private/
+
+bower_components
+/src/client/build
+/src/iis/*.Web/public/build
+/deploy
+*.zip
+npm-shrinkwrap.json
+/src/client/tests
+*.sublime-workspace
+*{#}.txt
+/db/diff.xml
+/src/client/app/.idea/workspace.xml
+/src/client/app/.idea/tasks.xml
+!/db/**/*.exe
+**/.vs/config/applicationhost.config
+/src/iis/**/bin/
+/src/iis/**/bin/

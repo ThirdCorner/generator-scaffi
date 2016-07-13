@@ -3,6 +3,7 @@ var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
 var helperFns = require('../helpers/generatorFns');
+var path = require("path");
 
 
 
@@ -50,24 +51,29 @@ module.exports = yeoman.Base.extend({
 		var routeName = this.route.indexOf(".") !== -1 ? this.route.split(".").pop() : this.route; // user-profile;
 
 
-			var jsParams = {
-				routePath: this.route, // main.user-profile
-				routeClassName: helperFns.makeDisplayName(routeName), // UserProfile
-				routeUrl: routeName, // user-profile,
-				breadcrumbLabel: helperFns.makeDisplayNameWithSpace(routeName)
-			};
-			
-			var routeFilePath = this.route.replace(".", "/") + "/";
-			
-			var destPath = this.destinationPath('ui/src/app/routes/');
-			helperFns.updateSiteMap(destPath, this.route, helperFns.makeDisplayNameWithSpace(routeName));
+		var jsParams = {
+			routePath: this.route, // main.user-profile
+			routeClassName: helperFns.makeDisplayName(routeName), // UserProfile
+			routeUrl: routeName, // user-profile,
+			breadcrumbLabel: helperFns.makeDisplayNameWithSpace(routeName)
+		};
+
+		var routeFilePath = path.join(this.route.replace(".", "/"), routeName);
+
+		var destPath = this.destinationPath(path.join("src", "ui", "app", "routes"));
+		helperFns.updateSiteMap(destPath, this.route, helperFns.makeDisplayNameWithSpace(routeName));
+		
 		if(this.route != "index") {
 			this.fs.copyTpl(
 				this.templatePath('route.js'),
-				this.destinationPath("ui/src/app/routes/" + routeFilePath + routeName + ".route.js"),
+				this.destinationPath(path.join("src", "ui", "app", "routes", routeFilePath +".route.js")),
 				jsParams);
 		}
 
+		
+		
+	},
+	end: function(){
 		var opts = { addBreadcrumb: false};
 		if(this.route == "index") {
 			opts.route = "index";

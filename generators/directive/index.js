@@ -3,6 +3,7 @@ var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
 var _ = require('lodash');
+var path = require('path');
 
 var helperFns = require('../helpers/generatorFns');
 
@@ -47,11 +48,11 @@ module.exports = yeoman.Base.extend({
 			className: helperFns.makeDisplayName(this.directiveName)
 		};
 
-		var folderName = this.directiveName + "/";
+		var folderName = path.join(this.directiveName, this.directiveName);
 
 		this.fs.copyTpl(
 			this.templatePath('directive.js'),
-			this.destinationPath("ui/src/app/directives/" + folderName + this.directiveName + ".directive.js"),
+			this.destinationPath(path.join("src", "ui", "app", "directives", folderName + ".directive.js")),
 			params);
 
 
@@ -60,7 +61,7 @@ module.exports = yeoman.Base.extend({
 		// This needs to be here because copyTpl is async and includes won't find new files if run
 		// in the writing phase
 		var done = this.async();
-		var destPath = this.destinationPath('ui/src/app/directives/');
+		var destPath = this.destinationPath(path.join("src", "ui", "app", "directives"));
 
 		helperFns.generateGenericJsIncludes(destPath, done, "directives.js", 'directive.js');
 	},

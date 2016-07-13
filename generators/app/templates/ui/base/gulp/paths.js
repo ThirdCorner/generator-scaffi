@@ -3,6 +3,7 @@
 import path from 'path';
 
 const root = path.dirname(__dirname);
+
 const paths = {
     root: root,
     /**
@@ -23,18 +24,15 @@ const paths = {
      * - 'config'       contains Angular app config files
      */
     app: {
-        app:            `${root}/src/app/`,
-        basePath:       `${root}/src/`,
-        fonts:          [`${root}/src/fonts/**/*.{eot,svg,ttf,woff,woff2}`, `${root}/jspm_packages/**/*.{eot,svg,ttf,woff,woff2}`],
-        styles:         `${root}/src/**/*.scss`,
-        images:         `${root}/src/images/**/*.{png,gif,jpg,jpeg}`,
-        config: {
-            basePath:   `${root}/src/app/core/config/`,
-        },
-        scripts:        [`${root}/src/app/**/*.js`],
-        html:           `${root}/src/index.html`,
-        templates:      `${root}/src/app/**/*.html`,
-        json:           `${root}/src/app/**/*.json`
+        app:            `${root}/app/`,
+        basePath:       `${root}/`,
+        fonts:          [`${root}/app/fonts/**/*.{eot,svg,ttf,woff,woff2}`, `${root}/jspm_packages/**/*.{eot,svg,ttf,woff,woff2}`],
+        styles:         `${root}/app/app.scss`,
+        images:          [`${root}/app/images/**/*.{png,gif,jpg,jpeg}`, `${root}/app/images/*.{png,gif,jpg,jpeg}`],
+        scripts:        [`${root}/app/**/*.js`],
+        html:           `${root}/app/index.html`,
+        templates:      `${root}/app/**/*.html`,
+        json:           `${root}/app/**/*.json`
     },
     /**
      * This is a collection of file patterns that refer to our app unit and e2e tests code.
@@ -55,9 +53,9 @@ const paths = {
             coverage:   `${root}/test-reports/coverage/`
         },
         platoReports:   `${root}/test/plato`,
-        mock:           `${root}/src/app/**/*.mock.js`,
-        unit:           `${root}/src/app/**/*.spec.js`,
-        e2e:            `${root}/src/app/**/*.e2e.js`
+        mock:           `${root}/app/**/*.mock.js`,
+        unit:           `${root}/app/**/*.spec.js`,
+        e2e:            `${root}/app/**/*.e2e.js`
     },
     /**
      * The 'tmp' folder is where our html templates are compiled to JavaScript during
@@ -65,11 +63,11 @@ const paths = {
      * copy to 'dist' folder.
      */
     tmp: {
-        basePath:       `${root}/.tmp/`,
-        styles:         `${root}/.tmp/styles/`,
-        scripts:        `${root}/.tmp/scripts/`,
-        css:            `${root}/.tmp/styles/*.css`,
-        fonts:          `${root}/.tmp/fonts/`
+        basePath:       `${root}/build/.tmp/`,
+        styles:         `${root}/build/.tmp/styles/`,
+        scripts:        `${root}/build/.tmp/scripts/`,
+        css:            `${root}/build/.tmp/styles/*.css`,
+        fonts:          `${root}/build/.tmp/fonts/`
     },
     /**
      * The 'build' folder is where our app resides once it's
@@ -79,15 +77,15 @@ const paths = {
      * - 'docs'         application documentation
      */
     build: {
-        basePath:       `${root}/build/`,
+        basePath:       `${root}/../server/public/`,
         dist: {
-            basePath:   `${root}/build/`,
-            fonts:      `${root}/build/fonts/`,
-            images:     `${root}/build/`,
-            styles:     `${root}/build/styles/`,
-            scripts:    `${root}/build/`
+            basePath:   `${root}/../server/public/`,
+            fonts:      `${root}/../server/public/fonts/`,
+            images:     `${root}/../server/public/images/`,
+            styles:     `${root}/../server/public/styles/`,
+            scripts:    `${root}/../server/public/scripts/`
         },
-        docs:           `${root}/build/docs/`
+        docs:           `${root}/../server/public/docs/`
     }
 };
 
