@@ -3,6 +3,7 @@ var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
 var helperFns = require('../helpers/generatorFns');
+var path = require("path");
 
 
 
@@ -15,22 +16,28 @@ module.exports = yeoman.Base.extend({
 			chalk.green('Scaffi') + ' theme time!'
 		));
 		this.choices = [
-			"Default",
-			"Merit"
+			{
+				name: "Angular Material",
+				value: "material"
+			}
 		];
 
 
 		var prompts = [{
-			type: 'input',
-			name: 'templateChoice',
-			message: 'Which theme would you like to use? (Default or Merit)',
-			validate: function(input) {
-				input = input.toLowerCase();
-				if(input != 'default' && input != 'merit') {
-					return 'Your choice must be either Default or Merit';
-				}
+			type: 'confirm',
+			name: 'nonesense',
+			message: 'You ready for it? \n(This is here till the list bug with inquirer is fixed)',
+			default: 1,
+			choices: ['Yes', 'Definitely'],
+			filter: function(){
 				return true;
 			}
+		},
+			{
+			type: 'list',
+			name: 'templateChoice',
+			message: 'Which theme would you like to use?',
+			choices: this.choices
 		}
 
 		];
@@ -39,11 +46,7 @@ module.exports = yeoman.Base.extend({
 			this.props = props;
 
 			this.templateChoice = props.templateChoice;
-			if(this.templateChoice.toLowerCase() == "default") {
-				this.templateChoice = "Default";
-			} else {
-				this.templateChoice = "Merit";
-			}
+
 
 			done();
 		}.bind(this));
@@ -53,7 +56,7 @@ module.exports = yeoman.Base.extend({
 
 	writing: function () {
 
-		this.fs.copy(this.templatePath(this.templateChoice), this.destinationPath("ui/src/app/theme"));
+		this.fs.copy(this.templatePath(this.templateChoice), this.destinationPath(path.join("src", "ui", "app", "theme")));
 
 	}
 });

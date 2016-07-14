@@ -1,0 +1,23 @@
+{
+  "generator-scaffi": {
+    "projectDetails": {
+      "variedIdName": false,
+      "idName": "id",
+      "tableNameStandard": "pascalCase",
+      "columnNameStandard": "pascalCase",
+      "columnMultiWordStandard": "none",
+      "idCapitalizeStandard": "pascalCase",
+      "routeLowercaseStandard": true,
+      "environment": "prototype",
+      "nonesense": true,
+      "mainOption": "add",
+      "addFeature": "both",
+      "projectName": "TestGenerator",
+      "authorName": "JJ",
+      "apiRoute": "/api/",
+      "uiLocalhostPort": "5005",
+      "serverLocalhostPort": "3000",
+      "customizeDataStructure": false
+    }
+  }
+}

@@ -1,0 +1,23 @@
+
+md-icon.fa {
+  display:block;
+  padding-left:0px;
+  font-size: 24px;
+}
+
+md-icon.s32 span {
+  padding-left:8px;
+}
+
+.required-icon.fa-asterisk{
+    color: darkred;
+    font-size: 10pt !important;
+
+}
+.hint .required-icon {
+  font-size: 0.9em;
+}
+
+md-button.md-primary md-icon.fa {
+  color: white !important;
+}

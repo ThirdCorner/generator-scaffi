@@ -1,0 +1,29 @@
+.breadcrumb {
+
+  a {
+    font-size: 0.85em;
+    text-decoration: none;
+  }
+  li span {
+    font-size: 1.15em;
+  }
+
+
+  li:before {
+    font: normal normal normal 14px/1 FontAwesome;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    content: "\f054";
+    padding-right:6px;
+
+    display: inline-block;
+    font-weight: bold;
+
+  }
+  li:first-child {
+    padding-left: 45px;
+  }
+  li:not(:first-child):before {
+    padding-left: 10px;
+  }
+}

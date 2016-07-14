@@ -1,0 +1,46 @@
+{
+  "app": [
+    {
+      "id": "index",
+      "displayText": "Index",
+      "sref": "app.index",
+      "isDisplayable": true,
+      "icon": "",
+      "routes": []
+    },
+    {
+      "id": "form",
+      "displayText": "Form",
+      "sref": "app.form",
+      "isDisplayable": true,
+      "icon": "",
+      "routes": [
+        {
+          "id": "edit",
+          "displayText": "Edit Form",
+          "sref": "app.form.edit",
+          "isDisplayable": false,
+          "icon": "",
+          "routes": []
+        }
+      ]
+    },
+    {
+      "id": "main",
+      "displayText": "Main",
+      "sref": "app.main",
+      "isDisplayable": true,
+      "icon": "",
+      "routes": [
+        {
+          "id": "edit",
+          "displayText": "Edit Main",
+          "sref": "app.main.edit",
+          "isDisplayable": false,
+          "icon": "",
+          "routes": []
+        }
+      ]
+    }
+  ]
+}

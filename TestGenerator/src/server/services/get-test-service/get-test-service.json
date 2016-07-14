@@ -1,0 +1,8 @@
+{
+	"dependencies": ["router"],
+	"params": {
+		"public": {},
+		"private": {}
+	}
+
+}

@@ -1,0 +1,128 @@
+.md-autocomplete-icon{
+  md-icon {
+    margin-top: 10px;
+    padding: 0 5px 0 0;
+  }
+  md-icon.right-icon {
+    padding-left: 5px;
+  }
+}
+md-input-container.md-input-invalid{
+  md-select-value{
+    color: #dd2c00 !important;
+  }
+
+}
+md-input-container .required-icon{
+  margin-top: 8px;
+}
+
+/*
+  Set placeholder style
+  */
+*::-webkit-input-placeholder {
+  font-size: 16px;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  line-height: 1.5em !important;
+}
+
+*:-moz-placeholder { /* Firefox 18- */
+  font-size: 16px !important;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  line-height: 1.5em !important;
+}
+
+*::-moz-placeholder { /* Firefox 19+ */
+  font-size: 16px !important;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  line-height: 1.5em !important;
+}
+
+*:-ms-input-placeholder {
+  font-size: 16px !important;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  line-height: 1.5em !important;
+}
+
+.ng-invalid.ng-touched, form.ng-submitted .ng-invalid {
+  *::-webkit-input-placeholder {
+    color: rgb(221, 44,0) !important;
+  }
+
+  *:-moz-placeholder { /* Firefox 18- */
+    color: rgb(221, 44,0) !important;
+  }
+
+  *::-moz-placeholder { /* Firefox 19+ */
+    color: rgb(221, 44,0) !important;
+  }
+
+  *:-ms-input-placeholder {
+    color: rgb(221, 44,0) !important;
+  }
+}
+
+form.ng-submitted md-datepicker.ng-invalid .md-datepicker-input-container,
+form.ng-submitted md-select.ng-invalid md-select-value,
+md-select.ng-invalid.ng-touched md-select-value, form.ng-submitted .ng-invalid-validate md-chips-wrap, .ng-invalid-validate.ng-touched md-chips-wrap
+{
+  color: rgb(221, 44,0) !important;
+  border-bottom-color: rgb(221, 44,0) !important;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+}
+md-datepicker.ng-valid .md-datepicker-input-container{
+  border-bottom-color: rgba(0,0,0,0.12) !important;
+}
+
+
+md-autocomplete md-input-container {
+  margin: 0px !important;
+}
+
+md-select-menu[multiple] md-option {
+  padding-left:32px;padding-right: 32px;
+  &[selected] .md-text:before {
+
+    box-sizing: border-box;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    position: absolute;
+    left: 14px;
+    display: table;
+    width: 6.67px;
+    height: 13.33px;
+    border-width: 2px;
+    border-style: solid;
+    border-top: 0;
+    border-left: 0;
+    content: '';
+  }
+}
+
+/*
+  Fix for dialog if your body is scrolled more than 100%;
+ */
+body.md-dialog-is-showing {
+  overflow: visible !important;
+}
+
+.validation-messages {
+  font-size: 12px;
+  line-height: 14px;
+  transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+  color: #dd2c00;
+}
+//
+//.popover {
+//  background-color: white;
+//  position: absolute;
+//  padding: 10px;
+//  -webkit-box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.15);
+//  -moz-box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.15);
+//  box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.15);
+//  z-index: 100;
+//  top: 0;
+//  left: 0;
+//}
+//
