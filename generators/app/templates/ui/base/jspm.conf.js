@@ -16,14 +16,10 @@ System.config({
   buildCSS: false,
   
   map: {
-    "Siyfion/angular-typeahead": "github:Siyfion/angular-typeahead@0.3.1",
     "ThirdCorner/scaffi-ui-core": "github:ThirdCorner/scaffi-ui-core@master",
     "angular": "github:angular/bower-angular@1.5.7",
     "angular-animate": "github:angular/bower-angular-animate@1.5.7",
     "angular-aria": "github:angular/bower-angular-aria@1.5.7",
-    "angular-breadcrumb": "github:ncuillery/angular-breadcrumb@0.4.1",
-    "angular-loading-bar": "github:chieffancypants/angular-loading-bar@0.9.0",
-    "angular-material": "github:angular/bower-material@1.1.0-rc4",
     "angular-messages": "github:angular/bower-angular-messages@1.5.7",
     "angular-mocks": "npm:angular-mocks@1.4.5",
     "angular-sanitize": "github:angular/bower-angular-sanitize@1.5.5",
@@ -31,16 +27,12 @@ System.config({
     "babel": "npm:babel-core@5.8.38",
     "babel-runtime": "npm:babel-runtime@5.8.38",
     "body-parser": "npm:body-parser@1.15.2",
-    "bootstrap-css-only": "github:fyockm/bootstrap-css-only@3.3.5",
     "chai": "npm:chai@3.5.0",
     "chai-as-promised": "npm:chai-as-promised@5.3.0",
     "chai-spies": "npm:chai-spies@0.7.1",
     "clean-css": "npm:clean-css@3.4.12",
-    "core-files": "src/app/core",
     "core-js": "npm:core-js@1.2.6",
     "css": "github:systemjs/plugin-css@0.1.23",
-    "daniel-nagy/md-data-table": "github:daniel-nagy/md-data-table@0.10.9",
-    "font-awesome": "npm:font-awesome@4.4.0",
     "gulp-debug": "npm:gulp-debug@2.1.2",
     "jasmine": "npm:jasmine@2.4.1",
     "json": "github:systemjs/plugin-json@0.1.0",
@@ -51,14 +43,9 @@ System.config({
     "lodash": "npm:lodash@3.10.1",
     "mocha": "npm:mocha@2.4.5",
     "moment": "npm:moment@2.14.1",
-    "ng-table": "github:esvit/ng-table@0.8.3",
-    "oblador/angular-scroll": "github:oblador/angular-scroll@1.0.0",
     "scaffi-ui-core": "github:ThirdCorner/scaffi-ui-core@master",
     "scss": "github:theefer/plugin-sass@master",
-    "si-table": "github:simplicitylabs/si-table@0.2.3",
-    "simeonc/sc-date-time": "github:simeonc/sc-date-time@1.1.6",
     "text": "github:systemjs/plugin-text@0.0.2",
-    "twitter/typeahead.js": "github:twitter/typeahead.js@0.11.1",
     "walkdir": "npm:walkdir@0.0.10",
     "yargs": "npm:yargs@3.27.0",
     "github:ThirdCorner/scaffi-ui-core@master": {
@@ -66,7 +53,6 @@ System.config({
       "angular-animate": "npm:angular-animate@1.5.7",
       "angular-aria": "npm:angular-aria@1.5.7",
       "angular-breadcrumb": "npm:angular-breadcrumb@0.4.1",
-      "angular-loading-bar": "npm:angular-loading-bar@0.9.0",
       "angular-messages": "npm:angular-messages@1.5.7",
       "angular-mocks": "npm:angular-mocks@1.5.7",
       "angular-sanitize": "npm:angular-sanitize@1.5.7",
@@ -95,13 +81,6 @@ System.config({
     },
     "github:angular/bower-angular-sanitize@1.5.5": {
       "angular": "github:angular/bower-angular@1.5.7"
-    },
-    "github:angular/bower-material@1.1.0-rc4": {
-      "angular": "github:angular/bower-angular@1.5.7",
-      "angular-animate": "github:angular/bower-angular-animate@1.5.7",
-      "angular-aria": "github:angular/bower-angular-aria@1.5.7",
-      "angular-messages": "github:angular/bower-angular-messages@1.5.7",
-      "css": "github:systemjs/plugin-css@0.1.23"
     },
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.4.1"
@@ -203,9 +182,6 @@ System.config({
       "module": "github:jspm/nodelibs-module@0.1.0",
       "path": "github:jspm/nodelibs-path@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
-    },
-    "npm:angular-breadcrumb@0.4.1": {
-      "path": "github:jspm/nodelibs-path@0.1.0"
     },
     "npm:angular-ui-router@0.2.18": {
       "angular": "npm:angular@1.5.7",
@@ -969,9 +945,6 @@ System.config({
     "npm:flagged-respawn@0.3.2": {
       "child_process": "github:jspm/nodelibs-child_process@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
-    },
-    "npm:font-awesome@4.4.0": {
-      "css": "github:systemjs/plugin-css@0.1.23"
     },
     "npm:for-own@0.1.4": {
       "for-in": "npm:for-in@0.1.5"

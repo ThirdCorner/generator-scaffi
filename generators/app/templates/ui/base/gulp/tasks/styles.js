@@ -15,6 +15,8 @@ import browserSync from 'browser-sync';
 import autoprefixer from 'gulp-autoprefixer';
 import path from '../paths';
 
+import resources from '../../build-resources.json';
+
 const argv = util.env;
 const LOG = util.log;
 const ENV = !!argv.env ? argv.env : 'DEV';
@@ -32,18 +34,14 @@ if(!ENV.match(new RegExp(/prod|dev|prototype|test|TEST|DEV|prototype|PROD/))) {
  */
 gulp.task('vendor-css', ()=>{
     var vendorResources = [];
-    var NPM_RESOURCE_PACKAGES = [
-        'bower-material/*.min.css',
-        'angular-loading*/build/loading-bar.min.css',
-        'font-awesome',
-        'md-data-table',
-        'sc-date-time*/dist/*.css'
-    ];
+
+
+    var NPM_RESOURCE_PACKAGES = resources && resources.styles ? resources.styles : [];
     if(_.isArray(NPM_RESOURCE_PACKAGES)) {
         _.each(NPM_RESOURCE_PACKAGES, function(projectName){
             /*
-                Either it'll just be a project folder
-                or it'll be individual file names
+             Either it'll just be a project folder
+             or it'll be individual file names
              */
             console.log(projectName)
             switch(true) {
@@ -85,7 +83,7 @@ gulp.task('sass', () => {
         .pipe(sourcemaps.write('../maps'))
         .pipe(gulp.dest(path.tmp.styles))
         .pipe(filter('**/*.css')) // Filtering stream to only css files
-       // .pipe(browserSync.stream());
+        .pipe(browserSync.stream());
 });
 
 gulp.task('css', ()=>{

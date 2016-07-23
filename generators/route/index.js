@@ -11,11 +11,6 @@ module.exports = yeoman.Base.extend({
 	prompting: function () {
 		var done = this.async();
 
-		// Have Yeoman greet the user.
-		this.log(yosay(
-			chalk.green('Scaffi') + ' route time!'
-		));
-
 		if(this.options.route) {
 			if(helperFns.validateRoute(this.options.route)  !== true){
 				throw new Error(helperFns.validateRoute(this.options.route));
@@ -23,6 +18,12 @@ module.exports = yeoman.Base.extend({
 			this.route = this.options.route;
 			done();
 		} else {
+
+			// Have Yeoman greet the user.
+			this.log(yosay(
+				chalk.green('Scaffi') + ' route time!'
+			));
+
 			var prompts = [{
 				type: 'input',
 				name: 'route',

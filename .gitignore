@@ -3,5 +3,6 @@ coverage
 .idea/*
 test/tmp
 test/temp
-latest-test
+latest-test-material
+latest-test-bootstrap
 .idea

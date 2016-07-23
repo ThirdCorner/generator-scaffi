@@ -27,7 +27,7 @@ const paths = {
         app:            `${root}/app/`,
         basePath:       `${root}/`,
         fonts:          [`${root}/app/fonts/**/*.{eot,svg,ttf,woff,woff2}`, `${root}/jspm_packages/**/*.{eot,svg,ttf,woff,woff2}`],
-        styles:         `${root}/app/app.scss`,
+        styles:         `${root}/app/**/*.scss`,
         images:          [`${root}/app/images/**/*.{png,gif,jpg,jpeg}`, `${root}/app/images/*.{png,gif,jpg,jpeg}`],
         scripts:        [`${root}/app/**/*.js`],
         html:           `${root}/app/index.html`,

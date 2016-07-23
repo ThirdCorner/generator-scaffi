@@ -575,28 +575,17 @@ module.exports = yeoman.Base.extend({
 
 
 	},
-	// install: function () {
-	//
-	// 	/*
-	// 		This is breaking so taking out for now
-	// 	 */
-	// 	console.log("INTSALL AP>P!");
-	// 	// var done = this.async();
-	// 	// var that = this;
-	// 	// This will run npm install and jspm from the ui folder
-	// 	// process.chdir(this.destinationPath('ui'));
-	// 	// this.installDependencies({callback: function(){
-	// 	// 	process.chdir(that.destinationPath('server'));
-	// 	// 	that.installDependencies({callback: function(){
-	// 	// 		process.chdir(that.destinationPath());
-	// 	// 		done();
-	// 	// 	}});
-	// 	// }});
-	//
-	// },
+	install: function () {
+
+		this.spawnCommandSync('npm', ['install'], {cwd: this.destinationPath('src', 'server')});
+		this.spawnCommandSync('npm', ['install'], {cwd: this.destinationPath('src', 'ui')});
+		
+
+	},
 	end: function(){
 		if(this.addFeature == "both" || this.addFeature == "ui") {
 			this.composeWith("scaffi:route", {options: {route: "index"}}, {local: require.resolve('../route')});
+			this.composeWith("scaffi:theme", {}, {local: require.resolve('../theme')});
 		}
 	}
 });

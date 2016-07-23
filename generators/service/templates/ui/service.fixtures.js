@@ -2,7 +2,7 @@ export default {
 	"COLLECTION": [
 		/*
 			{
-				ID: 1,
+				id: 1,
 				Name: "JJ",
 				Age: 23
 			}
