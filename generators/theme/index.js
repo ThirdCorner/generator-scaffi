@@ -65,7 +65,7 @@ module.exports = yeoman.Base.extend({
 	_getMaterialDependencies: function() {
 		var buildDependencies = {
 			"styles": [
-				"bower-material/*.min.css",
+				"bower-material*/angular-material.css",
 				"angular-loading*/build/loading-bar.min.css",
 				"font-awesome",
 				"md-data-table"
@@ -80,7 +80,7 @@ module.exports = yeoman.Base.extend({
 
 
 		return [
-			"angular-material@1.1.0-rc4",
+			"angular-material@1.0.9",
 			"angular-material-data-table@0.10.9",
 			"angular-breadcrumb@0.4.1",
 			"angular-loading-bar@0.9.0",
