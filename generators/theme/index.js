@@ -67,8 +67,7 @@ module.exports = yeoman.Base.extend({
 			"styles": [
 				"bower-material*/angular-material.css",
 				"angular-loading*/build/loading-bar.min.css",
-				"font-awesome",
-				"md-data-table"
+				"font-awesome"
 			]
 		};
 
@@ -81,7 +80,6 @@ module.exports = yeoman.Base.extend({
 
 		return [
 			"angular-material@1.0.9",
-			"angular-material-data-table@0.10.9",
 			"angular-breadcrumb@0.4.1",
 			"angular-loading-bar@0.9.0",
 			"font-awesome@4.4.0"

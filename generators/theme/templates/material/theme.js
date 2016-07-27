@@ -15,7 +15,6 @@ class Theme extends AbstractMaterial {
 	initialize(){
 		this.addRequires([
 			'ngMaterial',
-			'md.data.table',
 			'angular-loading-bar'
 		]);
 		this.getApp().config( (cfpLoadingBarProvider)=>{
