@@ -8,7 +8,6 @@ import './layout/layout.js';
 import './layout-error/layout-error.js';
 
 import 'angular-material';
-import 'angular-material-data-table';
 import 'angular-loading-bar';
 
 class Theme extends AbstractMaterial {
