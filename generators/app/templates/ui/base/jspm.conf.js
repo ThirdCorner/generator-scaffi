@@ -42,7 +42,7 @@ System.config({
     "karma-phantomjs-shim": "npm:karma-phantomjs-shim@1.1.2",
     "lodash": "npm:lodash@3.10.1",
     "mocha": "npm:mocha@2.4.5",
-    "moment": "npm:moment@2.14.1",
+    "moment": "npm:moment@2.14.1", 
     "scaffi-ui-core": "github:ThirdCorner/scaffi-ui-core@master",
     "scss": "github:theefer/plugin-sass@master",
     "text": "github:systemjs/plugin-text@0.0.2",
