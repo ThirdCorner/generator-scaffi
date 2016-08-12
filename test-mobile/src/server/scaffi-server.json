@@ -1,0 +1,21 @@
+{
+  "config": {
+    "apiRoute": "/api/",
+    "uiLocalhostPort": "5012",
+    "serverLocalhostPort": "3000",
+    "variedIdName": false,
+    "idName": "id",
+    "tableNameStandard": "pascalCase",
+    "columnNameStandard": "pascalCase",
+    "columnMultiWorkStandard": null,
+    "idCapitalizeStandard": "pascalCase",
+    "routeLowercaseStandard": true,
+    "environment": "prototype"
+  },
+  "components": {
+    "app": {
+      "port": 3000
+    }
+  },
+  "services": {}
+}
