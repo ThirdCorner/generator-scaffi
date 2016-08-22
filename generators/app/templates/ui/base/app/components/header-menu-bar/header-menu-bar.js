@@ -21,14 +21,8 @@ import template from './header-menu-bar.html!text';
 
 class HeaderMenuBar {
 	constructor($rootScope, $state){
-		var routes = $rootScope.getRouteMap();
-		if(_.isObject(routes) && _.has(routes, "app")) {
-			this.routes = routes.app;
-		} else {
-			return false;
-			//throw new Error("Can't load route map for header-menu-bar");
-		}
-
+	
+		this.routes = [];
 		this.setActiveState($state.current.name);
 
 		var that = this;

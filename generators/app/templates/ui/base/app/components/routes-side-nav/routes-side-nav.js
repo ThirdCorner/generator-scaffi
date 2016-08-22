@@ -21,13 +21,8 @@ import template from './routes-side-nav.html!text';
 
 class RoutesSideNav {
 	constructor($rootScope, $state){
-		var routes = $rootScope.getRouteMap();
-		if(_.isObject(routes) && _.has(routes, "app")) {
-			this.routes = routes.app;
-		} else {
-			return false;
-			//throw new Error("Can't load route map for routes-side-nav");
-		}
+
+		this.routes = [];
 
 		this.setActiveState($state.current.name, $state.params);
 
