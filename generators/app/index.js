@@ -584,7 +584,7 @@ module.exports = yeoman.Base.extend({
 	},
 	end: function(){
 		if(this.addFeature == "both" || this.addFeature == "ui") {
-			this.composeWith("scaffi:route", {options: {route: "index"}}, {local: require.resolve('../route')});
+			this.composeWith("scaffi:route", {options: {routeName: "index"}}, {local: require.resolve('../route')});
 			this.composeWith("scaffi:theme", {}, {local: require.resolve('../theme')});
 		}
 	}

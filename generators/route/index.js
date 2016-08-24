@@ -11,10 +11,14 @@ module.exports = yeoman.Base.extend({
 	prompting: function () {
 		var done = this.async();
 
-		if(this.options.route) {
-			if(helperFns.validateRoute(this.options.route)  !== true){
+		if(this.options.routeName) {
+			if(helperFns.validateRoute(this.options.routeName)  !== true){
+				throw new Error(helperFns.validateRoute(this.options.routeName));
+			}
+			if(this.options.route && helperFns.validateRoute(this.options.route)  !== true){
 				throw new Error(helperFns.validateRoute(this.options.route));
 			}
+			this.routeName = this.options.routeName;
 			this.route = this.options.route;
 			done();
 		} else {
@@ -24,14 +28,35 @@ module.exports = yeoman.Base.extend({
 				chalk.green('Scaffi') + ' route time!'
 			));
 
-			var prompts = [{
-				type: 'input',
-				name: 'route',
-				message: 'What\'s your full route going to be? If this is a sub-route, include any nesting. (main.user.profile)',
-				validate: function (input) {
-					return helperFns.validateRoute(input);
+			var prompts = [
+				{
+					type: 'input',
+					name: 'routeName',
+					message: 'Route name? (add-products)',
+					validate: function (input) {
+						return helperFns.validateRoute(input);
+					}
+				},
+				{
+					type: 'confirm',
+					name: 'isNested',
+					message: 'Is this a nested route?',
+					default: 0,
+					choices: ['No', 'Yes']
+				},
+				{
+					type: 'input',
+					name: 'route',
+					message: 'Where is this nested in? (main/user)',
+					validate: function (input) {
+						// chop off end / if there is one;
+						input = input.replace(/.+[\/\\]$/, '');
+						return helperFns.validateRoute(input);
+					},
+					when: (answers) =>{
+						return answers.isNested === true;
+					}
 				}
-			}
 
 			];
 
@@ -39,6 +64,7 @@ module.exports = yeoman.Base.extend({
 				this.props = props;
 
 				this.route = props.route;
+				this.routeName = props.routeName;
 
 				done();
 			}.bind(this));
@@ -48,26 +74,35 @@ module.exports = yeoman.Base.extend({
 	},
 
 	writing: function () {
+		
 
-		var routeName = this.route.indexOf(".") !== -1 ? this.route.split(".").pop() : this.route; // user-profile;
+		if(this.route) {
+			this.route = this.route.replace(/\\/g, '/');
 
+		}
+
+		var routeName = this.routeName; // user-profile;
+
+		var fullRoute = this.route ? this.route + "/" + routeName : routeName;
+		
 
 		var jsParams = {
-			routePath: this.route, // main.user-profile
+			routePath: fullRoute.replace(/\//g, "."), // main.user-profile
 			routeClassName: helperFns.makeDisplayName(routeName), // UserProfile
 			routeUrl: routeName, // user-profile,
 			breadcrumbLabel: helperFns.makeDisplayNameWithSpace(routeName)
 		};
 
-		var routeFilePath = path.join(this.route.replace(".", "/"), routeName);
-
 		var destPath = this.destinationPath(path.join("src", "ui", "app", "routes"));
-		helperFns.updateSiteMap(destPath, this.route, helperFns.makeDisplayNameWithSpace(routeName));
+
+		console.log(destPath);
+		helperFns.updateSiteMap(destPath, fullRoute, helperFns.makeDisplayNameWithSpace(routeName));
 		
-		if(this.route != "index") {
+		if(this.routeName != "index") {
+			var routeFilePath = this.route ? path.join(this.route, routeName) : routeName;
 			this.fs.copyTpl(
 				this.templatePath('route.js'),
-				this.destinationPath(path.join("src", "ui", "app", "routes", routeFilePath +".route.js")),
+				this.destinationPath(path.join("src", "ui", "app", "routes", routeFilePath, routeName + ".route.js")),
 				jsParams);
 		}
 
@@ -76,11 +111,11 @@ module.exports = yeoman.Base.extend({
 	},
 	end: function(){
 		var opts = { addBreadcrumb: false};
-		if(this.route == "index") {
-			opts.route = "index";
-		} else {
-			opts.route = helperFns.join(this.route, "index", ".");
+		if(this.routeName != "index") {
+			opts.route = this.route ? this.route + "/" + this.routeName : this.routeName;
 		}
+		opts.pageName = "index";
+		
 		this.composeWith("scaffi:page", {options: opts}, {local: require.resolve('../page')} )
 	}
 });

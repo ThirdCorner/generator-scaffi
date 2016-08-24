@@ -31,10 +31,10 @@ module.exports = {
 	},
 	join: function(whole, part, joinChar) {
 
-		if(whole.length && part.length == 0) {
+		if(!part) {
 			return whole;
 		}
-		if(whole.length == 0 && part.length == 0) {
+		if(!whole) {
 			return part;
 		}
 
@@ -102,7 +102,11 @@ module.exports = {
 			return 'You must provide a route.';
 		}
 		if(this.hasUpperCase(route) || this.hasSpace(route)) {
-			return 'Your route must be in this style: main.user-main';
+			return 'Your route must be in this style: main/user-main';
+		}
+
+		if(route.indexOf(".") !== -1) {
+			return 'You cannot have . in your route'
 		}
 		
 
@@ -182,7 +186,11 @@ module.exports = {
 		}
 
 
-		var routes = fullRoute.split(".");
+		if(fullRoute.indexOf(".") !== -1){
+			fullRoute = fullRoute.replace(/\./g, "/");
+		}
+		
+		var routes = fullRoute.split("/");
 
 		var lastRoute = routes.pop();
 		var nestedObj = json.app;
@@ -223,7 +231,7 @@ module.exports = {
 			nestedObj.push({
 				id: lastRoute,
 				displayText: displayText,
-				sref: fullRoute,
+				sref: fullRoute.replace(/\//g, "."),
 				isDisplayable: isDisplayable,
 				icon: "",
 				routes: []

@@ -7,7 +7,7 @@ import template from './<%= routeTemplateName %>.html!text';
 //start-non-standard
 // export-params-start
 <% if(enableEdit) { %>
-	const EDIT_ROUTE = 'app.<%= route %>.edit';
+	const EDIT_ROUTE = 'app.<%= routePath %>.edit';
 	const EDIT_PARAMS = {
 		url: '/:<%= serviceName %>ID/edit',
 		template: template,
@@ -25,7 +25,7 @@ import template from './<%= routeTemplateName %>.html!text';
 };
 <% } %>
 <% if(enableAdd) { %>
-		const ADD_ROUTE = 'app.<%= route %>.add';
+		const ADD_ROUTE = 'app.<%= routePath %>.add';
 		const ADD_PARAMS = {
 			url: '/add',
 			template: template,
@@ -62,7 +62,7 @@ class <%= routeClassName %> extends AbstractPage {
 	}
 	
 	submit(){
-		this.SERVICE.save(this.formItem).then(() => this.$state.go("app.<%= route %>", {}));
+		this.SERVICE.save(this.formItem).then(() => this.$state.go("app.<%= routePath %>", {}));
 	}
 	
 }

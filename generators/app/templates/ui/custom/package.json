@@ -80,7 +80,7 @@
     "jasmine-core": "^2.3.4",
     "jasmine-reporters": "2.0.7",
     "jshint-stylish": "2.0.1",
-    "jspm": "0.16.11",
+    "jspm": "0.16.36",
     "karma": "0.13.10",
     "karma-babel-preprocessor": "5.2.2",
     "karma-chai": "^0.1.0",
@@ -106,7 +106,7 @@
     "require-dir": "0.3.0",
     "run-sequence": "^1.1.4",
     "semver": "5.0.3",
-    "systemjs-builder": "0.14.7",
+    "systemjs-builder": "0.15.15",
     "yargs": "^3.27.0"
   },
   "jspm": {
