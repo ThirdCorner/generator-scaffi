@@ -55,6 +55,7 @@ module.exports = yeoman.Base.extend({
 			prompts.push({
 				type: 'input',
 				name: 'route',
+				store: true,
 				message: 'Route Path (main/user)',
 				validate: function (input) {
 

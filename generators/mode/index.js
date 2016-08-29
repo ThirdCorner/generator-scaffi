@@ -10,11 +10,6 @@ module.exports = yeoman.Base.extend({
 	prompting: function () {
 		var done = this.async();
 
-		// Have Yeoman greet the user.
-		this.log(yosay(
-			chalk.green('Scaffi') + ' mode time!'
-		));
-
 
 		if(this.options.mode) {
 			var mode = this.options.mode.toLowerCase();
@@ -22,11 +17,17 @@ module.exports = yeoman.Base.extend({
 				throw new Error("Mode provided is not valid: " + mode + ". Looking for " + '["production", "qa", "development", "localhost", "prototype"]');
 				return false;
 			}
-			this.log(yosay(
-				chalk.green('Scaffi') + ' is setting mode to : ' + mode
-			));
+			// this.log(yosay(
+			// 	chalk.green('Scaffi') + ' is setting mode to : ' + mode
+			// ));
 			this.modeType = mode;
 		} else {
+
+			// Have Yeoman greet the user.
+			this.log(yosay(
+				chalk.green('Scaffi') + ' mode time!'
+			));
+
 			var prompts = [
 				{
 					type: 'confirm',
@@ -84,9 +85,11 @@ module.exports = yeoman.Base.extend({
 	},
 	done: function(){
 
+		if(!this.options.mode) {
 			this.log(yosay(
 				'Your app has been set to run in ' + chalk.green(this.modeType) + ' mode. Go forth and do awesome things.'
 			));
+		}
 
 	}
 });

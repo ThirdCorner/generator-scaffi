@@ -1,7 +1,7 @@
 {
   "name": "generator-scaffi",
-  "version": "0.0.0",
-  "description": "Overall scaffold generator for Third Corner",
+  "version": "0.0.2",
+  "description": "Overall scaffold generator for Third Corner/Scaffi",
   "homepage": "www.thirdcorner.com",
   "author": {
     "name": "Joseph Blake",
@@ -17,7 +17,6 @@
     "test": "gulp",
     "mocha": "mocha"
   },
-  "private": true,
   "main": "generators\\index.js",
   "keywords": [
     "scaffi",

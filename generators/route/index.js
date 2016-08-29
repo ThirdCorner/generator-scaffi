@@ -47,6 +47,7 @@ module.exports = yeoman.Base.extend({
 				{
 					type: 'input',
 					name: 'route',
+					store: true,
 					message: 'Where is this nested in? (main/user)',
 					validate: function (input) {
 						// chop off end / if there is one;

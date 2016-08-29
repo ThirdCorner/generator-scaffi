@@ -23,23 +23,34 @@ module.exports = yeoman.Base.extend({
 
 
 		var prompts = [];
-		if(this.options.route) {
+		if(this.options.stubName && this.options.route) {
+			if(helperFns.validateRoute(this.options.stubName) !== true) {
+				throw new Error(helperFns.validateRoute(this.options.stubName));
+			}
 			if(helperFns.validateRoute(this.options.route) !== true) {
 				throw new Error(helperFns.validateRoute(this.options.route));
 			}
 
-			var splits = this.options.route.split(".");
-			this.routeName = splits.pop();
-			this.route = splits.join(".");
-			done();
 
 		} else {
+
+			prompts.push({
+				type: "input",
+				name: 'stubName',
+				message: "Stub name? Remember, it will be namespaced with the folder it's in. ('list' will become starting-index-list)",
+				validate: function(input) {
+					if(input.indexOf(".") !== -1) {
+						return "Periods are not allowed in the name";
+					}
+					return input.length > 0;
+				}
+			});
 
 			prompts.push({
 				type: 'input',
 				name: 'route',
 				store: true,
-				message: 'What\'s the route path? Must include the page route as well (main.user.index)',
+				message: 'What\'s the route path? Must include the page route as well (main/user/index)',
 				validate: function (input) {
 
 					// need to check that this exists already
@@ -52,65 +63,35 @@ module.exports = yeoman.Base.extend({
 		/*
 			Setup for type
 		 */
-		if(this.options.type){
-			if(allowedStubs.indexOf(this.options.type) === -1) {
-				throw new Error("You specified a type that doesn't exist as a template: ", this.options.type);
+		prompts.push({
+			type: 'list',
+			name: 'stubType',
+			choices: this.allowedStubs,
+			message: 'Which stub type would you like to add?',
+
+		});
+
+
+
+		this.prompt(prompts, function (props) {
+
+			this.route = this.options.route || props.route;
+			this.stubName = this.options.stubName || props.stubName;
+			this.stubType = props.stubType;
+
+			if(_.endsWith(this.route, "/")) {
+				this.route = this.route.substr(0, this.route.length -1);
 			}
 
-			this.stubType = this.options.type;
-		} else {
-			prompts.push({
-				type: 'list',
-				name: 'stubType',
-				choices: this.allowedStubs,
-				message: 'Which stub type would you like to add?',
-
-			});
-		}
-
-
-		if(this.options.stubName) {
-			this.stubName = this.options.stubName;
-		} else {
-			prompts.push({
-				type: "input",
-				name: 'stubName',
-				message: "What would you like to call this stub? Remember, it will be namespaced with the folder it's in. ('list' will become starting-index-list)",
-				validate: function(input) {
-					if(input.indexOf(".") !== -1) {
-						return "Periods are not allowed in the name";
-					}
-					return input.length > 0;
-				}
-			});
-		}
-
-
-		if(prompts.length) {
-			this.prompt(prompts, function (props) {
-
-				if(!this.route) {
-					this.route = props.route;
-				}
-
-				if(!this.stubType) {
-					this.stubType = props.stubType;
-				}
-
-				if(!this.stubName) {
-					this.stubName = props.stubName;
-				}
-
-				done();
-			}.bind(this));
-		}
+			done();
+		}.bind(this));
 
 
 	},
 
 	writing: function () {
 
-		var routeSplit = this.route.split(".");
+		var routeSplit = this.route.split("/");
 		var pageName = routeSplit.pop();
 		var routeName = routeSplit.pop();
 
@@ -122,7 +103,7 @@ module.exports = yeoman.Base.extend({
 		}
 
 		var htmlParams = {
-			stubPath: this.route + "." + name
+			stubPath: this.route.replace("/", ".") + "." + name
 		};
 		var jsParams = {
 			stubName: name,
