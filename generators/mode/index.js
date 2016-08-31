@@ -14,13 +14,14 @@ module.exports = yeoman.Base.extend({
 		if(this.options.mode) {
 			var mode = this.options.mode.toLowerCase();
 			if(["production", "qa", "development", "localhost", "prototype"].indexOf(mode) === -1){
-				throw new Error("Mode provided is not valid: " + mode + ". Looking for " + '["production", "qa", "development", "localhost", "prototype"]');
+				this.log.error("Mode provided is not valid: " + mode + ". Looking for " + '["production", "qa", "development", "localhost", "prototype"]');
 				return false;
 			}
 			// this.log(yosay(
 			// 	chalk.green('Scaffi') + ' is setting mode to : ' + mode
 			// ));
 			this.modeType = mode;
+			done();
 		} else {
 
 			// Have Yeoman greet the user.
