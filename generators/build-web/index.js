@@ -29,25 +29,29 @@ module.exports = yeoman.Base.extend({
 		this.log("Switching Mode to: " + this.options.mode);
 		this.composeWith("scaffi:mode", {options: {mode: this.options.mode}}, {local: require.resolve('../mode')});
 
-		this.log("Installing Server and UI");
+		this.log("Installing Server Node");
 		this.spawnCommandSync('npm', ['install'], {cwd: this.destinationPath('src', 'server')});
+		this.log("Installing UI Node")
 		this.spawnCommandSync('npm', ['install'], {cwd: this.destinationPath('src', 'ui')});
 
 		this.log("Setting JSPM properly");
-		this.spawnCommandSync('node', ['./node_modules/jspm', 'config', 'registries.github.timeouts.lookup', '600'], {cwd: this.destinationPath('src', 'ui')});
+		this.spawnCommandSync('node', ['./node_modules/jspm/jspm.js', 'config', 'registries.github.timeouts.lookup', '600'], {cwd: this.destinationPath('src', 'ui')});
 		if(this.options.githubToken) {
-			this.spawnCommandSync('node', ['./node_modules/jspm', 'config', 'registries.github.auth', this.options.githubToken], {cwd: this.destinationPath('src', 'ui')});
+			this.spawnCommandSync('node', ['./node_modules/jspm/jspm.js', 'config', 'registries.github.auth', this.options.githubToken], {cwd: this.destinationPath('src', 'ui')});
 		}
 
-		this.log("Installing JSPM in the UI")
-		this.spawnCommandSync('node', ['./node_modules/jspm', 'install'], {cwd: this.destinationPath('src', 'ui')});
+		this.log("Installing UI JSPM")
+		this.spawnCommandSync('node', ['./node_modules/jspm/jspm.js', 'install'], {cwd: this.destinationPath('src', 'ui')});
 
 		this.log("Building UI");
 		this.spawnCommandSync('gulp', ['build'], {cwd: this.destinationPath('src', 'ui')});
 
 		this.log("Copying Server to Build Folder");
 		this.fs.copy(this.destinationPath('src', 'server', "**"), this.destinationPath('build', "web", "server"));
-		this.fs.copy(this.destinationPath('src', 'iis', "**"), this.destinationPath('build', 'web', 'iis'));
+		if(!this.fs.exists(this.destinationPath('build', "web", "server", "web.config"))) {
+			this.fs.copy(this.templatePath('iis', 'web.config'), this.destinationPath('build', "web", "server", "web.config"));
+		}
+		
 
 
 	}
