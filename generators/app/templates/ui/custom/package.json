@@ -6,14 +6,12 @@
     "name": "<%= projectAuthor %>"
   },
   "scripts": {
-    "start": "gulp serve",
     "build": "gulp build",
     "jshint": "gulp jshint",
     "htmlhint": "gulp htmlhint",
     "test": "gulp config --env=prototype && gulp test:unit",
     "test-e2e-w": "gulp watch:test:e2e --env=test",
     "test-e2e": "gulp test:e2e --env=test",
-    "postinstall": "jspm install",
     "postmerge": "npm install",
     "prepush": "npm shrinkwrap --dev"
   },
@@ -116,7 +114,6 @@
     },
     "configFile": "jspm.conf.js",
     "dependencies": {
-      "ThirdCorner/scaffi-ui-core": "github:ThirdCorner/scaffi-ui-core@master",
       "angular": "github:angular/bower-angular@^1.5.5",
       "angular-animate": "github:angular/bower-angular-animate@^1.5.5",
       "angular-aria": "github:angular/bower-angular-aria@^1.5.5",
@@ -132,7 +129,7 @@
       "json": "github:systemjs/plugin-json@0.1.0",
       "lodash": "^3.10.1",
       "moment": "^2.10.6",
-      "scaffi-ui-core": "github:ThirdCorner/scaffi-ui-core@master",
+      "scaffi-ui-core": "^0.0.1",
       "scss": "github:theefer/plugin-sass@master",
       "text": "github:systemjs/plugin-text@0.0.2",
       "walkdir": "^0.0.10"

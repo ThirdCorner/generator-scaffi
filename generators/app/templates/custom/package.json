@@ -1,0 +1,23 @@
+{
+	"name": "<%= projectName %>",
+	"version": "0.0.0",
+	"description": "<%= projectDescription %>",
+	"scripts": {
+		"yo": "yo"
+	},
+	"repository": {
+		"type": "git",
+		"url": ""
+	},
+	"keywords": [
+		"scaffi",
+		"scaffi-docs"
+	],
+	"author": {
+		"name": "<%= projectAuthor %>"
+	},
+	"devDependencies": {
+		"generator-scaffi": "~0.0.0",
+		"yo": "^1.8.4"
+	}
+}

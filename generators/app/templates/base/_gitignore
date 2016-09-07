@@ -83,3 +83,6 @@ npm-shrinkwrap.json
 **/.vs/config/applicationhost.config
 /src/iis/**/bin/
 /src/iis/**/bin/
+/node_modules
+
+/build/web/server/*
