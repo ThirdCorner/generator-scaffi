@@ -5,6 +5,8 @@ var yosay = require('yosay');
 var helperFns = require('../helpers/generatorFns');
 var _ = require("lodash");
 var path = require("path");
+var gulp = require('gulp');
+
 
 module.exports = yeoman.Base.extend({
 	prompting: function () {
@@ -40,7 +42,7 @@ module.exports = yeoman.Base.extend({
 			this.spawnCommandSync('node', ['./node_modules/jspm/jspm.js', 'config', 'registries.github.auth', this.options.githubToken], {cwd: this.destinationPath('src', 'ui')});
 		}
 
-		this.log("Installing UI JSPM")
+		this.log("Installing UI JSPM");
 		this.spawnCommandSync('node', ['./node_modules/jspm/jspm.js', 'install'], {cwd: this.destinationPath('src', 'ui')});
 
 		this.log("Building UI");
@@ -51,8 +53,6 @@ module.exports = yeoman.Base.extend({
 		if(!this.fs.exists(this.destinationPath('build', "web", "server", "web.config"))) {
 			this.fs.copy(this.templatePath('iis', 'web.config'), this.destinationPath('build', "web", "server", "web.config"));
 		}
-		
-
 
 	}
 });
