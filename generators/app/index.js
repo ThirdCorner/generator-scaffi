@@ -516,6 +516,14 @@ module.exports = yeoman.Base.extend({
 		this.fs.copy(this.templatePath("base"), this.destinationPath());
 		this.fs.move(this.destinationPath("_gitignore"), this.destinationPath(path.join(".gitignore")));
 		this.fs.move(this.destinationPath("_gitconfig"), this.destinationPath(path.join(".gitconfig")));
+		
+		var npmProjectName = helperFns.parseNpmName(this.projectDetails.projectName);
+		
+		this.fs.copyTpl(this.templatePath( path.join("custom", "package.json")), this.destinationPath(path.join("package.json")), {
+			projectName: npmProjectName,
+			projectDescription: `${this.projectDetails.projectName}`,
+			projectAuthor: this.projectDetails.authorName
+		});
 
 	},
 	_writeAddBoth: function(){
@@ -576,9 +584,15 @@ module.exports = yeoman.Base.extend({
 
 	},
 	install: function () {
-
-		this.spawnCommandSync('npm', ['install'], {cwd: this.destinationPath('src', 'server')});
-		this.spawnCommandSync('npm', ['install'], {cwd: this.destinationPath('src', 'ui')});
+		
+		// this.composeWith("scaffi:setup", {options: {routeName: "index"}}, {local: require.resolve('../route')});
+		
+		if(this.addFeature == "both" || this.addFeature == "server") {
+			helperFns.installServerPackages(this);
+		}
+		if(this.addFeature == "both" || this.addFeature == "server") {
+			helperFns.installUiPackages(this);
+		}
 		
 
 	},

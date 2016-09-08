@@ -31,19 +31,8 @@ module.exports = yeoman.Base.extend({
 		this.log("Switching Mode to: " + this.options.mode);
 		this.composeWith("scaffi:mode", {options: {mode: this.options.mode}}, {local: require.resolve('../mode')});
 
-		this.log("Installing Server Node");
-		this.spawnCommandSync('npm', ['install'], {cwd: this.destinationPath('src', 'server')});
-		this.log("Installing UI Node")
-		this.spawnCommandSync('npm', ['install'], {cwd: this.destinationPath('src', 'ui')});
-
-		this.log("Setting JSPM properly");
-		this.spawnCommandSync('node', ['./node_modules/jspm/jspm.js', 'config', 'registries.github.timeouts.lookup', '600'], {cwd: this.destinationPath('src', 'ui')});
-		if(this.options.githubToken) {
-			this.spawnCommandSync('node', ['./node_modules/jspm/jspm.js', 'config', 'registries.github.auth', this.options.githubToken], {cwd: this.destinationPath('src', 'ui')});
-		}
-
-		this.log("Installing UI JSPM");
-		this.spawnCommandSync('node', ['./node_modules/jspm/jspm.js', 'install'], {cwd: this.destinationPath('src', 'ui')});
+		helperFns.installServerPackages(this);
+		helperFns.installUiPackages(this);
 
 		this.log("Building UI");
 		this.spawnCommandSync('gulp', ['build'], {cwd: this.destinationPath('src', 'ui')});

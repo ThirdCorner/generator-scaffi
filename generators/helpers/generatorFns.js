@@ -385,7 +385,23 @@ module.exports = {
 
 		fs.outputJsonSync(filename, json);
 
+	},
+
+	installServerPackages: function(context){
+		context.log("Installing Server Node");
+		context.spawnCommandSync('npm', ['install'], {cwd: context.destinationPath('src', 'server')});
+	},
+	installUiPackages: function(context) {
+		context.log("Installing UI Node")
+		context.spawnCommandSync('npm', ['install'], {cwd: context.destinationPath('src', 'ui')});
+		
+		context.log("Setting JSPM properly");
+		context.spawnCommandSync('node', ['./node_modules/jspm/jspm.js', 'config', 'registries.github.timeouts.lookup', '600'], {cwd: context.destinationPath('src', 'ui')});
+		if(context.options.githubToken) {
+			context.spawnCommandSync('node', ['./node_modules/jspm/jspm.js', 'config', 'registries.github.auth', context.options.githubToken], {cwd: context.destinationPath('src', 'ui')});
+		}
+		
+		context.log("Installing UI JSPM");
+		context.spawnCommandSync('node', ['./node_modules/jspm/jspm.js', 'install'], {cwd: context.destinationPath('src', 'ui')});
 	}
-
-
 };

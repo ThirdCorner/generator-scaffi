@@ -183,6 +183,11 @@ module.exports = yeoman.Base.extend({
 			var destPath = this.destinationPath(path.join("src", "ui", "app", "routes"));
 			switch(this.pageType) {
 				case "form":
+					/*
+						We're taking out the name on the path if it's a form, because otherwis
+						things will get messed up with ui router
+					 */
+					jsParams.routePath = jsParams.routePath.substr(0, jsParams.routePath.lastIndexOf("."));
 					if(this.enableEdit) {
 						helperFns.updateSiteMap(destPath,
 							helperFns.join(this.route, "edit", "."),

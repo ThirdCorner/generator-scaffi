@@ -9,10 +9,7 @@
 		"type": "git",
 		"url": ""
 	},
-	"keywords": [
-		"scaffi",
-		"scaffi-docs"
-	],
+	"keywords": [],
 	"author": {
 		"name": "<%= projectAuthor %>"
 	},

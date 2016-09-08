@@ -129,7 +129,7 @@
       "json": "github:systemjs/plugin-json@0.1.0",
       "lodash": "^3.10.1",
       "moment": "^2.10.6",
-      "scaffi-ui-core": "^0.0.1",
+      "scaffi-ui-core": "^0.0.2",
       "scss": "github:theefer/plugin-sass@master",
       "text": "github:systemjs/plugin-text@0.0.2",
       "walkdir": "^0.0.10"

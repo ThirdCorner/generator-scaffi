@@ -62,7 +62,9 @@ class <%= routeClassName %> extends AbstractPage {
 	}
 	
 	submit(){
-		this.SERVICE.save(this.formItem).then(() => this.$state.go("app.<%= routePath %>", {}));
+		this.SERVICE.save(this.formItem).then(() => {
+			this.$state.go("app.<%= routePath %>", {});
+		});
 	}
 	
 }
