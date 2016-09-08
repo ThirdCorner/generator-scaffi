@@ -35,7 +35,8 @@ module.exports = yeoman.Base.extend({
 		helperFns.installUiPackages(this);
 
 		this.log("Building UI");
-		this.spawnCommandSync('gulp', ['build'], {cwd: this.destinationPath('src', 'ui')});
+		this.spawnCommandSync('node', ['./node_modules/gulp/bin/gulp.js', 'build'], {cwd: this.destinationPath('src', 'ui')});
+
 
 		this.log("Copying Server to Build Folder");
 		this.fs.copy(this.destinationPath('src', 'server', "**"), this.destinationPath('build', "web", "server"));
