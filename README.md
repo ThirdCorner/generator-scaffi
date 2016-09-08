@@ -1,6 +1,9 @@
 # generator-scaffi [![NPM version][npm-image]][npm-url]
 > Overall scaffold generator for Third Corner. 
 
+## Documentation
+Docs are located at [scaffi-docs](http://scaffi-docs.azurewebsites.net).
+
 ## Installation
 
 First, install [Yeoman](http://yeoman.io), [Javascript Package Manager (jspm)](http://jspm.io/), and [generator-scaffi](https://github.com/ThirdCorner/generator-scaffi) using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/) and NPM).
@@ -8,7 +11,7 @@ First, install [Yeoman](http://yeoman.io), [Javascript Package Manager (jspm)](h
 ```bash
 npm install -g yo
 npm install -g jspm
-npm install -g ThirdCorner/generator-scaffi
+npm install -g generator-scaffi
 ```
 
 Then generate your new project:
@@ -31,7 +34,7 @@ Yeoman has a heart of gold. He&#39;s a person with feelings and opinions, but he
 
 ## License
 
- © [Third Corner]()
+ © [MIT]()
 
 
 [npm-image]: https://badge.fury.io/js/generator-scaffi.svg
