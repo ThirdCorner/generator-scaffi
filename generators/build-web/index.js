@@ -5,8 +5,6 @@ var yosay = require('yosay');
 var helperFns = require('../helpers/generatorFns');
 var _ = require("lodash");
 var path = require("path");
-var gulp = require('gulp');
-
 
 module.exports = yeoman.Base.extend({
 	prompting: function () {
