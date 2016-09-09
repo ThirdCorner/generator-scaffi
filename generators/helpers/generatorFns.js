@@ -296,6 +296,20 @@ module.exports = {
 		});
 	},
 
+	updateJson: function(filename, callback) {
+		console.log("JSON");
+		var json;
+		try {
+			json = fs.readJsonSync(filename, {});
+			if(json) {
+				callback(json);
+				fs.outputJsonSync(filename, json);
+				
+			}
+		} catch(e) {
+			throw e
+		}
+	},
 	updateServerComponents: function(basePath, components) {
 		var filename = path.join(basePath, 'server', `scaffi-server.json`);
 		
@@ -387,6 +401,11 @@ module.exports = {
 
 	},
 
+	runJspmCommand: function(context, args) {
+		args.unshift('./node_modules/jspm/jspm.js');
+		console.log(args)
+		context.spawnCommandSync('node', args, {cwd: context.destinationPath('src', 'ui')});
+	},
 	installServerPackages: function(context){
 		context.log("Installing Server Node");
 		context.spawnCommandSync('npm', ['install'], {cwd: context.destinationPath('src', 'server')});
