@@ -68,8 +68,8 @@ module.exports = yeoman.Base.extend({
 						 Remove github reference for scaffi-ui-core
 					 */
 					helperFns.updateJson(that.destinationPath(path.join("src", "ui", "package.json")), function (json) {
-						if (json.scripts.postmerge) {
-							delete json.scripts.postmerge;
+						if (json.scripts.postinstall) {
+							delete json.scripts.postinstall;
 						}
 						if(json.scripts.start){
 							delete json.scripts.start;
