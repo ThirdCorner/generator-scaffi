@@ -4,7 +4,7 @@ var _ = require("lodash");
 var fs = require('fs-extra');
 var path = require('path');
 
-module.exports = {
+var helperFns = {
 	makeDisplayNameWithSpace: function(name) {
 		var names = name.indexOf(".") !== -1 ? name.split(".") : [name];
 		var returnName = '';
@@ -424,5 +424,148 @@ module.exports = {
 		
 		context.log("Installing UI JSPM");
 		context.spawnCommandSync('node', ['./node_modules/jspm/jspm.js', 'install'], {cwd: context.destinationPath('src', 'ui')});
+	},
+	deletePrivateConfigs: function(context){
+		try {
+			/*
+			 These need to be sync because otherwise yeoman gets confused with order
+			 */
+			if(context.fs.exists(context.destinationPath(path.join('src', "server", "scaffi-server.private.json")))) {
+				fs.unlinkSync(context.destinationPath(path.join('src', "server", "scaffi-server.private.json")));
+			}
+
+			if(context.fs.exists(context.destinationPath(path.join('src', "ui", "scaffi-ui.private.json")))) {
+				fs.unlinkSync(context.destinationPath(path.join('src', "ui", "scaffi-ui.private.json")));
+			}
+		} catch(e){}
+	},
+	installLocalhostConfig: function(context){
+		if(!context.fs.exists(context.destinationPath(path.join("src", "server", "config", "scaffi-server.localhost.private.json")))){
+			context.fs.writeJSON(context.destinationPath(path.join("src", "server", "config", "scaffi-server.localhost.private.json")), {
+				"config": {
+					"environment": "localhost"
+				},
+				"components": {},
+				"services": {}
+			});
+		}
+		if(!context.fs.exists(context.destinationPath(path.join("src", "ui", "config", "scaffi-ui.localhost.private.json")))){
+			context.fs.writeJSON(context.destinationPath(path.join("src", "ui", "config", "scaffi-ui.localhost.private.json")), {
+				"config": {
+					"environment": "localhost"
+				}
+			});
+		}
+	},
+	needsUpgrade: function(context){
+		return !context.config.get("structureVersion") || context.config.get("structureVersion") < helperFns.getUpgrades(context) ? true : false;
+	},
+	getUpgrades: function(context){
+		return [
+			// UP to 0.0.3 / structureVersion # 1
+			function(){
+
+				var success = true;
+				try {
+					/*
+					 UI installs
+					 Update jspm / system builder / scaffi-ui-core update
+					 */
+					context.spawnCommandSync('npm', ['install', 'jspm@0.16.35'], {cwd: context.destinationPath('src', 'ui')});
+					context.spawnCommandSync('npm', ['install', 'systemjs-builder@0.15.15'], {cwd: context.destinationPath('src', 'ui')});
+					helperFns.runJspmCommand(context, ['uninstall', "ThirdCorner/scaffi-ui-core"]);
+					helperFns.runJspmCommand(context, ['install', 'npm:scaffi-ui-core']);
+
+					/*
+					 Server installs
+					 */
+					context.spawnCommandSync('npm', ['install', 'nodemon@1.9.1'], {cwd: context.destinationPath('src', 'server')});
+					context.spawnCommandSync('npm', ['install', 'scaffi-server-core@0.0.2'], {cwd: context.destinationPath('src', 'server')});
+					/*
+					 Remove postinstall
+					 Add ui dependancies
+					 Remove start trigger
+					 Remove github reference for scaffi-ui-core
+					 */
+					helperFns.updateJson(context.destinationPath(path.join("src", "ui", "package.json")), function (json) {
+						if (json.scripts.postinstall) {
+							delete json.scripts.postinstall;
+						}
+						if(json.scripts.start){
+							delete json.scripts.start;
+						}
+						json.devDependencies["jspm"] = "0.16.35";
+						json.devDependencies["systemjs-builder"] = "0.15.15";
+
+
+					});
+					/*
+					 Add Server Dependancies
+					 Remove start trigger
+					 */
+					helperFns.updateJson(context.destinationPath(path.join("src", "server", "package.json")), function (json) {
+						json.devDependencies["nodemon"] = "^1.9.1";
+						if(json.scripts.start){
+							delete json.scripts.start;
+						}
+						json.dependencies["scaffi-server-core"] = "~0.0.2";
+					});
+					/*
+					 Add project-level package.json
+					 */
+
+					context.fs.copyTpl(context.templatePath(path.join("0", "package.json")), context.destinationPath("package.json"), {
+						projectName: context.config.get("projectDetails").projectName,
+						projectDescription: "",
+						projectAuthor: context.config.get("projectDetails").authorName
+					});
+
+					/*
+					 Add ignores to project base level
+					 */
+					context.fs.copy(context.templatePath(path.join("0", "_gitignore")), context.destinationPath("_gitignore"));
+					context.fs.move(context.destinationPath("_gitignore"), context.destinationPath(".gitignore"));
+
+					/*
+					 Add device specific build dirs
+					 */
+					context.fs.copy(context.templatePath(path.join("0", "README.md")), context.destinationPath("build", "web", "README.md"));
+					context.fs.copy(context.templatePath(path.join("0", "README.md")), context.destinationPath("build", "ios", "README.md"));
+					context.fs.copy(context.templatePath(path.join("0", "README.md")), context.destinationPath("build", "android", "README.md"));
+
+
+
+
+				}catch(e){
+					success = false;
+					throw e;
+				}
+
+
+				return success;
+			},
+			// UP to 0.0.5 / structureVersion # 2
+			function() {
+
+				var success = true;
+				try {
+					context.fs.copy(context.templatePath(path.join("1", "server", "config")), context.destinationPath("src", "server", "config"));
+					context.fs.copy(context.templatePath(path.join("1", "ui", "config")), context.destinationPath("src", "ui", "config"));
+					
+					/*
+					 Add ignore changes to project base level
+					 */
+					context.fs.copy(context.templatePath(path.join("1", "_gitignore")), context.destinationPath(".gitignore"));
+				} catch (e) {
+					success = false;
+					throw e;
+				}
+
+
+				return success;
+			}
+		]
 	}
 };
+
+module.exports = helperFns;

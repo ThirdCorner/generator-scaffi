@@ -70,6 +70,11 @@ module.exports = yeoman.Base.extend({
 
 	writing: function () {
 
+		/*
+		 Making sure localhost configs exist, otherwise we can assume this is a fresh checkout
+		 */
+		helperFns.installLocalhostConfig(this);
+
 		if(this.modeType == "ui") {
 			this.spawnCommandSync('gulp', ['serve'], {cwd: this.destinationPath('src', 'ui')});
 

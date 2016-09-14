@@ -503,7 +503,9 @@ module.exports = yeoman.Base.extend({
 		}
 
 		this.config.set("projectDetails", this.projectDetails);
-
+		
+		var structureVersion = helperFns.getUpgrades(this).length;
+		this.config.set("structureVersion", structureVersion);
 
 		process.chdir(this.destinationPath());
 		

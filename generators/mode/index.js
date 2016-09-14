@@ -10,16 +10,13 @@ module.exports = yeoman.Base.extend({
 	prompting: function () {
 		var done = this.async();
 
-
 		if(this.options.mode) {
 			var mode = this.options.mode.toLowerCase();
-			if(["production", "qa", "development", "localhost", "prototype"].indexOf(mode) === -1){
-				this.log.error("Mode provided is not valid: " + mode + ". Looking for " + '["production", "qa", "development", "localhost", "prototype"]');
+			if(["production", "qa", "development", "localhost", "prototype", "ci"].indexOf(mode) === -1){
+				this.log.error("Mode provided is not valid: " + mode + ". Looking for " + '["production", "qa", "development", "localhost", "prototype", "ci"]');
 				return false;
 			}
-			// this.log(yosay(
-			// 	chalk.green('Scaffi') + ' is setting mode to : ' + mode
-			// ));
+
 			this.modeType = mode;
 			done();
 		} else {
@@ -54,7 +51,7 @@ module.exports = yeoman.Base.extend({
 							value: "localhost"
 						},
 						{
-							name: "Dev",
+							name: "Development",
 							value: "development"
 						},
 						{
@@ -62,7 +59,7 @@ module.exports = yeoman.Base.extend({
 							value: "qa"
 						},
 						{
-							name: "Prod",
+							name: "Production",
 							value: "production"
 						}
 					]
@@ -81,8 +78,21 @@ module.exports = yeoman.Base.extend({
 	
 	writing: function () {
 
-		helperFns.updatePrivateConfig(this.destinationPath(path.join("src", "server")), "scaffi-server.private", {environment: this.modeType});
-		helperFns.updatePrivateConfig(this.destinationPath(path.join("src", "ui")), "scaffi-ui.private", {environment: this.modeType});
+		/*
+			Making sure localhost configs exist, otherwise we can assume this is a fresh checkout
+		 */
+		helperFns.installLocalhostConfig(this);
+		/*
+			Delete the private configs so we can replace
+		 */
+		helperFns.deletePrivateConfigs(this);
+		
+		var serverJsonName = "scaffi-server." + this.modeType + ".private.json";
+		var uiJsonName = "scaffi-ui." + this.modeType + ".private.json";
+
+		this.fs.copy(this.destinationPath(path.join("src", "server", "config", serverJsonName)),this.destinationPath(path.join("src", "server", "scaffi-server.private.json")));
+		this.fs.copy(this.destinationPath(path.join("src", "ui", "config", uiJsonName)),this.destinationPath(path.join("src", "ui", "scaffi-ui.private.json")));
+
 	},
 	done: function(){
 

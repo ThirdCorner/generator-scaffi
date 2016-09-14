@@ -1,0 +1,7 @@
+{
+	"config": {
+		"environment": "localhost"
+	},
+	"components": {},
+	"services": {}
+}
