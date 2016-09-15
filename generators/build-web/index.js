@@ -39,6 +39,15 @@ module.exports = yeoman.Base.extend({
 			return false;
 		}
 
+		if(!this.options.version) {
+			this.log("VERSION NOT PASSED, USING package.json version.");
+			var json = helperFns.openJson(this.destinationPath("package.json"));
+			if(json) {
+				this.options.version = json.version;
+			}
+		}
+
+		console.log("VERSION: " + this.options.version);
 
 	},
 	writing: function(){

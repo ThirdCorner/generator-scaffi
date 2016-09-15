@@ -296,8 +296,19 @@ var helperFns = {
 		});
 	},
 
+	openJson: function(filename) {
+		var json;
+		try {
+			json = fs.readJsonSync(filename, {});
+			
+		} catch(e) {
+			throw e;
+		}
+		
+		return json;
+	},
 	updateJson: function(filename, callback) {
-		console.log("JSON");
+		
 		var json;
 		try {
 			json = fs.readJsonSync(filename, {});
