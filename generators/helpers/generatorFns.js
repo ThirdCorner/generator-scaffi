@@ -383,7 +383,8 @@ var helperFns = {
 			"columnMultiWorkStandard",
 			"idCapitalizeStandard",
 			"routeLowercaseStandard",
-			"environment"
+			"environment",
+			"version"
 		];
 
 

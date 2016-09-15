@@ -47,7 +47,7 @@ module.exports = yeoman.Base.extend({
 			}
 		}
 
-		console.log("VERSION: " + this.options.version);
+		console.log("BUILDING VERSION: " + this.options.version);
 
 	},
 	writing: function(){
@@ -65,6 +65,8 @@ module.exports = yeoman.Base.extend({
 		helperFns.installServerPackages(this);
 		helperFns.installUiPackages(this);
 
+		helperFns.updateConfig(this.destinationPath("src", "ui"), "scaffi-ui", {version: this.options.version});
+		helperFns.updateConfig(this.destinationPath("src", "server"), "scaffi-server", {version: this.options.version});
 		
 		this.log("Building UI");
 		this.spawnCommandSync('node', ['./node_modules/gulp/bin/gulp.js', 'build'], {cwd: this.destinationPath('src', 'ui')});
@@ -83,6 +85,6 @@ module.exports = yeoman.Base.extend({
 	},
 	end: function(){
 		this.log("Deleting config directory in Server");
-		fs.removeSync(this.destinationPath(path.join('build', "web", "server", "config")));
+	//	fs.removeSync(this.destinationPath(path.join('build', "web", "server", "config")));
 	}
 });
