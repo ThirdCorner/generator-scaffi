@@ -26,19 +26,31 @@ module.exports = yeoman.Base.extend({
 		var outerPath = this.destinationPath("node_modules", "protractor");
 		var innerPath = path.join(root, "..", 'node_modules/protractor/');
 
+		this.protractorPath = null;
 		try {
-			if (this.fs.exists(outerPath)) {
+
+			if (fs.statSync(outerPath).isDirectory()) {
 				this.protractorPath = outerPath;
-			} else if (this.fs.exists(innerPath)) {
-				this.protractorPath = innerPath;
-			} else {
-				this.log.error("Can't find protractor in either: " + outerPath + " nor " + innerPath);
-				throw new Error("Can't find protractor in either: " + outerPath + " nor " + innerPath);
-				return false;
 			}
-		} catch(e) {
-			throw e;
+
+		} catch(e) {}
+
+		try {
+			if (!this.protractorPath && fs.statSync(innerPath).isDirectory()) {
+				this.protractorPath = innerPath;
+			}
+		} catch(e){}
+
+		if(!this.protractorPath) {
+
+			this.log.error("Can't find protractor in either: " + outerPath + " nor " + innerPath);
+			throw new Error("Can't find protractor in either: " + outerPath + " nor " + innerPath);
+			return false;
+
 		}
+
+
+
 
 
 		// var done = this.async();
@@ -134,7 +146,7 @@ module.exports = yeoman.Base.extend({
 		// console.log(path.join(root, "..", 'node_modules/protractor/bin/webdriver-manager'));
 
 		this.log("=========TEST TIME==============", this.protractorPath);
-		this.spawnCommandSync("node", [this.protractorPath, this.destinationPath('src', 'ui', "protractor.conf.js"), '--browser=phantomjs']);
+		this.spawnCommandSync("node", [path.join(this.protractorPath, "bin", "protractor") , this.destinationPath('src', 'ui', "protractor.conf.js"), '--browser=phantomjs']);
 
 
 		// var returnSpawn = spawn('node',  [path.join(root, "..", 'node_modules/protractor/bin/protractor'), this.destinationPath('src', 'ui', "protractor.conf.js"), '--browser=phantomjs']);
