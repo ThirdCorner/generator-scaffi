@@ -94,7 +94,7 @@ module.exports = yeoman.Base.extend({
 		this.fs.copy(this.destinationPath(path.join("src", "ui", "config", uiJsonName)),this.destinationPath(path.join("src", "ui", "scaffi-ui.private.json")));
 
 	},
-	done: function(){
+	end: function(){
 
 		if(!this.options.mode) {
 			this.log(yosay(

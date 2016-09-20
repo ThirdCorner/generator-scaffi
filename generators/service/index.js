@@ -140,7 +140,7 @@ module.exports = yeoman.Base.extend({
 			helperFns.generateGenericJsIncludes(destPath, done2, 'mock-services.js', 'mock.js');
 		}
 	},
-	done: function(){
+	end: function(){
 		if(this.serviceType == "ui") {
 			this.log(yosay(
 				'Your service has been created. To use in your controller, add "' + this.fullClassName + '" as an inject.'
