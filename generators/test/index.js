@@ -53,10 +53,10 @@ module.exports = yeoman.Base.extend({
 
 
 
-		// var done = this.async();
-		// setTimeout(done, 7000);
-		// this.spawnCommand("node", [path.join(root, "..", 'node_modules/protractor/bin/webdriver-manager'), "update"]);
-		// this.spawnCommand("node", [path.join(root, "..", 'node_modules/protractor/bin/webdriver-manager'), "start"]);
+		var done = this.async();
+		setTimeout(done, 7000);
+		this.spawnCommand("node", [path.join(this.protractorPath, "bin", "webdriver-manager"), "update"]);
+		this.spawnCommand("node", [path.join(this.protractorPath, "bin", "webdriver-manager"), "start"]);
 
 
 		// Have Yeoman greet the user.
