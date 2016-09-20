@@ -116,7 +116,7 @@ module.exports = yeoman.Base.extend({
 		//var done = this.async();
 		// console.log(path.join(root, "..", 'node_modules/protractor/bin/webdriver-manager'));
 
-		this.log("=========TEST TIME==============");
+		this.log("=========TEST TIME==============", path.join(root, "..", 'node_modules/protractor/bin/protractor'), this.destinationPath('src', 'ui', "protractor.conf.js"));
 		this.spawnCommandSync("node", [path.join(root, "..", 'node_modules/protractor/bin/protractor'), this.destinationPath('src', 'ui', "protractor.conf.js"), '--browser=phantomjs']);
 
 
