@@ -54,7 +54,7 @@ module.exports = yeoman.Base.extend({
 
 
 		var done = this.async();
-		setTimeout(done, 7000);
+		setTimeout(done, 10000);
 		this.spawnCommand("node", [path.join(this.protractorPath, "bin", "webdriver-manager"), "update"]);
 		this.spawnCommand("node", [path.join(this.protractorPath, "bin", "webdriver-manager"), "start"]);
 
@@ -145,7 +145,7 @@ module.exports = yeoman.Base.extend({
 		//var done = this.async();
 		// console.log(path.join(root, "..", 'node_modules/protractor/bin/webdriver-manager'));
 
-		this.log("=========TEST TIME==============", this.protractorPath);
+
 		this.spawnCommandSync("node", [path.join(this.protractorPath, "bin", "protractor") , this.destinationPath('src', 'ui', "protractor.conf.js"), '--browser=phantomjs']);
 
 
@@ -169,7 +169,7 @@ module.exports = yeoman.Base.extend({
 	},
 	end: function(){
 
-		this.log("Done testing");
+
 	}
 
 
