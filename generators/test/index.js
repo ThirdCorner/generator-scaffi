@@ -26,20 +26,23 @@ module.exports = yeoman.Base.extend({
 		var outerPath = this.destinationPath("node_modules", "protractor");
 		var innerPath = path.join(root, "..", 'node_modules/protractor/');
 
+		var runningCI = false;
 		this.protractorPath = null;
 		try {
+			if (fs.statSync(innerPath).isDirectory()) {
+				this.protractorPath = innerPath;
+			}
+		} catch(e){}
 
-			if (fs.statSync(outerPath).isDirectory()) {
+		try {
+
+			if (!this.protractorPath && fs.statSync(outerPath).isDirectory()) {
 				this.protractorPath = outerPath;
+				runningCI = true;
 			}
 
 		} catch(e) {}
 
-		try {
-			if (!this.protractorPath && fs.statSync(innerPath).isDirectory()) {
-				this.protractorPath = innerPath;
-			}
-		} catch(e){}
 
 		if(!this.protractorPath) {
 
@@ -53,10 +56,12 @@ module.exports = yeoman.Base.extend({
 
 
 
-		var done = this.async();
-		setTimeout(done, 10000);
-		this.spawnCommand("node", [path.join(this.protractorPath, "bin", "webdriver-manager"), "update"]);
-		this.spawnCommand("node", [path.join(this.protractorPath, "bin", "webdriver-manager"), "start"]);
+		if(runningCI) {
+			var done = this.async();
+			setTimeout(done, 10000);
+			this.spawnCommand("node", [path.join(this.protractorPath, "bin", "webdriver-manager"), "update"]);
+			this.spawnCommand("node", [path.join(this.protractorPath, "bin", "webdriver-manager"), "start"]);
+		}
 
 
 		// Have Yeoman greet the user.
