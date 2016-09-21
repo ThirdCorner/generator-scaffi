@@ -17,15 +17,15 @@ System.config({
 
   map: {
     "ThirdCorner/scaffi-ui-core": "github:ThirdCorner/scaffi-ui-core@master",
-    "angular": "github:angular/bower-angular@1.5.7",
-    "angular-animate": "github:angular/bower-angular-animate@1.5.7",
+    "angular": "github:angular/bower-angular@1.5.8",
+    "angular-animate": "github:angular/bower-angular-animate@1.5.8",
     "angular-aria": "github:angular/bower-angular-aria@1.5.7",
     "angular-bootstrap": "github:angular-ui/bootstrap-bower@2.0.0",
     "angular-breadcrumb": "github:ncuillery/angular-breadcrumb@0.4.1",
     "angular-loading-bar": "github:chieffancypants/angular-loading-bar@0.9.0",
     "angular-messages": "github:angular/bower-angular-messages@1.5.7",
     "angular-mocks": "npm:angular-mocks@1.4.5",
-    "angular-sanitize": "github:angular/bower-angular-sanitize@1.5.5",
+    "angular-sanitize": "github:angular/bower-angular-sanitize@1.5.8",
     "angular-ui-router": "github:angular-ui/ui-router@0.2.18",
     "babel": "npm:babel-core@5.8.38",
     "babel-runtime": "npm:babel-runtime@5.8.38",
@@ -39,6 +39,7 @@ System.config({
     "css": "github:systemjs/plugin-css@0.1.26",
     "font-awesome": "npm:font-awesome@4.4.0",
     "gulp-debug": "npm:gulp-debug@2.1.2",
+    "ionic": "github:driftyco/ionic-bower@1.3.0",
     "jasmine": "npm:jasmine@2.4.1",
     "json": "github:systemjs/plugin-json@0.1.0",
     "karma-chai": "npm:karma-chai@0.1.0",
@@ -72,19 +73,26 @@ System.config({
       "walkdir": "npm:walkdir@0.0.11"
     },
     "github:angular-ui/ui-router@0.2.18": {
-      "angular": "github:angular/bower-angular@1.5.7"
+      "angular": "github:angular/bower-angular@1.5.8"
     },
-    "github:angular/bower-angular-animate@1.5.7": {
-      "angular": "github:angular/bower-angular@1.5.7"
+    "github:angular/bower-angular-animate@1.5.8": {
+      "angular": "github:angular/bower-angular@1.5.8"
     },
     "github:angular/bower-angular-aria@1.5.7": {
-      "angular": "github:angular/bower-angular@1.5.7"
+      "angular": "github:angular/bower-angular@1.5.8"
     },
     "github:angular/bower-angular-messages@1.5.7": {
-      "angular": "github:angular/bower-angular@1.5.7"
+      "angular": "github:angular/bower-angular@1.5.8"
     },
-    "github:angular/bower-angular-sanitize@1.5.5": {
-      "angular": "github:angular/bower-angular@1.5.7"
+    "github:angular/bower-angular-sanitize@1.5.8": {
+      "angular": "github:angular/bower-angular@1.5.8"
+    },
+    "github:driftyco/ionic-bower@1.3.0": {
+      "angular": "github:angular/bower-angular@1.5.8",
+      "angular-animate": "github:angular/bower-angular-animate@1.5.8",
+      "angular-sanitize": "github:angular/bower-angular-sanitize@1.5.8",
+      "angular-ui-router": "github:angular-ui/angular-ui-router-bower@0.2.13",
+      "css": "github:systemjs/plugin-css@0.1.26"
     },
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.4.1"

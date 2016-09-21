@@ -2,12 +2,13 @@
 
 import {RouteConfig} from 'scaffi-ui-core';  // jshint unused: false
 import template from './layout.html!text';
+import templateMobile from './layout.mobile.html!text';
 
 //start-non-standard
 @RouteConfig('app', {
     url: '',
     abstract: true,
-    template: template,
+    template: templateMobile,
 	redirectTo: "app.index",
 	resolve: {
 	}

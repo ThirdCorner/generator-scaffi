@@ -7,6 +7,14 @@
       "isDisplayable": true,
       "icon": "",
       "routes": []
+    },
+    {
+      "id": "account",
+      "displayText": "Account",
+      "sref": "app.account",
+      "isDisplayable": true,
+      "icon": "",
+      "routes": []
     }
   ]
 }

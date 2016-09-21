@@ -1,5 +1,5 @@
 {
   "config": {
-    "environment": "prototype"
+    "environment": "localhost"
   }
 }

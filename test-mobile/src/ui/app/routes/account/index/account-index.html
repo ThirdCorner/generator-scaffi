@@ -1,0 +1,16 @@
+<!--<div class="route route-account.index">-->
+    <!--<section>-->
+        <!--<h1>Index Page</h1>-->
+    <!--</section>-->
+<!--</div>-->
+
+<ion-view view-title="Account">
+    <ion-content class="padding">
+        <h2>Product Owners</h2>
+        <ion-list>
+            <ion-item ng-repeat="item in vm.products">
+                {{item.name}} - {{item.age}}
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>
