@@ -13,7 +13,7 @@ var glob = require("glob");
 
 const root = path.dirname(__dirname);
 
-var spawn = require('child_process').spawn;
+//var spawn = require('child_process').spawn;
 
 module.exports = yeoman.Base.extend({
 	constructor: function(){
@@ -51,10 +51,6 @@ module.exports = yeoman.Base.extend({
 			return false;
 
 		}
-
-
-
-
 
 		if(runningCI) {
 			var done = this.async();
@@ -150,31 +146,14 @@ module.exports = yeoman.Base.extend({
 		//var done = this.async();
 		// console.log(path.join(root, "..", 'node_modules/protractor/bin/webdriver-manager'));
 
-
-		this.spawnCommandSync("node", [path.join(this.protractorPath, "bin", "protractor") , this.destinationPath('src', 'ui', "protractor.conf.js"), '--browser=phantomjs']);
-
-
-		// var returnSpawn = spawn('node',  [path.join(root, "..", 'node_modules/protractor/bin/protractor'), this.destinationPath('src', 'ui', "protractor.conf.js"), '--browser=phantomjs']);
-		//
-		// returnSpawn.stdout.on('data', (data) => {
-		// 	console.log(`stdout: ${data}`);
-		// });
-		//
-		// returnSpawn.stderr.on('data', (data) => {
-		// 	console.log(`stderr: ${data}`);
-		// });
-		//
-		// returnSpawn.on('close', (code) => {
-		// 	console.log(`child process exited with code ${code}`);
-		// 	done();
-		// });
-
+		var spawn = this.spawnCommandSync("node", [path.join(this.protractorPath, "bin", "protractor") , this.destinationPath('src', 'ui', "protractor.conf.js"), '--browser=phantomjs']);
+		if(!spawn || spawn.status === 1) {
+			this.log.error("Error with test cases in build");
+			throw new Error("Error with test cases in build");
+			return false;
+		}
 
 		
-	},
-	end: function(){
-
-
 	}
 
 
