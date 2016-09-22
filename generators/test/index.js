@@ -53,6 +53,7 @@ module.exports = yeoman.Base.extend({
 		}
 
 		if(runningCI && !this.options.sauceUser) {
+			this.log("NO SAUCE USER PASSED", this.options)
 			var done = this.async();
 			setTimeout(done, 10000);
 			this.spawnCommand("node", [path.join(this.protractorPath, "bin", "webdriver-manager"), "update"]);
