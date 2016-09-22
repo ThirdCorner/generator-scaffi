@@ -146,7 +146,17 @@ module.exports = yeoman.Base.extend({
 		//var done = this.async();
 		// console.log(path.join(root, "..", 'node_modules/protractor/bin/webdriver-manager'));
 
-		var spawn = this.spawnCommandSync("node", [path.join(this.protractorPath, "bin", "protractor") , this.destinationPath('src', 'ui', "protractor.conf.js"), '--browser=phantomjs']);
+		var args = [path.join(this.protractorPath, "bin", "protractor") , this.destinationPath('src', 'ui', "protractor.conf.js"), "--browser=phantomjs"];
+		var that = this;
+
+		_.each([ "sauceUser", "sauceKey"], function(key){
+
+			if(_.has(that.options, key)) {
+				args.push("--" + key + "=" + that.options[key]);
+			}
+		}, this);
+
+		var spawn = this.spawnCommandSync("node", args);
 		if(!spawn || spawn.status === 1) {
 			this.log.error("Error with test cases in build");
 			throw new Error("Error with test cases in build");
