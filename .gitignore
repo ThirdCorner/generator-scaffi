@@ -6,3 +6,9 @@ test/temp
 latest-test-material
 latest-test-bootstrap
 .idea
+test-mobile/deploy/mobile/platforms/**/
+test-mobile/deploy/mobile/plugins/**/
+!test-mobile/deploy/mobile/plugins/android.json
+!test-mobile/deploy/mobile/plugins/fetch.json
+!test-mobile/deploy/mobile/plugins/ios.json
+npm-debug.log
