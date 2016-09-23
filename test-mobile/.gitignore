@@ -70,7 +70,6 @@ _vti_pvt/
 bower_components
 /src/client/build
 /src/iis/*.Web/public/build
-/deploy
 *.zip
 npm-shrinkwrap.json
 /src/client/tests
