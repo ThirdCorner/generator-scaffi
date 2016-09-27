@@ -2,18 +2,40 @@
 
 var path = require('path');
 const root = path.dirname(__dirname);
-var ScreenShotReporter = require('protractor-html-screenshot-reporter');
+// var ScreenShotReporter = require('protractor-html-screenshot-reporter');
 
 exports.config = {
     seleniumArgs: ['-browserTimeout=120'],
-    seleniumAddress: 'http://127.0.0.1:4444/wd/hub',
+
+	sauceUser: process.env.sauceUser,
+	sauceKey: process.env.sauceKey,
+
+	//seleniumAddress: 'http://127.0.0.1:4723/wd/hub',
+	baseUrl: 'http://10.0.2.2:8000',
+
+	//seleniumAddress: 'http://127.0.0.1:4444/wd/hub',
     allScriptsTimeout: 30000,
-    capabilities: {
-	    'phantomjs.binary.path': root + "/ui/test/phantomjs/phantomjs.exe",
-        'phantomjs.cli.args': ['--ignore-ssl-errors=true',  '--web-security=false'],
-        'version' : '',
-        'platform': 'ANY'
-    },
+	multiCapabilities: [
+		// {
+		// browserName: "phantomjs",
+	 //    'phantomjs.binary.path': root + "/ui/test/phantomjs/phantomjs.exe",
+    //     'phantomjs.cli.args': ['--ignore-ssl-errors=true',  '--web-security=false'],
+    //     'version' : '',
+    //     'platform': 'ANY'
+    // }
+		// ,
+	// {
+	// 	browserName: "chrome"
+	// }
+		{
+		platformName: 'android',
+		platformVersion: '6.0',
+		deviceName: 'Generic Phone',
+		browserName: "",
+		autoWebview: true,
+		app: root + '/ui/test/apk/android-debug.apk'
+		}
+	],
     keepAlive: true,
     framework: 'mocha',
     mochaOpts:{
@@ -24,12 +46,7 @@ exports.config = {
         fullTrace: false,
         colors: true
     },
-    plugins: [{
-        path: './node_modules/protractor/plugins/console/index.js',
-        failOnWarning: true,
-        failOnError: true
-    }],
-
+	specs: ["app/**/*.e2e.js"],
     /**
      * A callback function called once protractor is ready and available,
      * and before the specs are executed.
@@ -38,21 +55,23 @@ exports.config = {
      * the filename string.
      */
     onPrepare: function() {
-        browser.driver.manage().window().setSize(1024,768);
+        // browser.driver.manage().window().setSize(1024,768);
 
         // Adds ES6 features to testing
 	    require('babel-register')({
 		    presets: [ 'es2015' ]
 	    });
-
-	    protractor.globals = require('./src/app/globals');
-	    global.TestPage = require('./src/app/core/tests/route/test-page');
+	
 	    global.chai = require('chai');
 	    var promised = require('chai-as-promised');
 	    global.chai.use(promised);
 	    global.expect = chai.expect;
-	    global.Page = require("./src/app/core/tests/common/page");
-	    global.Instruction = require("./src/app/core/tests/common/instruction-block");
+
+
+	    var wd = require('wd'),
+		    protractor = require('protractor'),
+		    wdBridge = require('wd-bridge')(protractor, wd);
+	    wdBridge.initFromProtractor(exports.config);
 
 	    /**
          * At this point, global 'protractor' object will be set up, and

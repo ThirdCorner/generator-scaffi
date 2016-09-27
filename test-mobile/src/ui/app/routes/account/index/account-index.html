@@ -6,10 +6,11 @@
 
 <ion-view view-title="Account">
     <ion-content class="padding">
-        <h2>Product Owners</h2>
+        <div id="logo">I'm a logoooooo</div>
+        <h2>Product Owners <button id="add-account-button" ui-sref="app.account.add()">New</button></h2>
         <ion-list>
-            <ion-item ng-repeat="item in vm.products">
-                {{item.name}} - {{item.age}}
+            <ion-item ng-repeat="item in vm.products" ui-sref="app.account.edit({AccountServiceID: item.id})">
+                {{item.Name}}
             </ion-item>
         </ion-list>
     </ion-content>

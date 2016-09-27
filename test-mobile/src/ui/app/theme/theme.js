@@ -31,6 +31,7 @@ class Theme extends AbstractBootstrap {
 			// other pieces of code.
 		})
 		this.getApp().config(($ionicConfigProvider)=>{
+			$ionicConfigProvider.views.maxCache(0);
 			$ionicConfigProvider.tabs.position("bottom");
 		});
 		this.getApp().run(($ionicPlatform) =>{
@@ -50,9 +51,10 @@ class Theme extends AbstractBootstrap {
 		});
 
 		this.getApp().run( ($timeout, $state)=>{
+
 			$timeout(function() {
 				$state.go('app.index');
-			}, 5000);
+			}, 0);
 		});
 		// this.getApp().config( ($ionicConfigProvider)=>{
 		// 	$ionicConfigProvider.views.maxCache(0);

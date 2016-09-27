@@ -22,13 +22,16 @@ const PARAMS = {
 //end-non-standard
 
 class AccountIndex extends AbstractPage {
-	constructor($state, $scope, ProductsService){
+	constructor($state, $scope, ProductsService, AccountService){
 		super($scope);
 		
 		this.$state = $state;
 		this.$scope = $scope;
 		
-		ProductsService.list().then((data)=>{
+		
+		
+		AccountService.list().then((data)=>{
+			console.log("LIST DATA", data)
 			this.products = data;
 		});
 	}
