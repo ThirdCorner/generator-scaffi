@@ -38,7 +38,7 @@
     "lodash": "^4.6.0",
     "mocha": "^3.0.2",
     "mockery": "^1.4.0",
-    "protractor": "^4.0.8",
+    "protractor": "^4.0.9",
     "yeoman-assert": "^2.1.1",
     "yeoman-generator": "^0.22.5",
     "yeoman-test": "^1.1.0",
