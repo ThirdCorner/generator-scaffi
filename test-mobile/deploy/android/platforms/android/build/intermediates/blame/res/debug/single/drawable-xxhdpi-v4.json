@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "C:\\Users\\Joseph\\projects\\generator-scaffi\\test-mobile\\deploy\\android\\platforms\\android\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4\\icon.png",
+        "source": "C:\\Users\\Joseph\\projects\\generator-scaffi\\test-mobile\\deploy\\android\\platforms\\android\\res\\drawable-xxhdpi\\icon.png"
+    },
+    {
+        "merged": "C:\\Users\\Joseph\\projects\\Scaffi\\generator-scaffi\\test-mobile\\deploy\\android\\platforms\\android\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4\\icon.png",
+        "source": "C:\\Users\\Joseph\\projects\\Scaffi\\generator-scaffi\\test-mobile\\deploy\\android\\platforms\\android\\res\\drawable-xxhdpi\\icon.png"
+    }
+]

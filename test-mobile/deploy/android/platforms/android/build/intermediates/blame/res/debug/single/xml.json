@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "C:\\Users\\Joseph\\projects\\Scaffi\\generator-scaffi\\test-mobile\\deploy\\android\\platforms\\android\\build\\intermediates\\res\\merged\\debug\\xml\\config.xml",
+        "source": "C:\\Users\\Joseph\\projects\\Scaffi\\generator-scaffi\\test-mobile\\deploy\\android\\platforms\\android\\res\\xml\\config.xml"
+    },
+    {
+        "merged": "C:\\Users\\Joseph\\projects\\generator-scaffi\\test-mobile\\deploy\\android\\platforms\\android\\build\\intermediates\\res\\merged\\debug\\xml\\config.xml",
+        "source": "C:\\Users\\Joseph\\projects\\generator-scaffi\\test-mobile\\deploy\\android\\platforms\\android\\res\\xml\\config.xml"
+    }
+]
