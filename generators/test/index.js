@@ -158,7 +158,8 @@ module.exports = yeoman.Base.extend({
 		}, this);
 
 		var spawn = this.spawnCommandSync("node", args);
-		if(!spawn || spawn.status === 1) {
+
+		if(!spawn || spawn.status > 0) {
 			this.log.error("Error with test cases in build");
 			throw new Error("Error with test cases in build");
 			return false;

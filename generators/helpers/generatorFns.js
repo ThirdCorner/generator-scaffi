@@ -257,8 +257,9 @@ var helperFns = {
 			output = "'use strict';\n";
 
 
+
 			_.each(results, function(file) {
-				if(file != filename) {
+				if(file != filename && !_.endsWith(file, ".e2e.js") && !_.endsWith(file, ".spec.js")) {
 					output += "import './" + file + "';\n";
 				}
 

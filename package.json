@@ -1,6 +1,6 @@
 {
   "name": "generator-scaffi",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "description": "Overall scaffold generator for Third Corner/Scaffi",
   "homepage": "www.thirdcorner.com",
   "author": {
@@ -25,7 +25,11 @@
   "dependencies": {
     "babel": "^6.5.2",
     "babel-eslint": "^6.1.0",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-register": "^6.14.0",
     "babel-runtime": "^6.5.0",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^5.3.0",
     "chalk": "^1.1.1",
     "eslint-config-angular": "^0.4.0",
     "eslint-plugin-angular": "^0.15.0",
@@ -34,7 +38,7 @@
     "lodash": "^4.6.0",
     "mocha": "^3.0.2",
     "mockery": "^1.4.0",
-    "protractor": "^4.0.8",
+    "protractor": "^4.0.9",
     "yeoman-assert": "^2.1.1",
     "yeoman-generator": "^0.22.5",
     "yeoman-test": "^1.1.0",
