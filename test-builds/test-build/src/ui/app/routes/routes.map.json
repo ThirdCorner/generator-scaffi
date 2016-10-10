@@ -1,0 +1,12 @@
+{
+  "app": [
+    {
+      "id": "index",
+      "displayText": "Index",
+      "sref": "app.index",
+      "isDisplayable": true,
+      "icon": "",
+      "routes": []
+    }
+  ]
+}

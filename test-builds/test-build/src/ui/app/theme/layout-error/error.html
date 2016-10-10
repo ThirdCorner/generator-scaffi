@@ -1,0 +1,14 @@
+<div class="container-fluid">
+    <div class="error-page">
+        <div class="error-code mb10">{{vm.params.errorType}} <i class="fa fa-warning" style="cursor: pointer;" ng-click="vm.showStack = !vm.showStack"></i></div>
+        <div class="error-content">
+            <div class="error-message">{{vm.params.message}}<br><br></div>
+            <pre class="error-desc mb20" ng-if="vm.showStack">
+                {{vm.params.stack}}
+            </pre>
+            <div ng-if="vm.params.statusCode < 400 || vm.params.statusCode > 499">
+                <a href="/" class="btn btn-success">Go Back to Home Page</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,7 @@
+{
+	"config": {
+		"environment": "ci"
+	},
+	"components": {},
+	"services": {}
+}

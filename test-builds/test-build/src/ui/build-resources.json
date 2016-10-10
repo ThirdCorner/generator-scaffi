@@ -1,0 +1,8 @@
+{
+  "styles": [
+    "bootstrap*/css/*.min.css",
+    "angular-loading*/build/loading-bar.min.css",
+    "font-awesome",
+    "ng-table"
+  ]
+}
