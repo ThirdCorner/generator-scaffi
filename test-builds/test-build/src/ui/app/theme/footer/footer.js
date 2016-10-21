@@ -1,6 +1,6 @@
 'use strict';
 
-import template from './footer.html!text';
+import template from './footer.html';
 import {View, Component} from 'scaffi-ui-core'; // jshint unused: false
 
 //start-non-standard

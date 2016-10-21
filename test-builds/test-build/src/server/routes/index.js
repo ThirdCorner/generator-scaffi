@@ -6,4 +6,4 @@ module.exports = function(app, router) {
 	router.list('', (req, res, next)=>{
 		res.sendSuccess('Hello Dance Time');
 	})
-};
+};   

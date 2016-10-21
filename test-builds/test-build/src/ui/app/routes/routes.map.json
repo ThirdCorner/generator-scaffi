@@ -7,6 +7,14 @@
       "isDisplayable": true,
       "icon": "",
       "routes": []
+    },
+    {
+      "id": "products",
+      "displayText": "Products",
+      "sref": "app.products",
+      "isDisplayable": true,
+      "icon": "",
+      "routes": []
     }
   ]
 }

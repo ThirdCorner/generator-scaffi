@@ -1,8 +1,58 @@
 {
-  "styles": [
-    "bootstrap*/css/*.min.css",
-    "angular-loading*/build/loading-bar.min.css",
-    "font-awesome",
-    "ng-table"
-  ]
+	"common": {
+		"dependencies": [
+			"angular",
+			"angular-animate",
+			"angular-aria",
+			"angular-breadcrumb",
+			"angular-loading-bar",
+			"angular-messages",
+			"angular-sanitize",
+			"angular-ui-bootstrap",
+			"angular-ui-router",
+			"body-parser",
+			"clean-css",
+			"font-awesome",
+			"lodash",
+			"moment",
+			"scaffi-ui-core",
+			"walkdir"
+		],
+		"resources": {
+			"fonts": {
+				"font-awesome": "font"
+			},
+			"css": {
+				"angular-loading*/build/loading-bar.min.css": "css",
+				"font-awesome": "css"
+			}
+		}
+	},
+	"web": {
+		"dependencies": [
+			"bootstrap"
+		],
+		"resources": {
+			"css": {
+				"bootstrap/dist/css/*.min.css": "css",
+				"ng-table": "css"
+			}
+		}
+	},
+	"ios": {
+		"dependencies": [
+
+		],
+		"resources": {
+
+		}
+	},
+	"android": {
+		"dependencies": [
+
+		],
+		"resources": {
+
+		}
+	}
 }

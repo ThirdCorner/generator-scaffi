@@ -11,9 +11,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
-        <link rel="stylesheet" href="styles/vendor.css" />
-        <link rel="stylesheet" href="styles/main.css" />
-        <!-- endbuild -->
+        <%- head %>
     </head>
 
     <body>
@@ -25,9 +23,7 @@
         <server-message></server-message>
         <ui-view id="container"></ui-view>
 
-        <!-- build:js(.) scripts/main.min.js -->
-        <!-- inject:build:js --><!-- endinject -->
-        <!-- endbuild -->
+        <%- body %>
 
     </body>
 </html>

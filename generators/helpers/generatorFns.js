@@ -297,6 +297,16 @@ var helperFns = {
 		});
 	},
 
+	exists: function(filename) {
+		try {
+			
+			return fs.existsSync(filename)
+		} catch(e){
+
+		}
+		
+		return false;
+	},
 	openJson: function(filename) {
 		var json;
 		try {
@@ -307,6 +317,16 @@ var helperFns = {
 		}
 		
 		return json;
+	},
+	saveJson: function(filename, json) {
+		
+		try {
+			fs.outputJsonSync(filename, json);
+			
+		} catch(e) {
+			throw e;
+		}
+		
 	},
 	updateJson: function(filename, callback) {
 		
@@ -427,16 +447,7 @@ var helperFns = {
 		context.log("Installing UI Node")
 		context.spawnCommandSync('npm', ['set', "registry", "https://registry.npmjs.org/"], {cwd: context.destinationPath('src', 'ui')});
 		context.spawnCommandSync('npm', ['install'], {cwd: context.destinationPath('src', 'ui')});
-		
-		context.log("Setting JSPM properly");
-		context.spawnCommandSync('node', ['./node_modules/jspm/jspm.js', 'config', 'registries.github.timeouts.lookup', '600'], {cwd: context.destinationPath('src', 'ui')});
-		if(context.options.githubToken) {
-			context.log("Using GITHUB TOKEN");
-			context.spawnCommandSync('node', ['./node_modules/jspm/jspm.js', 'config', 'registries.github.auth', context.options.githubToken], {cwd: context.destinationPath('src', 'ui')});
-		}
-		
-		context.log("Installing UI JSPM");
-		context.spawnCommandSync('node', ['./node_modules/jspm/jspm.js', 'install'], {cwd: context.destinationPath('src', 'ui')});
+		context.spawnCommandSync('npm', ['shrinkwrap'], {cwd: context.destinationPath('src', 'ui')});
 	},
 	deletePrivateConfigs: function(context){
 		try {

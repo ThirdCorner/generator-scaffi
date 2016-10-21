@@ -6,8 +6,15 @@ var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
 var helperFns = require('../helpers/generatorFns');
+var buildHelpers = require('../helpers/builds');
 var _ = require("lodash");
 var path = require("path");
+var fs = require("fs");
+var watch = require("node-watch");
+var nodemon = require("nodemon");
+var modRewrite  = require('connect-modrewrite');
+
+var bs = require("browser-sync").create();
 
 module.exports = yeoman.Base.extend({
 	constructor: function(){
@@ -25,7 +32,7 @@ module.exports = yeoman.Base.extend({
 				chalk.green('Scaffi') + ' startup time!'
 			));
 
-		if(this.mode && ["ui", "server"].indexOf(this.mode.toLowerCase()) !== -1) {
+		if(this.mode && ["web", "ios", "android"].indexOf(this.mode.toLowerCase()) !== -1) {
 			this.modeType = this.mode;
 			done();
 
@@ -47,12 +54,16 @@ module.exports = yeoman.Base.extend({
 					name: "modeType",
 					choices: [
 						{
-							name: "UI",
-							value: "ui"
+							name: "Web",
+							value: "web"
 						},
 						{
-							name: "Server",
-							value: "server"
+							name: "ios",
+							value: "ios"
+						},
+						{
+							name: "android",
+							value: "android"
 						}
 					]
 				}];
@@ -67,21 +78,89 @@ module.exports = yeoman.Base.extend({
 
 		}
 	},
+	
+	configuring: function() {
+		var done = this.async();
+		
+		try {
+			/*
+				We want these steps:
+				 check for out of sync packages with package.json
+				    hash that check
+				 check if platform build hash matches
+				    rebuild vendor resources for platform if not
+				 bundle app resources
+				 write index.html
+			 */
+			
+			buildHelpers.buildUi(this, this.modeType)
+				.then(function(){
+					done();
+				});
 
-	writing: function () {
+		} catch(e){
+			console.log(e);
+			throw e;
+		}
+	},
+
+	end: function(){
+		var that = this;
+
+		watch(this.destinationPath("src", "ui", "app"), {recursive: true}, function(filename){
+			switch(true){
+				case _.endsWith(filename, ".js") || _.endsWith(filename, ".html"):
+					buildHelpers.bundleAppJS(that, that.modeType).then(function(){
+						buildHelpers.bundleIndex(that, that.modeType)
+					});
+					break;
+				case _.endsWith(filename, ".scss"):
+					buildHelpers.bundleAppSass(that, that.modeType);
+					break;
+			}
+		});
+		/*
+			Neoed to add ability to watch package.json and build-resources so it will auto bundle vendors
+		 */
+
+		// watch(this.destinationPath("src", "ui"), {recursive: false}, function(filename){
+		// 	switch(true){
+		// 		case _.endsWith(filename, "build-resources.json") || _.endsWith(filename, "package.json"):
+		// 			buildHelpers.buildUi(that, that.modeType);
+		// 			break;
+		// 	}
+		// });
 
 		/*
-		 Making sure localhost configs exist, otherwise we can assume this is a fresh checkout
+			This needs to be switched to the server, that way the paths seem to work then without starting
+			a bunch of watchers.
 		 */
-		helperFns.installLocalhostConfig(this);
+		process.chdir(this.destinationPath("src", "server"));
 
-		if(this.modeType == "ui") {
-			this.spawnCommandSync('gulp', ['serve'], {cwd: this.destinationPath('src', 'ui')});
+		nodemon({
+			ignore: ["public"],
+			script: "index.js"
+		});
 
-		} else {
-			this.spawnCommandSync('node', ['./node_modules/nodemon/bin/nodemon.js', 'index.js'], {cwd: this.destinationPath('src', 'server')});
-		}
+
+		bs.init({
+			port: 4000,
+			reloadDelay: 1000, // So that index has time to regen before reloading
+			files: [
+				"index.html",
+				"public/**/*.css",
+				"public/**/*.js"
+			],
+			open: true,
+			server: {
+				baseDir: this.destinationPath("src", "server", "public"),
+				middleware: [
+					modRewrite(['^([^.]+)$ /index.html [L]'])
+				]
+			},
+			browser: "chrome"
+		});
+
 
 	}
-
 });

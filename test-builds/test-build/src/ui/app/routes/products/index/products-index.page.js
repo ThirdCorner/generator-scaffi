@@ -1,10 +1,10 @@
 'use strict';
 
 import {RouteConfig, AbstractPage} from 'scaffi-ui-core'; // jshint unused: false
-import template from './index.html';
+import template from './products-index.html';
 
 // export-params-start
-const ROUTE = 'app.index';
+const ROUTE = 'app.products.index';
 const PARAMS = {
 	url: '/',
 	template: template,
@@ -21,10 +21,9 @@ const PARAMS = {
 @RouteConfig(ROUTE, PARAMS)
 //end-non-standard
 
-class Index extends AbstractPage {
+class ProductsIndex extends AbstractPage {
 	constructor($state, $scope){
 		super($scope);
-		console.log("Mine")
 		
 		this.$state = $state;
 		this.$scope = $scope;
@@ -32,5 +31,5 @@ class Index extends AbstractPage {
 
 }
 
-export default Index;
+export default ProductsIndex;
 export {ROUTE, PARAMS};

@@ -1,8 +1,8 @@
 'use strict';
 
 // js vendor files
-import ScaffiConfig from '../scaffi-ui.json!json';
-import ScaffiConfigPrivate from '../scaffi-ui.private.json!json';
+import ScaffiConfig from '../scaffi-ui.json';
+import ScaffiConfigPrivate from '../scaffi-ui.private.json';
 import ScaffiUi from 'scaffi-ui-core';
 import _ from 'lodash';
 

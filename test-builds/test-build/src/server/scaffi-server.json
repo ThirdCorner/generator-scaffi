@@ -11,7 +11,7 @@
     "idCapitalizeStandard": "pascalCase",
     "routeLowercaseStandard": true,
     "environment": "prototype",
-    "version": null
+    "version": "0.0.0"
   },
   "components": {
     "app": {

@@ -1,7 +1,7 @@
 'use strict';
 
 import {RouteConfig} from 'scaffi-ui-core';  // jshint unused: false
-import template from './layout.html!text';
+import template from './layout.html';
 
 //start-non-standard
 @RouteConfig('app', {

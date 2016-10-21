@@ -3,7 +3,7 @@
 import {RouteConfig, Component, View} from 'scaffi-ui-core'; // jshint unused: false
 import _ from 'lodash';
 
-import template from './routes-side-nav.html!text';
+import template from './routes-side-nav.html';
 
 //start-non-standard
 @Component({

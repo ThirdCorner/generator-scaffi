@@ -7,7 +7,7 @@ import './header/header.js';
 import './layout/layout.js';
 import './layout-error/layout-error.js';
 
-import 'angular-bootstrap';
+import 'angular-ui-bootstrap';
 import 'angular-loading-bar';
 
 class Theme extends AbstractBootstrap {

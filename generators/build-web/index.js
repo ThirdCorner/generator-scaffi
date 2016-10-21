@@ -14,20 +14,22 @@ module.exports = yeoman.Base.extend({
 			getting used for prod. Cause that'd be bad, m'kay.
 		 */
 		helperFns.deletePrivateConfigs(this);
+		this.argument('platformType', { type: String, required: true });
+		this.argument('mode', { type: String, required: true });
 	},
 	prompting: function () {
+		//
+		// if(!this.options.mode) {
+		// 	this.log.error("Must pass argument --mode");
+		// 	throw new Error("Must pass argument --mode");
+		// 	return false;
+		// }
 
-		if(!this.options.mode) {
-			this.log.error("Must pass argument --mode");
-			throw new Error("Must pass argument --mode");
-			return false;
-		}
-
-		if(this.options.mode != "localhost" && this.options.mode != "prototype" && !this.options.githubToken ){
-			this.log.error("Non localhost/prototype builds must pass a --githubToken as an argument");
-			throw new Error("Non localhost/prototype builds must pass a --githubToken as an argument");
-			return false;
-		}
+		// if(this.options.mode != "localhost" && this.options.mode != "prototype" && !this.options.githubToken ){
+		// 	this.log.error("Non localhost/prototype builds must pass a --githubToken as an argument");
+		// 	throw new Error("Non localhost/prototype builds must pass a --githubToken as an argument");
+		// 	return false;
+		// }
 
 		/*
 			This is here as of 0.0.5 to make sure project has configs that it can use for build.
@@ -40,7 +42,7 @@ module.exports = yeoman.Base.extend({
 		}
 
 		if(!this.options.version) {
-			this.log("VERSION NOT PASSED, USING package.json version.");
+			this.log("VERSION NOT PASSED, USING ui/package.json VERSION.");
 			var json = helperFns.openJson(this.destinationPath("package.json"));
 			if(json) {
 				this.options.version = json.version;
