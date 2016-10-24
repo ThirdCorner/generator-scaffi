@@ -5,6 +5,7 @@ body {
 }
 body {
     overflow-x: hidden;
+    border: 5px solid red;
 }
 h1, h2, h3, h4, h5, h6{
 }
@@ -37,4 +38,9 @@ html, body {
 
 .hidden {
     display: none;
+}
+
+// Mobile
+ion-nav-view {
+    padding-top: 30px;
 }

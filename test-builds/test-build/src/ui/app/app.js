@@ -8,6 +8,7 @@ import _ from 'lodash';
 
 import theme from './theme/theme';
 
+console.log("INITIALIZE APP")
 var mainModule = ScaffiUi.initialize({
 	config: ScaffiConfig,
 	private: ScaffiConfigPrivate,
@@ -53,3 +54,5 @@ mainModule.requires = mainModule.requires.concat(requires);
  
  });
  */
+
+export {mainModule};

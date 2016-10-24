@@ -12,7 +12,7 @@
     "bluebird": "^3.4.0",
     "ejs": "^2.4.1",
     "lodash": "^4.8.2",
-    "scaffi-server-core": "^0.0.2"
+    "scaffi-server-core": "github:thirdcorner/scaffi-server-core#v0.1"
   },
   "devDependencies": {
     "nodemon": "^1.9.1"

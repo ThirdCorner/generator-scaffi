@@ -14,7 +14,16 @@
       "sref": "app.products",
       "isDisplayable": true,
       "icon": "",
-      "routes": []
+      "routes": [
+        {
+          "id": "users",
+          "displayText": "Users",
+          "sref": "app.products.users",
+          "isDisplayable": true,
+          "icon": "",
+          "routes": []
+        }
+      ]
     }
   ]
 }

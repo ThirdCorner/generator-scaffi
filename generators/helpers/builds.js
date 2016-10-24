@@ -24,6 +24,8 @@ module.exports = {
 			.then(function(){
 				return that.syncPlatformPackages(context, platformType);
 			}).then(function(){
+				return that.changeUiPlatformType(context, platformType);
+			}).then(function(){
 				context.log("Bundling App Resources");
 
 				that.transferVendorBundle(context, platformType);
@@ -118,6 +120,18 @@ module.exports = {
 	getRandomHash: function(){
 		return md5(Date().toString())
 	},
+	changeUiPlatformType: function(context, platformType) {
+		return new Promise(function(resolve){
+			var jsonPath = context.destinationPath("src", "ui", "scaffi-ui.private.json");
+			var privateJson = helperFns.openJson(jsonPath);
+
+			privateJson.config.platform = platformType;
+
+			helperFns.saveJson(jsonPath, privateJson);
+
+			resolve();
+		});
+	},
 
 
 	/*
@@ -164,6 +178,31 @@ module.exports = {
 
 		return synced;
 	},
+	updateScaffiPrivateInstalledPackages: function(context, type){
+		var config = this.getScaffiPrivate(context);
+		
+		config.build.packages[type].hash = this.getRandomHash();
+		config.build.packages[type].packages = {};
+		config.build.packages[type].jsPackages = {};
+		
+		this.parseInstalledPackages(context, type, function(npmPackageJson, name){
+			
+			if(npmPackageJson) {
+				var resolve = npmPackageJson._resolved || npmPackageJson._shasum;
+				if(!resolve) {
+					throw new Error(name + " does not have a resolve or dist.shasum to track. Cannot build.");
+				}
+				config.build.packages[type].packages[name] = resolve;
+				if (npmPackageJson.main) {
+					config.build.packages[type].jsPackages[name] = resolve;
+				}
+			}
+			
+		});
+		
+		
+		this.saveScaffiPrivate(context, config);
+	},
 	installPackages: function(context, type){
 
 		var that = this;
@@ -173,35 +212,125 @@ module.exports = {
 			context.spawnCommandSync('npm', ['install'], {cwd: context.destinationPath('src', type)});
 			context.spawnCommandSync('npm', ['shrinkwrap'], {cwd: context.destinationPath('src', type)});
 
-			var config = that.getScaffiPrivate(context);
-
-			config.build.packages[type].hash = that.getRandomHash();
-			config.build.packages[type].packages = {};
-			config.build.packages[type].jsPackages = {};
-
-			that.parseInstalledPackages(context, type, function(npmPackageJson, name){
-
-				if(npmPackageJson) {
-					var resolve = npmPackageJson._resolved || npmPackageJson._shasum;
-					if(!resolve) {
-						throw new Error(name + " does not have a resolve or dist.shasum to track. Cannot build.");
-					}
-					config.build.packages[type].packages[name] = resolve;
-					if (npmPackageJson.main) {
-						config.build.packages[type].jsPackages[name] = resolve;
-					}
-				}
-
-			});
-
-
-			that.saveScaffiPrivate(context, config);
+			that.updateScaffiPrivateInstalledPackages(context, type);
 
 			resolve();
 
 		});
 
 
+	},
+
+	installPackage: function(context, platformType, pkg) {
+		var that = this;
+		return new Promise(function(resolve){
+			var serverOrUi = platformType == "server" ? "server" : "ui";
+
+			context.log(_.capitalize(serverOrUi) + " has started npm install "+ pkg + " --save");
+			context.spawnCommandSync('npm', ['set', "registry", "https://registry.npmjs.org/"], {cwd: context.destinationPath('src', serverOrUi)});
+
+			context.spawnCommandSync('npm', ['install', pkg, "--save"], {cwd: context.destinationPath('src', serverOrUi)});
+			context.spawnCommandSync('npm', ['shrinkwrap'], {cwd: context.destinationPath('src', serverOrUi)});
+
+			that.updateScaffiPrivateInstalledPackages(context, serverOrUi);
+
+			if(platformType !== "server") {
+
+				// Clean up package name
+				if(pkg.indexOf(":") !== -1) {
+					pkg = pkg.substr(pkg.indexOf(":") + 1);
+				}
+				
+				if(pkg.indexOf("/") !== -1) {
+					pkg = pkg.substr(pkg.indexOf("/") + 1);
+				}
+				if(pkg.indexOf("@") !== -1) {
+					pkg = pkg.substr(0, pkg.indexOf("@"));
+				}
+				if(pkg.indexOf("#") !== -1) {
+					pkg = pkg.substr(0, pkg.indexOf("#"));
+				}
+				
+				var buildJson = that.getBuildResourceJson(context);
+				
+				switch(platformType) {
+					case "ui":
+						if(buildJson.common.dependencies.indexOf(pkg) === -1){
+							buildJson.common.dependencies.push(pkg);
+						}
+						break;
+					case "web":
+						if(buildJson.web.dependencies.indexOf(pkg) === -1){
+							buildJson.web.dependencies.push(pkg);
+						}
+						break;
+					case "mobile":
+						if(buildJson.ios.dependencies.indexOf(pkg) === -1){
+							buildJson.ios.dependencies.push(pkg);
+						}
+						if(buildJson.android.dependencies.indexOf(pkg) === -1){
+							buildJson.android.dependencies.push(pkg);
+						}
+						break;
+					case "ios":
+					case "android":
+						if(buildJson[platformType].dependencies.indexOf(pkg) === -1){
+							buildJson[platformType].dependencies.push(pkg);
+						}
+						break;
+					
+				}
+				
+				that.saveBuildResourceJson(context, buildJson);
+			}
+
+
+			resolve();
+
+		});
+
+	},
+	uninstallPackage: function(context, platformType, pkg){
+		var that = this;
+		return new Promise(function(resolve) {
+			var serverOrUi = platformType == "server" ? "server" : "ui";
+
+			context.log(_.capitalize(serverOrUi) + " has started npm uninstall " + pkg + " --save");
+
+			var opts = {
+				save: true,
+				cwd: context.destinationPath('src', serverOrUi)
+			};
+
+			context.spawnCommandSync('npm', ['uninstall', pkg, "--save"], {cwd: context.destinationPath('src', serverOrUi)});
+			context.spawnCommandSync('npm', ['shrinkwrap'], {cwd: context.destinationPath('src', serverOrUi)});
+
+			that.updateScaffiPrivateInstalledPackages(context, serverOrUi);
+
+			if(platformType !== "server") {
+
+				var buildJson = that.getBuildResourceJson(context);
+
+				var platforms = ["common", "web", "ios", "android"];
+				_.each(platforms, (platform)=>{
+					var key;
+					for(var i in buildJson[platform].dependencies) {
+						if(buildJson[platform].dependencies[i] == pkg) {
+							key = i;
+						}
+					}
+
+					if(key) {
+						context.log("Removing " + pkg + " from " + platform + " dependencies");
+						buildJson[platform].dependencies.splice(key, 1);
+					}
+				});
+				
+				that.saveBuildResourceJson(context, buildJson);
+			}
+
+			resolve();
+		});
 	},
 	/*
 		Sync Platform Vendors
@@ -276,6 +405,7 @@ module.exports = {
 					}
 				}
 
+
 				var buildHash = that.getRandomHash();
 
 				var fileStream = fs.createWriteStream(context.destinationPath("src", "ui", "build", platformType, ".vendor", "scripts", "vendor." + buildHash + ".js"));
@@ -304,20 +434,32 @@ module.exports = {
 
 	},
 	transferVendorBundle: function(context, platformType){
-		
-		fsExtra.emptyDirSync(this.getPlatformOutputDir(context, platformType));
-		fsExtra.copySync(context.destinationPath("src", "ui", "build", platformType, ".vendor"), this.getPlatformOutputDir(context, platformType));
-		
+
+		fsExtra.emptyDirSync(this.getPlatformOutputBaseDir(context, platformType));
+
+		if(platformType == "web"){
+			fsExtra.copySync(context.destinationPath("src", "ui", "build", platformType, ".vendor"), this.getPlatformOutputBaseDir(context, platformType));
+		} else {
+			fsExtra.copySync(context.destinationPath("src", "ui", "mobile"), this.getPlatformOutputBaseDir(context, platformType));
+			fsExtra.copySync(context.destinationPath("src", "ui", "build", platformType, ".vendor"), this.getPlatformOutputDir(context, platformType));
+		}
 	},
 
 	/*
 		App bundle FNs
 	 */
-	getPlatformOutputDir: function(context, platformType){
+	getPlatformOutputBaseDir: function(context, platformType) {
 		if(platformType == "web") {
 			return context.destinationPath("src", "server", "public");
 		} else {
 			return context.destinationPath("src", "ui", "build", platformType, "public");
+		}
+	},
+	getPlatformOutputDir: function(context, platformType){
+		if(platformType == "web") {
+			return context.destinationPath("src", "server", "public");
+		} else {
+			return context.destinationPath("src", "ui", "build", platformType, "public", "www");
 		}
 	},
 	bundleAppJS: function(context, platformType) {
@@ -344,6 +486,17 @@ module.exports = {
 					appChain = appChain.exclude(pkgName);
 				}
 			}
+
+
+			/*
+				For ionic specifically with weird include paths, we have to make sure to ignore
+			 */
+
+			var ignores = that.getIgnoreDependencies(context, platformType);
+			for(var i in ignores) {
+				appChain = appChain.ignore(ignores[i]);
+			}
+
 
 			var buildHash = md5(Date().toString());
 			var fileStream = fs.createWriteStream(context.destinationPath(that.getPlatformOutputDir(context, platformType), "scripts", "app." + buildHash+ ".js"));
@@ -413,18 +566,37 @@ module.exports = {
 			var styleFiles = that.getBundleFiles(context, outputDir, "*.css");
 			if(styleFiles) {
 				styleFiles.forEach(function(file){
+					if(_.startsWith(file, "/")) {
+						file = file.substr(1);
+					}
 					outputLinkTags += '<link rel="stylesheet" href="'+file+'" />';
 				})
 			}
+
+			// Mobile only stuff
+			if(platformType !== "web") {
+				outputLinkTags += '<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">';
+				outputLinkTags += ' <meta http-equiv="Content-Security-Policy" content="default-src *; img-src \'self\' data:; style-src \'self\' \'unsafe-inline\'; script-src \'self\' \'unsafe-inline\' \'unsafe-eval\'">';
+				outputLinkTags += '<script src="cordova.js"></script>';
+			} else {
+				outputLinkTags = '<base href="/">' + outputLinkTags;
+			}
+
 
 			var vendor = that.getBundleFiles(context, outputDir, "scripts/vendor*");
 			var app = that.getBundleFiles(context, outputDir, "scripts/app*");
 			
 			vendor.forEach(function(filePath){
+				if(_.startsWith(filePath, "/")) {
+					filePath = filePath.substr(1);
+				}
 				scriptTags += '<script src=' + filePath + '></script>';
 			});
 	
 			app.forEach(function(filePath){
+				if(_.startsWith(filePath, "/")) {
+					filePath = filePath.substr(1);
+				}
 				scriptTags += '<script src=' + filePath + '></script>';
 			});
 	
@@ -505,7 +677,22 @@ module.exports = {
 
 		return Promise.all(promises);
 	},
-	
+	getIgnoreDependencies: function(context, platformType) {
+
+		var returnDeps = [];
+		var buildResouces = this.getBuildResourceJson(context);
+		_.each(["web", "ios", "android"], function(platform) {
+			if(platform != platformType) {
+				_.each(buildResouces[platform].dependencies, function(dep){
+					if(buildResouces[platformType].dependencies.indexOf(dep) === -1 && returnDeps.indexOf(dep) === -1) {
+						returnDeps.push(dep);
+					}
+				})
+			}
+		});
+
+		return returnDeps;
+	},
 	getBuildResourceFileList: function(context, platformType, resourceType){
 
 		var config = this.getScaffiPrivate(context);
@@ -580,6 +767,9 @@ module.exports = {
 		}
 
 		return buildJson;
+	},
+	saveBuildResourceJson: function(context, json){
+		helperFns.saveJson(context.destinationPath("src", 'ui', "build-resources.json"), json);
 	},
 	parseInstalledPackages: function(context, type, loopCallback) {
 		var deps = helperFns.openJson(context.destinationPath("src", type, "package.json")).dependencies;

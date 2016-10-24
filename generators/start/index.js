@@ -78,7 +78,7 @@ module.exports = yeoman.Base.extend({
 
 		}
 	},
-	
+
 	configuring: function() {
 		var done = this.async();
 		
@@ -143,24 +143,42 @@ module.exports = yeoman.Base.extend({
 		});
 
 
-		bs.init({
-			port: 4000,
-			reloadDelay: 1000, // So that index has time to regen before reloading
-			files: [
-				"index.html",
-				"public/**/*.css",
-				"public/**/*.js"
-			],
-			open: true,
-			server: {
-				baseDir: this.destinationPath("src", "server", "public"),
-				middleware: [
-					modRewrite(['^([^.]+)$ /index.html [L]'])
-				]
-			},
-			browser: "chrome"
-		});
+		if(this.modeType == "web") {
+			bs.init({
+				port: 4000,
+				reloadDelay: 1000, // So that index has time to regen before reloading
+				files: [
+					"index.html",
+					"public/**/*.css",
+					"public/**/*.js"
+				],
+				open: true,
+				server: {
+					baseDir: buildHelpers.getPlatformOutputDir(this, this.modeType),
+					middleware: [
+						modRewrite(['^([^.]+)$ /index.html [L]'])
+					]
+				},
+				browser: "chrome"
+			});
 
+		} else {
+			bs.init({
+				reloadDelay: 1000, // So that index has time to regen before reloading
+				files: [
+					buildHelpers.getPlatformOutputDir(this, this.modeType) + "/index.html",
+					buildHelpers.getPlatformOutputDir(this, this.modeType) + "/**/*"
+				],
+				open: true,
+				server: {
+					baseDir: buildHelpers.getPlatformOutputDir(this, this.modeType),
+					middleware: [
+						modRewrite(['^([^.]+)$ /index.html [L]'])
+					]
+				},
+				browser: "chrome"
+			});
+		}
 
 	}
 });

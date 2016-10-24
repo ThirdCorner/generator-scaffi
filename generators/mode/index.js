@@ -7,10 +7,16 @@ var _ = require("lodash");
 var path = require("path");
 
 module.exports = yeoman.Base.extend({
+	constructor: function(){
+		yeoman.Base.apply(this, arguments);
+		
+		// This makes `appname` a required argument.
+		this.argument('mode', { type: String, required: false });
+	},
 	prompting: function () {
 		var done = this.async();
 
-		if(this.options.mode) {
+		if(this.mode) {
 			var mode = this.options.mode.toLowerCase();
 			if(["production", "qa", "development", "localhost", "prototype", "ci"].indexOf(mode) === -1){
 				this.log.error("Mode provided is not valid: " + mode + ". Looking for " + '["production", "qa", "development", "localhost", "prototype", "ci"]');
