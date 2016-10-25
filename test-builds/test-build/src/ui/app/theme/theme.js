@@ -32,10 +32,6 @@ class Theme extends AbstractBootstrap {
 
 			this.addRequires(['ionic']);
 
-			this.getApp().config(function ($locationProvider) {
-				$locationProvider.html5Mode(false); // disable html5 mode on mobile devices.
-				// other pieces of code.
-			})
 			this.getApp().config(($ionicConfigProvider)=>{
 				$ionicConfigProvider.views.maxCache(0);
 				$ionicConfigProvider.tabs.position("bottom");
@@ -56,6 +52,9 @@ class Theme extends AbstractBootstrap {
 				});
 			});
 
+			this.getApp().config( ($urlRouterProvider)=>{
+				$urlRouterProvider.otherwise('/');
+			});
 			this.getApp().run( ($timeout, $state)=>{
 
 				// $timeout(function() {
