@@ -92,9 +92,15 @@ module.exports = yeoman.Base.extend({
 			Delete the private configs so we can replace
 		 */
 		helperFns.deletePrivateConfigs(this);
-		
-		var serverJsonName = "scaffi-server." + this.modeType + ".private.json";
-		var uiJsonName = "scaffi-ui." + this.modeType + ".private.json";
+
+		var serverJsonName, uiJsonName;
+		if(this.modeType == "localhost") {
+			serverJsonName = "scaffi-server." + this.modeType + ".private.json";
+			uiJsonName = "scaffi-ui." + this.modeType + ".private.json";
+		} else {
+			serverJsonName = "scaffi-server." + this.modeType + ".json";
+			uiJsonName = "scaffi-ui." + this.modeType + ".json";
+		}
 
 		this.fs.copy(this.destinationPath(path.join("src", "server", "config", serverJsonName)),this.destinationPath(path.join("src", "server", "scaffi-server.private.json")));
 		this.fs.copy(this.destinationPath(path.join("src", "ui", "config", uiJsonName)),this.destinationPath(path.join("src", "ui", "scaffi-ui.private.json")));

@@ -17,6 +17,10 @@ var modRewrite  = require('connect-modrewrite');
 var bs = require("browser-sync").create();
 
 module.exports = yeoman.Base.extend({
+	/*
+		Pass in --localhost if you want to run ui in a env mode, but have all server requests
+		redirect to a localhost server instance.
+	 */
 	constructor: function(){
 		yeoman.Base.apply(this, arguments);
 
@@ -81,19 +85,10 @@ module.exports = yeoman.Base.extend({
 
 	configuring: function() {
 		var done = this.async();
-		
+
 		try {
-			/*
-				We want these steps:
-				 check for out of sync packages with package.json
-				    hash that check
-				 check if platform build hash matches
-				    rebuild vendor resources for platform if not
-				 bundle app resources
-				 write index.html
-			 */
-			
-			buildHelpers.buildUi(this, this.modeType)
+
+			buildHelpers.changeUiDomain(this, this.modeType, this.options.localhost)
 				.then(function(){
 					done();
 				});
@@ -104,6 +99,31 @@ module.exports = yeoman.Base.extend({
 		}
 	},
 
+	writing: function(){
+		var done = this.async();
+
+		try {
+
+			/*
+			 We want these steps:
+			 check for out of sync packages with package.json
+			 hash that check
+			 check if platform build hash matches
+			 rebuild vendor resources for platform if not
+			 bundle app resources
+			 write index.html
+			 */
+
+			buildHelpers.buildUi(this, this.modeType)
+				.then(function(){
+					done();
+				});
+
+		} catch(e){
+			console.log(e);
+			throw e;
+		}
+	},
 	end: function(){
 
 		buildHelpers.addFileWatchers(this, this.modeType);
@@ -114,15 +134,17 @@ module.exports = yeoman.Base.extend({
 		 */
 		process.chdir(this.destinationPath("src", "server"));
 
-		nodemon({
-			ignore: ["public"],
-			script: "index.js"
-		});
-
 
 		if(this.modeType == "web") {
+			nodemon({
+				ignore: ["public"],
+				script: "index.js"
+			});
+
+
 			bs.init({
 				port: 4000,
+				uiPort: 4010,
 				reloadDelay: 1000, // So that index has time to regen before reloading
 				files: [
 					"index.html",
@@ -140,7 +162,10 @@ module.exports = yeoman.Base.extend({
 			});
 
 		} else {
+			this.log("!!! Remember that you need to start a server if you're outside prototype mode, since you're running a mobile build !!!");
 			bs.init({
+				port: 4001,
+				uiPort: 4011,
 				reloadDelay: 1000, // So that index has time to regen before reloading
 				files: [
 					buildHelpers.getPlatformOutputDir(this, this.modeType) + "/index.html",

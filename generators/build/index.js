@@ -20,6 +20,8 @@ module.exports = yeoman.Base.extend({
 	},
 	prompting: function () {
 
+		throw new Error("Need config.domain to be able to build things");
+		
 		/*
 			This is here as of 0.0.5 to make sure project has configs that it can use for build.
 			Might need to take this out later. 

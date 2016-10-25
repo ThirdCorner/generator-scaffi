@@ -11,6 +11,7 @@ var md5 = require("md5");
 var glob = require("glob");
 var fsExtra = require("fs-extra");
 var watch = require("node-watch");
+var nodeIp = require("ip");
 
 var Promise = require("bluebird");
 
@@ -120,6 +121,64 @@ module.exports = {
 	},
 	getRandomHash: function(){
 		return md5(Date().toString())
+	},
+	changeUiDomain: function(context, platformType, setAsLocalhost) {
+		return new Promise(function(resolve){
+			var jsonPath = context.destinationPath("src", "ui", "scaffi-ui.private.json");
+			var privateJson = helperFns.openJson(jsonPath);
+
+			/*
+				Get env config
+			 */
+			var filename;
+			if(privateJson.config.environment == "localhost"){
+				filename = "scaffi-ui.localhost.private.json";
+			} else {
+				filename = "scaffi-ui." + privateJson.config.environment + ".json";
+			}
+			var envJson = helperFns.openJson(context.destinationPath('src', "ui", "config", filename));
+
+			/*
+				Get public ui config
+			 */
+			var publicUiJson = helperFns.openJson(context.destinationPath("src", "ui", "scaffi-ui.json"));
+
+
+			var domain;
+			if(!setAsLocalhost) {
+				domain = envJson.config.domain;
+			} else {
+				domain = "http://localhost";
+			}
+
+			if(!domain || domain.length == 0) {
+				throw new Error("No domain provided in config. Can't bundle.");
+			}
+
+			/*
+				Make sure we add port for server if it's localhost;
+			 */
+			if(domain.indexOf("localhost") !== -1) {
+				domain = domain + ":" + publicUiJson.config.serverLocalhostPort;
+			}
+
+			if(domain.indexOf("localhost") !== -1 && platformType !== "web") {
+				var localhostIp = nodeIp.address();
+				domain = domain.replace("localhost", localhostIp);
+			}
+			
+			if(!_.startsWith(domain, "http")) {
+				throw new Error("Domain needs to start with http or https in the env config you're running");
+			}
+			
+			context.log("= Setting UI server domain to " + domain);
+			privateJson.config.domain = domain;
+			
+			helperFns.saveJson(jsonPath, privateJson);
+
+			resolve();
+		});
+
 	},
 	changeUiPlatformType: function(context, platformType) {
 		return new Promise(function(resolve){
@@ -450,7 +509,7 @@ module.exports = {
 		CLI commands
 	 */
 	addFileWatchers: function(context, platformType){
-		var that = context;
+		var that = this;
 		watch(context.destinationPath("src", "ui", "app"), {recursive: true}, function(filename){
 			switch(true){
 				case _.endsWith(filename, ".js") || _.endsWith(filename, ".html"):

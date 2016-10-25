@@ -9,7 +9,7 @@ const PARAMS = {
 	url: '/',
 	template: template,
 	resolve: {
-
+		user: (UserService) => UserService.get()
 	},
 	ncyBreadcrumb: {
 		 skip: true 
@@ -22,10 +22,10 @@ const PARAMS = {
 //end-non-standard
 
 class Index extends AbstractPage {
-	constructor($state, $scope){
+	constructor($state, $scope, user){
 		super($scope);
 		console.log("Mine")
-		
+		this.user = user;
 		this.$state = $state;
 		this.$scope = $scope;
 	}
