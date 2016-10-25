@@ -10,6 +10,7 @@ var mkdirp = require("mkdirp");
 var md5 = require("md5");
 var glob = require("glob");
 var fsExtra = require("fs-extra");
+var watch = require("node-watch");
 
 var Promise = require("bluebird");
 
@@ -443,6 +444,30 @@ module.exports = {
 			fsExtra.copySync(context.destinationPath("src", "ui", "mobile"), this.getPlatformOutputBaseDir(context, platformType));
 			fsExtra.copySync(context.destinationPath("src", "ui", "build", platformType, ".vendor"), this.getPlatformOutputDir(context, platformType));
 		}
+	},
+	
+	/*
+		CLI commands
+	 */
+	addFileWatchers: function(context, platformType){
+		var that = context;
+		watch(context.destinationPath("src", "ui", "app"), {recursive: true}, function(filename){
+			switch(true){
+				case _.endsWith(filename, ".js") || _.endsWith(filename, ".html"):
+					that.bundleAppJS(context, platformType).then(function(){
+						that.bundleIndex(context, platformType);
+					});
+					break;
+				case _.endsWith(filename, ".scss"):
+					that.bundleAppSass(context, platformType);
+					break;
+			}
+		});
+		/*
+		 Need to add ability to watch package.json and build-resources so it will auto bundle vendors
+		 */
+	
+		
 	},
 
 	/*

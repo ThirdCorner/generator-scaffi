@@ -10,7 +10,7 @@ var buildHelpers = require('../helpers/builds');
 var _ = require("lodash");
 var path = require("path");
 var fs = require("fs");
-var watch = require("node-watch");
+
 var nodemon = require("nodemon");
 var modRewrite  = require('connect-modrewrite');
 
@@ -105,32 +105,9 @@ module.exports = yeoman.Base.extend({
 	},
 
 	end: function(){
-		var that = this;
 
-		watch(this.destinationPath("src", "ui", "app"), {recursive: true}, function(filename){
-			switch(true){
-				case _.endsWith(filename, ".js") || _.endsWith(filename, ".html"):
-					buildHelpers.bundleAppJS(that, that.modeType).then(function(){
-						buildHelpers.bundleIndex(that, that.modeType)
-					});
-					break;
-				case _.endsWith(filename, ".scss"):
-					buildHelpers.bundleAppSass(that, that.modeType);
-					break;
-			}
-		});
-		/*
-			Neoed to add ability to watch package.json and build-resources so it will auto bundle vendors
-		 */
-
-		// watch(this.destinationPath("src", "ui"), {recursive: false}, function(filename){
-		// 	switch(true){
-		// 		case _.endsWith(filename, "build-resources.json") || _.endsWith(filename, "package.json"):
-		// 			buildHelpers.buildUi(that, that.modeType);
-		// 			break;
-		// 	}
-		// });
-
+		buildHelpers.addFileWatchers(this, this.modeType);
+		
 		/*
 			This needs to be switched to the server, that way the paths seem to work then without starting
 			a bunch of watchers.
