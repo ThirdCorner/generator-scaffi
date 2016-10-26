@@ -5,10 +5,7 @@
   "author": {
     "name": "JJ"
   },
-  "scripts": {
-    "build": "browserify -x angular -t babelify -t brfs app/app.js > ../server/public/scripts/bundle.js",
-    "build:sass": "node-sass --include-path app/app.scss app/theme/styles/theme.scss ../server/public/styles/main.css"
-  },
+  "scripts": {},
   "pre-commit": [
     "jshint",
     "htmlhint",
