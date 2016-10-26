@@ -587,6 +587,182 @@ var helperFns = {
 
 
 				return success;
+			},
+			// UP to 0.1.0 / structureVersion #3
+			function(){
+				var success = true;
+				var versionFolder = 2;
+				try {
+					/*
+					 Add ignore changes to project base level
+					 */
+					context.fs.copy(context.templatePath(path.join(versionFolder, "_gitignore")), context.destinationPath(".gitignore"));
+
+					/*
+						Update config json from cli => ci
+					 */
+					helperFns.updateJson(context.destinationPath("src", "server", "config", "scaffi-server.ci.private.json"), function(json){
+						json.config.environment = "ci";
+					});
+
+					/*
+						Delete scaffi-server.private for cleanup purposes
+					 */
+					if(context.fs.exists(context.destinationPath("src", "server", "scaffi-server.private.json"))) {
+						context.fs.delete(context.destinationPath("src", "server", "scaffi-server.private.json"));
+					}
+
+					/*
+						Rename all the config files that need to be
+					 */
+					context.fs.move(context.destinationPath("src", "server", "config", "scaffi-server.ci.private.json"), context.destinationPath("src", "server", "config", "scaffi-server.ci.json"));
+					context.fs.move(context.destinationPath("src", "server", "config", "scaffi-server.development.private.json"), context.destinationPath("src", "server", "config", "scaffi-server.development.json"));
+					context.fs.move(context.destinationPath("src", "server", "config", "scaffi-server.production.private.json"), context.destinationPath("src", "server", "config", "scaffi-server.production.json"));
+					context.fs.move(context.destinationPath("src", "server", "config", "scaffi-server.prototype.private.json"), context.destinationPath("src", "server", "config", "scaffi-server.prototype.json"));
+					context.fs.move(context.destinationPath("src", "server", "config", "scaffi-server.qa.private.json"), context.destinationPath("src", "server", "config", "scaffi-server.qa.json"));
+
+					// Install Server core update
+					context.spawnCommandSync('npm', ['install', 'scaffi-server-core@0.1.0', "--save"], {cwd: context.destinationPath('src', 'server')});
+
+					// Install UI core
+					context.spawnCommandSync('npm', ['install', 'scaffi-ui-core@0.1.0', "--save"], {cwd: context.destinationPath('src', 'ui')});
+					context.spawnCommandSync('npm', ['install', 'ionic-angular@1.3.1', "--save"], {cwd: context.destinationPath('src', 'ui')});
+
+					/*
+						Make changes to ui package.json
+					 */
+					helperFns.updateJson(context.destinationPath("src", "ui", "package.json"), function(json){
+						json.scripts = {};
+					});
+
+					context.fs.copy(context.templatePath(path.join(versionFolder, "index.html")), context.destinationPath("src", "ui", "app", "index.html"));
+					
+					/*
+						Fix the build-resources.json file
+					*/
+					var buildDependencies = {
+						"common": {
+							"dependencies": [
+								"angular",
+								"angular-animate",
+								"angular-aria",
+								"angular-breadcrumb",
+								"angular-loading-bar",
+								"angular-messages",
+								"angular-sanitize",
+								"angular-material",
+								"angular-ui-router",
+								"body-parser",
+								"clean-css",
+								"font-awesome",
+								"lodash",
+								"moment",
+								"scaffi-ui-core",
+								"walkdir"
+							],
+							"resources": {
+								"fonts": {
+									"font-awesome": "font"
+								},
+								"css": {
+									"angular-loading*/build/loading-bar.min.css": "css",
+									"font-awesome": "css"
+								}
+							}
+						},
+						"web": {
+							"dependencies": [
+							],
+							"resources": {
+								"css": {
+									"bootstrap/dist/css/*.min.css": "css",
+									"ng-table": "css"
+								}
+							}
+						},
+						"ios": {
+							"dependencies": [
+								"ionic-angular/release/js/ionic.js",
+								"ionic-angular/release/js/ionic-angular.js"
+							],
+							"resources": {
+								"fonts": {
+									"ionic-angular/release/fonts/*": "font"
+								},
+								"css": {
+									"ionic-angular/release/css/ionic.min.css": "css"
+								}
+							}
+						},
+						"android": {
+							"dependencies": [
+								"ionic-angular/release/js/ionic.js",
+								"ionic-angular/release/js/ionic-angular.js"
+							],
+							"resources": {
+								"fonts": {
+									"ionic-angular/release/fonts/*": "font"
+								},
+								"css": {
+									"ionic-angular/release/css/ionic.min.css": "css"
+								}
+							}
+						}
+					};
+					
+					var uiFolder = context.destinationPath(path.join("src", "ui"));
+					
+					fs.outputJsonSync(path.join(uiFolder, "build-resources.json"), buildDependencies);
+					
+					/*
+					 Update config json from cli => ci
+					 */
+					helperFns.updateJson(context.destinationPath("src", "ui", "config", "scaffi-ui.ci.private.json"), function(json){
+						json.config.environment = "ci";
+					});
+					
+					/*
+					 Delete scaffi-ui.private for cleanup purposes
+					 */
+					if(context.fs.exists(context.destinationPath("src", "ui", "scaffi-ui.private.json"))) {
+						context.fs.delete(context.destinationPath("src", "ui", "scaffi-ui.private.json"));
+					}
+					
+					/*
+					 Rename all the config files that need to be
+					 */
+					context.fs.move(context.destinationPath("src", "ui", "config", "scaffi-ui.ci.private.json"), context.destinationPath("src", "ui", "config", "scaffi-ui.ci.json"));
+					context.fs.move(context.destinationPath("src", "ui", "config", "scaffi-ui.development.private.json"), context.destinationPath("src", "ui", "config", "scaffi-ui.development.json"));
+					context.fs.move(context.destinationPath("src", "ui", "config", "scaffi-ui.production.private.json"), context.destinationPath("src", "ui", "config", "scaffi-ui.production.json"));
+					context.fs.move(context.destinationPath("src", "ui", "config", "scaffi-ui.prototype.private.json"), context.destinationPath("src", "ui", "config", "scaffi-ui.prototype.json"));
+					context.fs.move(context.destinationPath("src", "ui", "config", "scaffi-ui.qa.private.json"), context.destinationPath("src", "ui", "config", "scaffi-ui.qa.json"));
+
+					if(context.fs.exists(context.destinationPath("src", "ui", "app", "images"))) {
+						context.fs.move(context.destinationPath("src", "ui", "app", "images"), context.destinationPath("src", "ui", "app", "resources", "images"));
+					}
+
+					if(context.fs.exists(context.destinationPath("src", "ui", "app", "fonts"))) {
+						context.fs.move(context.destinationPath("src", "ui", "app", "fonts"), context.destinationPath("src", "ui", "app", "resources", "fonts"));
+					}
+
+
+					context.fs.copy(context.templatePath(path.join(versionFolder, "mobile")), context.destinationPath("src", "ui", "app", "mobile"));
+
+					/*
+						Cleanup folders
+					 */
+					fs.removeSync(context.destinationPath("src", "ui", "jspm_packages"));
+					fs.removeSync(context.destinationPath("src", "ui", "gulp"));
+					fs.removeSync(context.destinationPath("src", "ui", "gulpfile.js"));
+					fs.removeSync(context.destinationPath("src", "ui", "jspm.conf.js"));
+
+				} catch (e) {
+					success = false;
+					throw e;
+				}
+				
+				
+				return success;
 			}
 		]
 	}
