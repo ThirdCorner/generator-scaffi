@@ -90,4 +90,5 @@ npm-shrinkwrap.json
 /src/ui/config/scaffi-ui.localhost.private.json
 *.private.json
 **/*.private.json
-/**/*.private.json
+/src/ui/scaffi-ui.private.json
+/src/server/scaffi-server.private.json
