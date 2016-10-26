@@ -192,7 +192,37 @@ module.exports = {
 			resolve();
 		});
 	},
-
+	/*
+		This is here because composeWith is screwing up my process steps. 	
+	 */
+	changeMode: function(context, mode) {
+		return new Promise(function(resolve){
+			
+			context.log("Switching Mode to: " + mode);
+			/*
+			 Making sure localhost configs exist, otherwise we can assume this is a fresh checkout
+			 */
+			helperFns.installLocalhostConfig(context);
+			/*
+			 Delete the private configs so we can replace
+			 */
+			helperFns.deletePrivateConfigs(context);
+			
+			var serverJsonName, uiJsonName;
+			if (mode == "localhost") {
+				serverJsonName = "scaffi-server." + mode + ".private.json";
+				uiJsonName = "scaffi-ui." + mode + ".private.json";
+			} else {
+				serverJsonName = "scaffi-server." + mode + ".json";
+				uiJsonName = "scaffi-ui." + mode + ".json";
+			}
+			
+			fsExtra.copySync(context.destinationPath("src", "server", "config", serverJsonName), context.destinationPath("src", "server", "scaffi-server.private.json"));
+			fsExtra.copySync(context.destinationPath("src", "ui", "config", uiJsonName), context.destinationPath("src", "ui", "scaffi-ui.private.json"));
+			
+			resolve();
+		});
+	},
 
 	/*
 		Sync Steps

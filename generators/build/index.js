@@ -20,43 +20,56 @@ module.exports = yeoman.Base.extend({
 	},
 	prompting: function () {
 
-		throw new Error("Need config.domain to be able to build things");
-		
-		/*
-			This is here as of 0.0.5 to make sure project has configs that it can use for build.
-			Might need to take this out later. 
-		 */
-		if(helperFns.needsUpgrade(this)) {
-			this.log.error("You need to run yo scaffi:upgrade before you can build");
-			throw new Error("You need to run 'yo scaffi:upgrade' on the project before you can build.");
-			return false;
-		}
-
-		if(!this.options.version) {
-			this.log("VERSION NOT PASSED, USING ui/package.json VERSION.");
-			var json = helperFns.openJson(this.destinationPath("package.json"));
-			if(json) {
-				this.options.version = json.version;
+		try {
+			/*
+			 This is here as of 0.0.5 to make sure project has configs that it can use for build.
+			 Might need to take this out later.
+			 */
+			if (helperFns.needsUpgrade(this)) {
+				this.log.error("You need to run yo scaffi:upgrade before you can build");
+				throw new Error("You need to run 'yo scaffi:upgrade' on the project before you can build.");
+				return false;
 			}
-		}
 
-		console.log("BUILDING VERSION: " + this.options.version);
+			if (!this.options.version) {
+				this.log("VERSION NOT PASSED, USING ui/package.json VERSION.");
+				var json = helperFns.openJson(this.destinationPath("package.json"));
+				if (json) {
+					this.options.version = json.version;
+				}
+			}
+
+			this.log("BUILDING VERSION: " + this.options.version);
+		} catch (e) {
+			this.log(e);
+			throw e;
+		}
 
 	},
 	configuring: function(){
 
 		var done = this.async();
 
-		this.log("Switching Mode to: " + this.mode);
-		this.composeWith("scaffi:mode", {options: {mode: this.mode}}, {local: require.resolve('../mode')});
+		try {
 
-		helperFns.updateConfig(this.destinationPath("src", "ui"), "scaffi-ui", {version: this.options.version});
-		helperFns.updateConfig(this.destinationPath("src", "server"), "scaffi-server", {version: this.options.version});
+			var that = this;
 
-		buildHelpers.changeUiDomain(this, this.platformType)
-			.then(function(){
-				done();
+			buildHelpers.changeMode(this, this.mode).then(function(){
+				
+				helperFns.updateConfig(that.destinationPath("src", "ui"), "scaffi-ui", {version: that.options.version});
+				helperFns.updateConfig(that.destinationPath("src", "server"), "scaffi-server", {version: that.options.version});
+				
+				buildHelpers.changeUiDomain(that, that.platformType)
+					.then(function () {
+						done();
+					});				
 			});
+
+		} catch (e) {
+			this.log(e)
+			throw e;
+		}
+
 	},
 	writing: function(){
 
@@ -80,23 +93,28 @@ module.exports = yeoman.Base.extend({
 				});
 
 		} catch(e){
-			console.log(e);
+			this.log(e);
 			throw e;
 		}
 
 	},
 	install: function(){
 
-		this.log("Copying Server to Build Folder");
+		try {
+			this.log("Copying Server to Build Folder");
 
-		if(this.platformType == "web") {
-			fs.copy(this.destinationPath('src', 'server', "**"), this.destinationPath('builds', this.platformType, "server"));
-			if (!fs.existsSync(this.destinationPath('build', this.platformType, "server", "web.config"))) {
-				fs.copy(this.templatePath('iis', 'web.config'), this.destinationPath('builds', "web", "server", "web.config"));
+			if (this.platformType == "web") {
+				fs.copySync(this.destinationPath('src', 'server'), this.destinationPath('builds', this.platformType, "server"));
+				if (!fs.existsSync(this.destinationPath('build', this.platformType, "server", "web.config"))) {
+					fs.copySync(this.templatePath('iis', 'web.config'), this.destinationPath('builds', "web", "server", "web.config"));
+				}
+			} else {
+				fs.copySync(this.destinationPath('src', 'ui', "build", this.platformType, "public"), this.destinationPath('builds', this.platformType));
+
 			}
-		} else {
-			fs.copy(this.destinationPath('src', 'ui', "build", this.platformType, "public", "**"), this.destinationPath('builds', this.platformType));
-
+		} catch (e) {
+			this.log(e);
+			throw e;
 		}
 	},
 
