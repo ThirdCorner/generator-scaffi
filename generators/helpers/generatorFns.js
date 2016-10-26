@@ -591,13 +591,18 @@ var helperFns = {
 			// UP to 0.1.0 / structureVersion #3
 			function(){
 				var success = true;
-				var versionFolder = 2;
+				var versionFolder = "2";
 				try {
 					/*
 					 Add ignore changes to project base level
 					 */
 					context.fs.copy(context.templatePath(path.join(versionFolder, "_gitignore")), context.destinationPath(".gitignore"));
 
+					/*
+						Update base level generator to latest
+					 */
+					context.spawnCommandSync('npm', ['install', 'generator-scaffi@0.1.0', "--save"], {cwd: context.destinationPath()});
+					
 					/*
 						Update config json from cli => ci
 					 */
@@ -758,6 +763,7 @@ var helperFns = {
 
 				} catch (e) {
 					success = false;
+					context.log(e);
 					throw e;
 				}
 				

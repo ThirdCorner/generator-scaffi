@@ -16,6 +16,7 @@ module.exports = yeoman.Base.extend({
 
 	},
 	writing: function(){
+		console.log("#", this._getUpgrades());
 		if(this.version >= this._getUpgrades().length) {
 			this.log("No upgrade needed. You're on structure version #" + this.version);
 		} else {

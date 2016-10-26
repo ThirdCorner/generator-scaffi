@@ -316,15 +316,19 @@ module.exports = {
 		return new Promise(function(resolve){
 			var serverOrUi = platformType == "server" ? "server" : "ui";
 
-			context.log(_.capitalize(serverOrUi) + " has started npm install "+ pkg + " --save");
 			context.spawnCommandSync('npm', ['set', "registry", "https://registry.npmjs.org/"], {cwd: context.destinationPath('src', serverOrUi)});
-
-			context.spawnCommandSync('npm', ['install', pkg, "--save"], {cwd: context.destinationPath('src', serverOrUi)});
+			if(pkg) {
+				context.log(_.capitalize(serverOrUi) + " has started npm install "+ pkg + " --save");
+				context.spawnCommandSync('npm', ['install', pkg, "--save"], {cwd: context.destinationPath('src', serverOrUi)});
+			} else {
+				context.log(_.capitalize(serverOrUi) + " has started npm install");
+				context.spawnCommandSync('npm', ['install'], {cwd: context.destinationPath('src', serverOrUi)});
+			}
 			context.spawnCommandSync('npm', ['shrinkwrap'], {cwd: context.destinationPath('src', serverOrUi)});
 
 			that.updateScaffiPrivateInstalledPackages(context, serverOrUi);
 
-			if(platformType !== "server") {
+			if(platformType !== "server" && pkg) {
 
 				// Clean up package name
 				if(pkg.indexOf(":") !== -1) {

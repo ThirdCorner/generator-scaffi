@@ -11,7 +11,7 @@ module.exports = yeoman.Base.extend({
 		yeoman.Base.apply(this, arguments);
 
 		// This makes `appname` a required argument.
-		this.argument('package', { type: String, required: true });
+		this.argument('package', { type: String, required: false });
 	},
 	install: function () {
 		var done = this.async();
