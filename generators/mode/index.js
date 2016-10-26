@@ -5,6 +5,7 @@ var yosay = require('yosay');
 var helperFns = require('../helpers/generatorFns');
 var _ = require("lodash");
 var path = require("path");
+var fsExtra = require("fs-extra");
 
 module.exports = yeoman.Base.extend({
 	constructor: function(){
@@ -102,9 +103,9 @@ module.exports = yeoman.Base.extend({
 			uiJsonName = "scaffi-ui." + this.modeType + ".json";
 		}
 
-		this.fs.copy(this.destinationPath(path.join("src", "server", "config", serverJsonName)),this.destinationPath(path.join("src", "server", "scaffi-server.private.json")));
-		this.fs.copy(this.destinationPath(path.join("src", "ui", "config", uiJsonName)),this.destinationPath(path.join("src", "ui", "scaffi-ui.private.json")));
-
+		fsExtra.copySync(this.destinationPath("src", "server", "config", serverJsonName), this.destinationPath("src", "server", "scaffi-server.private.json"));
+		fsExtra.copySync(this.destinationPath("src", "ui", "config", uiJsonName), this.destinationPath("src", "ui", "scaffi-ui.private.json"));
+		
 	},
 	end: function(){
 

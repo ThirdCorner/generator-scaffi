@@ -9,13 +9,15 @@ var fs = require("fs-extra");
 
 module.exports = yeoman.Base.extend({
 	initializing: function(){
+
+		throw new Error("Use yo scaffi:build instead");
 		/*
 			Delete any current private ones so we don't end up in a bad, cross-platform situation of test accidentally
 			getting used for prod. Cause that'd be bad, m'kay.
 		 */
 		helperFns.deletePrivateConfigs(this);
-		this.argument('platformType', { type: String, required: true });
-		this.argument('mode', { type: String, required: true });
+		this.argument('platformType', { type: String, required: true }); // web ios android
+		this.argument('mode', { type: String, required: true }); // development qa
 	},
 	prompting: function () {
 		//

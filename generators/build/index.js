@@ -14,9 +14,9 @@ module.exports = yeoman.Base.extend({
 			Delete any current private ones so we don't end up in a bad, cross-platform situation of test accidentally
 			getting used for prod. Cause that'd be bad, m'kay.
 		 */
-		helperFns.deletePrivateConfigs(this);
-		this.argument('platformType', { type: String, required: true });
-		this.argument('mode', { type: String, required: true });
+	
+		this.argument('platformType', { type: String, required: true }); // web ios android
+		this.argument('mode', { type: String, required: true }); // development qa 
 	},
 	prompting: function () {
 
@@ -44,44 +44,66 @@ module.exports = yeoman.Base.extend({
 
 	},
 	configuring: function(){
+
+		var done = this.async();
+
 		this.log("Switching Mode to: " + this.mode);
 		this.composeWith("scaffi:mode", {options: {mode: this.mode}}, {local: require.resolve('../mode')});
 
 		helperFns.updateConfig(this.destinationPath("src", "ui"), "scaffi-ui", {version: this.options.version});
 		helperFns.updateConfig(this.destinationPath("src", "server"), "scaffi-server", {version: this.options.version});
+
+		buildHelpers.changeUiDomain(this, this.platformType)
+			.then(function(){
+				done();
+			});
 	},
-	// writing: function(){
-	//
-	// 	/*
-	// 		 ComposeWith needs to be separated from the rest because it's not async
-	// 	 */
-	//
-	//
-	// 	var done = this.async();
-	//
-	// 	/*
-	// 	 Calling this will end up installing everything, including server
-	// 	 */
-	// 	buildHelpers.buildUi(this, this.platformType).then(function(){
-	// 		done();
-	// 	});
-	//
-	// },
-	// install: function(){
-	//
-	// 	this.log("Copying Server to Build Folder");
-	//
-	// 	this.fs.copy(this.destinationPath('src', 'server', "**"), this.destinationPath('build', this.platformType, "server"));
-	// 	if(this.platformType == "web" && !this.fs.exists(this.destinationPath(path.join('build', this.platformType, "server", "web.config")))) {
-	// 		this.fs.copy(this.templatePath(path.join('iis', 'web.config')), this.destinationPath(path.join('build', "web", "server", "web.config")));
-	// 	}
-	//
-	//
-	//
-	//
-	// },
-	// end: function(){
-	// 	this.log("Deleting config directory in Server");
-	// 	fs.removeSync(this.destinationPath(path.join('build', "web", "server", "config")));
-	// }
+	writing: function(){
+
+		var done = this.async();
+
+		try {
+
+			/*
+			 We want these steps:
+			 check for out of sync packages with package.json
+			 hash that check
+			 check if platform build hash matches
+			 rebuild vendor resources for platform if not
+			 bundle app resources
+			 write index.html
+			 */
+
+			buildHelpers.buildUi(this, this.platformType)
+				.then(function(){
+					done();
+				});
+
+		} catch(e){
+			console.log(e);
+			throw e;
+		}
+
+	},
+	install: function(){
+
+		this.log("Copying Server to Build Folder");
+
+		if(this.platformType == "web") {
+			fs.copy(this.destinationPath('src', 'server', "**"), this.destinationPath('builds', this.platformType, "server"));
+			if (!fs.existsSync(this.destinationPath('build', this.platformType, "server", "web.config"))) {
+				fs.copy(this.templatePath('iis', 'web.config'), this.destinationPath('builds', "web", "server", "web.config"));
+			}
+		} else {
+			fs.copy(this.destinationPath('src', 'ui', "build", this.platformType, "public", "**"), this.destinationPath('builds', this.platformType));
+
+		}
+	},
+
+	end: function(){
+		if(this.platformType == "web") {
+			this.log("Deleting config directory in Server");
+			fs.removeSync(this.destinationPath('builds', "web", "server", "config"));
+		}
+	}
 });
