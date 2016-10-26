@@ -1,7 +1,7 @@
 'use strict';
 
 import {RouteConfig, AbstractPage} from 'scaffi-ui-core'; // jshint unused: false
-import template from './<%= routeTemplateName %>.html!text';
+import template from './<%= routeTemplateName %>.html';
 
 // export-params-start
 const ROUTE = 'app.<%= routePath %>';

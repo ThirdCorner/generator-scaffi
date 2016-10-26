@@ -3,7 +3,7 @@
 import {RouteConfig, Component, AbstractComponent, View} from 'scaffi-ui-core'; // jshint unused: false
 import _ from 'lodash';
 
-import template from './<%= tagName %>.html!text';
+import template from './<%= tagName %>.html';
 
 //start-non-standard
 @Component({

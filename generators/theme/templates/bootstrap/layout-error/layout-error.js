@@ -1,7 +1,7 @@
 'use strict';
 
-import templateError from './error.html!text';
 import {RouteConfig} from 'scaffi-ui-core'; // jshint unused: false
+import templateError from './error.html';
 import _ from 'lodash';
 
 //start-non-standard

@@ -1,7 +1,7 @@
 'use strict';
 
-import template from './header.html!text';
 import {View, Component, Inject} from 'scaffi-ui-core'; // jshint unused: false
+import template from './header.html';
 
 
 //start-non-standard

@@ -64,11 +64,73 @@ module.exports = yeoman.Base.extend({
 	},
 	_getMaterialDependencies: function() {
 		var buildDependencies = {
-			"styles": [
-				"bower-material*/angular-material.css",
-				"angular-loading*/build/loading-bar.min.css",
-				"font-awesome"
-			]
+			"common": {
+				"dependencies": [
+					"angular",
+					"angular-animate",
+					"angular-aria",
+					"angular-breadcrumb",
+					"angular-loading-bar",
+					"angular-messages",
+					"angular-sanitize",
+					"angular-material",
+					"angular-ui-router",
+					"body-parser",
+					"clean-css",
+					"font-awesome",
+					"lodash",
+					"moment",
+					"scaffi-ui-core",
+					"walkdir"
+				],
+				"resources": {
+					"fonts": {
+						"font-awesome": "font"
+					},
+					"css": {
+						"angular-loading*/build/loading-bar.min.css": "css",
+						"font-awesome": "css"
+					}
+				}
+			},
+			"web": {
+				"dependencies": [
+				],
+				"resources": {
+					"css": {
+						"bootstrap/dist/css/*.min.css": "css",
+						"ng-table": "css"
+					}
+				}
+			},
+			"ios": {
+				"dependencies": [
+					"ionic-angular/release/js/ionic.js",
+					"ionic-angular/release/js/ionic-angular.js"
+				],
+				"resources": {
+					"fonts": {
+						"ionic-angular/release/fonts/*": "font"
+					},
+					"css": {
+						"ionic-angular/release/css/ionic.min.css": "css"
+					}
+				}
+			},
+			"android": {
+				"dependencies": [
+					"ionic-angular/release/js/ionic.js",
+					"ionic-angular/release/js/ionic-angular.js"
+				],
+				"resources": {
+					"fonts": {
+						"ionic-angular/release/fonts/*": "font"
+					},
+					"css": {
+						"ionic-angular/release/css/ionic.min.css": "css"
+					}
+				}
+			}
 		};
 
 		var uiFolder = this.destinationPath(path.join("src", "ui"));
@@ -88,12 +150,74 @@ module.exports = yeoman.Base.extend({
 	},
 	_getBootstrapDependencies: function() {
 		var buildDependencies = {
-			"styles": [
-				"bootstrap*/css/*.min.css",
-				"angular-loading*/build/loading-bar.min.css",
-				"font-awesome",
-				"ng-table"
-			]
+			"common": {
+				"dependencies": [
+					"angular",
+					"angular-animate",
+					"angular-aria",
+					"angular-breadcrumb",
+					"angular-loading-bar",
+					"angular-messages",
+					"angular-sanitize",
+					"angular-ui-bootstrap",
+					"angular-ui-router",
+					"body-parser",
+					"clean-css",
+					"font-awesome",
+					"lodash",
+					"moment",
+					"scaffi-ui-core",
+					"walkdir"
+				],
+				"resources": {
+					"fonts": {
+						"font-awesome": "font"
+					},
+					"css": {
+						"angular-loading*/build/loading-bar.min.css": "css",
+						"font-awesome": "css"
+					}
+				}
+			},
+			"web": {
+				"dependencies": [
+					"bootstrap"
+				],
+				"resources": {
+					"css": {
+						"bootstrap/dist/css/*.min.css": "css",
+						"ng-table": "css"
+					}
+				}
+			},
+			"ios": {
+				"dependencies": [
+					"ionic-angular/release/js/ionic.js",
+					"ionic-angular/release/js/ionic-angular.js"
+				],
+				"resources": {
+					"fonts": {
+						"ionic-angular/release/fonts/*": "font"
+					},
+					"css": {
+						"ionic-angular/release/css/ionic.min.css": "css"
+					}
+				}
+			},
+			"android": {
+				"dependencies": [
+					"ionic-angular/release/js/ionic.js",
+					"ionic-angular/release/js/ionic-angular.js"
+				],
+				"resources": {
+					"fonts": {
+						"ionic-angular/release/fonts/*": "font"
+					},
+					"css": {
+						"ionic-angular/release/css/ionic.min.css": "css"
+					}
+				}
+			}
 		};
 
 
@@ -110,7 +234,7 @@ module.exports = yeoman.Base.extend({
 			"angular-loading-bar@0.9.0",
 			"font-awesome@4.4.0",
 			"bootstrap@3.3.6",
-			"angular-bootstrap@2.0.0"
+			"angular-ui-bootstrap@2.0.0"
 		];
 
 	},
@@ -128,8 +252,10 @@ module.exports = yeoman.Base.extend({
 
 
 		for(var i in packageDependencies) {
-			this.spawnCommandSync('jspm', ['install', packageDependencies[i]], {cwd: this.destinationPath('src', 'ui')});
+			this.spawnCommandSync('npm', ['install', packageDependencies[i], "--save"], {cwd: this.destinationPath('src', 'ui')});
 		}
+
+		this.spawnCommandSync('npm', ['shrinkwrap'], {cwd: this.destinationPath('src', "ui")});
 
 	}
 });

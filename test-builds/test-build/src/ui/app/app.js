@@ -8,7 +8,6 @@ import _ from 'lodash';
 
 import theme from './theme/theme';
 
-console.log("INITIALIZE APP")
 var mainModule = ScaffiUi.initialize({
 	config: ScaffiConfig,
 	private: ScaffiConfigPrivate,

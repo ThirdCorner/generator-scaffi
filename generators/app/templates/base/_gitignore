@@ -85,6 +85,12 @@ npm-shrinkwrap.json
 /src/iis/**/bin/
 /node_modules
 
-/build/web/server/*
 /src/server/config/scaffi-server.localhost.private.json
 /src/ui/config/scaffi-ui.localhost.private.json
+/src/ui/scaffi-ui.private.json
+/src/server/scaffi-server.private.json
+/builds/web/server/*
+/builds/ios/*
+/builds/android/*
+*.private.json
+**/*.private.json

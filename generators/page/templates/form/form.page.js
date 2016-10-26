@@ -2,7 +2,7 @@
 
 import ScaffiCore from 'scaffi-ui-core';
 import {RouteConfig, AbstractPage} from 'scaffi-ui-core'; // jshint unused: false
-import template from './<%= routeTemplateName %>.html!text';
+import template from './<%= routeTemplateName %>.html';
 
 //start-non-standard
 // export-params-start

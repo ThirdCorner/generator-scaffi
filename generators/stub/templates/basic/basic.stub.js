@@ -2,7 +2,7 @@
 
 import {Component, View, AbstractStubPage} from 'scaffi-ui-core'; // jshint unused: false
 import _ from 'lodash';
-import template from './<%= stubName %>.html!text';
+import template from './<%= stubName %>.html';
 
 //start-non-standard
 @Component({
