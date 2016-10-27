@@ -109,10 +109,13 @@ module.exports = yeoman.Base.extend({
 					fs.copySync(this.templatePath('iis', 'web.config'), this.destinationPath('builds', "web", "server", "web.config"));
 				}
 			} else {
-				this.log("Running ionic build " + this.platformType);
-				process.chdir(this.destinationPath("src", "ui", "build", this.platformType, "public"));
-				this.spawnCommandSync('ionic', ['build', this.platformType], this.options);
-				// fs.copySync(this.destinationPath('src', 'ui', "build", this.platformType, "public"), this.destinationPath('builds', this.platformType));
+				/*
+					We don't want to call ionic here because the build machine might not be able to build it; ie ios
+				 */
+				this.log("Moving ionic build folder to build/" + this.platformType);
+				//process.chdir(this.destinationPath("src", "ui", "build", this.platformType, "public"));
+				//this.spawnCommandSync('ionic', ['build', this.platformType], this.options);
+				fs.copySync(this.destinationPath('src', 'ui', "build", this.platformType, "public"), this.destinationPath('builds', this.platformType));
 
 			}
 		} catch (e) {
@@ -127,8 +130,8 @@ module.exports = yeoman.Base.extend({
 				this.log("Deleting config directory in Server");
 				fs.removeSync(this.destinationPath('builds', "web", "server", "config"));
 			} else {
-				this.log("Copying outputted apk to build/" + this.platformType + "/apk folder");
-				this.fs.copy(this.destinationPath("src", "ui", "build", this.platformType, "public", "platforms", this.platformType, "build", "outputs", "apk"), this.destinationPath('builds', this.platformType));
+				//this.log("Copying outputted apk to build/" + this.platformType + "/apk folder");
+				// this.fs.copy(this.destinationPath("src", "ui", "build", this.platformType, "public", "platforms", this.platformType, "build", "outputs", "apk"), this.destinationPath('builds', this.platformType));
 			}
 		} catch(e){
 			this.log(e);
