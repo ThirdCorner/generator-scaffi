@@ -15,6 +15,9 @@ var nodeIp = require("ip");
 
 var Promise = require("bluebird");
 
+var transformLegacy = require("babel-plugin-transform-decorators-legacy");
+var babelify = require("babelify");
+
 module.exports = {
 	/*
 		Task chain FNs
@@ -483,9 +486,11 @@ module.exports = {
 				var config = that.getScaffiPrivate(context);
 				var buildDeps = config.bundle[platformType].config.dependencies;
 
-				process.chdir(context.destinationPath("src", "ui"));
+				// process.chdir(context.destinationPath("src", "ui"));
 				var bundleChain = browserify({
-					debug: true
+					debug: true,
+					basedir: context.destinationPath("src", "ui"),
+					paths: [path.join(__dirname, "..", "node_modules")]
 				});
 
 				/*
@@ -502,10 +507,14 @@ module.exports = {
 
 				var buildHash = that.getRandomHash();
 
+				/*
+					On the transforms, because we're installing them in the generator, we need to require them so the resolve in relation to the generator's packgaes
+					On, presets, you don't want to say require().default, but plugins you need to do that.
+				 */
 				var fileStream = fs.createWriteStream(context.destinationPath("src", "ui", "build", platformType, ".vendor", "scripts", "vendor." + buildHash + ".js"));
 				bundleChain
 					//.plugin("minifyify", {map: 'bundle.js.map', output: 'bundle.js.map'})
-					.transform("babelify", {presets: ["es2015", "stage-0"], plugins: ["transform-decorators-legacy", "transform-html-import-to-string"]})
+					.transform(babelify, {presets: [require("babel-preset-es2015"), require("babel-preset-stage-0")], plugins: [require("babel-plugin-transform-decorators-legacy").default, require("babel-plugin-transform-html-import-to-string").default]})
 					.bundle()
 					.pipe(fileStream)
 
@@ -590,9 +599,10 @@ module.exports = {
 			var config = that.getScaffiPrivate(context);
 			var buildDeps = config.bundle[platformType].config.dependencies;
 
-
 			var appChain = browserify(context.destinationPath("src", "ui", "app", "app.js"), {
-				debug: true
+				debug: true,
+				basedir: context.destinationPath("src", "ui"),
+				paths: [path.join(__dirname, "..", "node_modules")]
 			});
 
 			that.cleanScriptFile(context, context.destinationPath(that.getPlatformOutputDir(context, platformType), "scripts"), "app");
@@ -619,8 +629,14 @@ module.exports = {
 			var buildHash = md5(Date().toString());
 			var fileStream = fs.createWriteStream(context.destinationPath(that.getPlatformOutputDir(context, platformType), "scripts", "app." + buildHash+ ".js"));
 
+
+			/*
+			 On the transforms, because we're installing them in the generator, we need to require them so the resolve in relation to the generator's packgaes
+			 On, presets, you don't want to say require().default, but plugins you need to do that.
+			 */
+
 			appChain
-				.transform("babelify", {presets: ["es2015", "stage-0"], plugins: ["transform-decorators-legacy", "transform-html-import-to-string"]})
+				.transform(babelify, {presets: [require("babel-preset-es2015"), require("babel-preset-stage-0")], plugins: [require("babel-plugin-transform-decorators-legacy").default, require("babel-plugin-transform-html-import-to-string").default]})
 				.bundle()
 				.pipe(fileStream);
 
@@ -636,7 +652,14 @@ module.exports = {
 	},
 	bundleAppResources: function(context, platformType){
 
-		return this.bundleResources(context, path.join("src", "ui", "app"), path.join(this.getPlatformOutputDir(context, platformType), ".vendor"), platformType);
+		var that = this;
+		return this.bundleResources(context, path.join("src", "ui", "app"), that.getPlatformOutputDir(context, platformType), platformType).then(function(){
+			return new Promise(function(resolve){
+				fsExtra.ensureDirSync(context.destinationPath("src", "ui", "app", "resources"));
+				fsExtra.copySync(context.destinationPath("src", "ui", "app", "resources"), that.getPlatformOutputDir(context, platformType));
+				resolve();
+			});
+		});
 
 	},
 	bundleAppSass: function(context, platformType) {
