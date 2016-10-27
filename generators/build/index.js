@@ -101,15 +101,18 @@ module.exports = yeoman.Base.extend({
 	install: function(){
 
 		try {
-			this.log("Copying Server to Build Folder");
 
 			if (this.platformType == "web") {
+				this.log("Copying Server to Build Folder");
 				fs.copySync(this.destinationPath('src', 'server'), this.destinationPath('builds', this.platformType, "server"));
 				if (!fs.existsSync(this.destinationPath('build', this.platformType, "server", "web.config"))) {
 					fs.copySync(this.templatePath('iis', 'web.config'), this.destinationPath('builds', "web", "server", "web.config"));
 				}
 			} else {
-				fs.copySync(this.destinationPath('src', 'ui', "build", this.platformType, "public"), this.destinationPath('builds', this.platformType));
+				this.log("Running ionic build " + this.platformType);
+				process.chdir(this.destinationPath("src", "ui", "build", this.platformType, "public"));
+				this.spawnCommandSync('ionic', ['build', this.platformType], this.options);
+				// fs.copySync(this.destinationPath('src', 'ui', "build", this.platformType, "public"), this.destinationPath('builds', this.platformType));
 
 			}
 		} catch (e) {
@@ -119,9 +122,17 @@ module.exports = yeoman.Base.extend({
 	},
 
 	end: function(){
-		if(this.platformType == "web") {
-			this.log("Deleting config directory in Server");
-			fs.removeSync(this.destinationPath('builds', "web", "server", "config"));
+		try {
+			if (this.platformType == "web") {
+				this.log("Deleting config directory in Server");
+				fs.removeSync(this.destinationPath('builds', "web", "server", "config"));
+			} else {
+				this.log("Copying outputted apk to build/" + this.platformType + "/apk folder");
+				this.fs.copy(this.destinationPath("src", "ui", "build", this.platformType, "public", "platforms", this.platformType, "build", "outputs", "apk"), this.destinationPath('builds', this.platformType));
+			}
+		} catch(e){
+			this.log(e);
+			throw e;
 		}
 	}
 });

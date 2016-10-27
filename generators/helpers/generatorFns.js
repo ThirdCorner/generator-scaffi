@@ -726,6 +726,8 @@ var helperFns = {
 						json.config.environment = "ci";
 					});
 					
+					context.fs.copy(context.templatePath(path.join(versionFolder, "mobile")), context.destinationPath("src", "ui", "app", "mobile"));
+					
 					/*
 					 Delete scaffi-ui.private for cleanup purposes
 					 */
@@ -749,9 +751,7 @@ var helperFns = {
 					if(context.fs.exists(context.destinationPath("src", "ui", "app", "fonts"))) {
 						context.fs.move(context.destinationPath("src", "ui", "app", "fonts"), context.destinationPath("src", "ui", "app", "resources", "fonts"));
 					}
-
-
-					context.fs.copy(context.templatePath(path.join(versionFolder, "mobile")), context.destinationPath("src", "ui", "app", "mobile"));
+					
 
 					/*
 						Cleanup folders

@@ -25,17 +25,20 @@ module.exports = yeoman.Base.extend({
 
 			var mainCommand = this.arguments[0];
 
+			this.command = this.arguments[0];
+			this.platformType = this.arguments[1];
 			this.buildFiles = false;
 			this.processSrc = null;
 			switch (mainCommand) {
-				//case "build":
+				case "build":
+					throw new Error("Use 'yo scaffi:build ios mode' || 'yo scaffi:build android mode'");
 				case "run":
 				case "emulate":
 					this.buildFiles = true;
 					if (["ios", "android"].indexOf(this.arguments[1]) === -1) {
-						throw new Error("Unknown platform type: ", this.arguments[1]);
+						throw new Error("Unknown platform type: ", this.platformType);
 					}
-					this.processSrc = this.destinationPath("src", "ui", "build", this.arguments[1], "public");
+					this.processSrc = this.destinationPath("src", "ui", "build", this.platformType, "public");
 					break;
 				case "platform":
 				case "browser":
@@ -63,7 +66,7 @@ module.exports = yeoman.Base.extend({
 		var done = this.async();
 
 		if(this.buildFiles) {
-			var platformType = this.arguments[1];
+			var platformType = this.platformType;
 			var that = this;
 
 			try {
@@ -71,7 +74,9 @@ module.exports = yeoman.Base.extend({
 					.then(function(){
 						return buildHelpers.buildUi(that, platformType)
 							.then(function(){
-								buildHelpers.addFileWatchers(that, platformType);
+								if(that.command != "build"){
+									buildHelpers.addFileWatchers(that, platformType);
+								}
 
 								// We're adding a timeout so that we can ensure index.html is compiled
 								setTimeout(function(){
@@ -93,5 +98,8 @@ module.exports = yeoman.Base.extend({
 	end: function(){
 		process.chdir(this.processSrc);
 		this.spawnCommandSync('ionic', this.arguments, this.options);
+		if(this.command == "build") {
+			this.fs.copy(this.destinationPath("src", "ui", "build", this.platformType, "platforms", this.platformType, "build", "outputs", "apk"))
+		}
 	}
 });
