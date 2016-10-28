@@ -601,7 +601,7 @@ var helperFns = {
 					/*
 						Update base level generator to latest
 					 */
-					context.spawnCommandSync('npm', ['install', 'generator-scaffi@0.1.0', "--save"], {cwd: context.destinationPath()});
+					context.spawnCommandSync('npm', ['install', 'generator-scaffi@0.1.0', "--save-dev"], {cwd: context.destinationPath()});
 					
 					/*
 						Update config json from cli => ci
@@ -727,7 +727,7 @@ var helperFns = {
 						json.config.environment = "ci";
 					});
 					
-					context.fs.copy(context.templatePath(path.join(versionFolder, "mobile")), context.destinationPath("src", "ui", "app", "mobile"));
+					context.fs.copy(context.templatePath(path.join(versionFolder, "mobile")), context.destinationPath("src", "ui", "mobile"));
 					
 					/*
 					 Delete scaffi-ui.private for cleanup purposes

@@ -329,7 +329,9 @@ module.exports = {
 				context.log(_.capitalize(serverOrUi) + " has started npm install");
 				context.spawnCommandSync('npm', ['install'], {cwd: context.destinationPath('src', serverOrUi)});
 			}
-			context.spawnCommandSync('npm', ['shrinkwrap'], {cwd: context.destinationPath('src', serverOrUi)});
+			if(!fsExtra.existsSync(context.destinationPath('src', serverOrUi, "npm-shrinkwrap.json"))) {
+				context.spawnCommandSync('npm', ['shrinkwrap'], {cwd: context.destinationPath('src', serverOrUi)});
+			}
 
 			that.updateScaffiPrivateInstalledPackages(context, serverOrUi);
 

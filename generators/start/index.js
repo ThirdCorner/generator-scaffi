@@ -36,6 +36,11 @@ module.exports = yeoman.Base.extend({
 				chalk.green('Scaffi') + ' startup time!'
 			));
 
+		if(!fs.existsSync(this.destinationPath("src", "ui", "scaffi-ui.private.json")) || !fs.existsSync(this.destinationPath("src", "server", "scaffi-server.private.json"))){
+			this.log("You need to run 'yo scaffi:mode' before you can start anything.")
+			throw new Error("You need to run 'yo scaffi:mode' before you can start anything.");
+		}
+
 		if(this.mode && ["web", "ios", "android"].indexOf(this.mode.toLowerCase()) !== -1) {
 			this.modeType = this.mode;
 			done();
