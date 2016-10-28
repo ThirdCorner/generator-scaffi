@@ -303,7 +303,9 @@ module.exports = {
 			context.log(_.capitalize(type) + " has started npm install");
 			context.spawnCommandSync('npm', ['set', "registry", "https://registry.npmjs.org/"], {cwd: context.destinationPath('src', type)});
 			context.spawnCommandSync('npm', ['install'], {cwd: context.destinationPath('src', type)});
-			context.spawnCommandSync('npm', ['shrinkwrap'], {cwd: context.destinationPath('src', type)});
+			if(!fsExtra.existsSync(context.destinationPath('src', type, "npm-shrinkwrap.json"))) {
+				context.spawnCommandSync('npm', ['shrinkwrap'], {cwd: context.destinationPath('src', type)});
+			}
 
 			that.updateScaffiPrivateInstalledPackages(context, type);
 
