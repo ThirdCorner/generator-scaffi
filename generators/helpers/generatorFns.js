@@ -757,7 +757,7 @@ var helperFns = {
 					/*
 						Cleanup folders
 					 */
-					fs.removeSync(context.destinationPath("src", "ui", "jspm_packages"));
+					//fs.removeSync(context.destinationPath("src", "ui", "jspm_packages"));
 					fs.removeSync(context.destinationPath("src", "ui", "gulp"));
 					fs.removeSync(context.destinationPath("src", "ui", "gulpfile.js"));
 					fs.removeSync(context.destinationPath("src", "ui", "jspm.conf.js"));
