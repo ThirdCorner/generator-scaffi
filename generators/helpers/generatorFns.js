@@ -641,6 +641,7 @@ var helperFns = {
 					});
 
 					context.fs.copy(context.templatePath(path.join(versionFolder, "index.html")), context.destinationPath("src", "ui", "app", "index.html"));
+					context.fs.copy(context.templatePath(path.join(versionFolder, "layout.mobile.html")), context.destinationPath("src", "ui", "app", "theme", "layout", "layout.mobile.html"));
 					
 					/*
 						Fix the build-resources.json file
