@@ -286,7 +286,7 @@ module.exports = {
 					throw new Error(name + " does not have a resolve or dist.shasum to track. Cannot build.");
 				}
 				config.build.packages[type].packages[name] = resolve;
-				if (npmPackageJson.main) {
+				if (npmPackageJson.main && _.endsWith(npmPackageJson.main, ".js")) {
 					config.build.packages[type].jsPackages[name] = resolve;
 				}
 			}
@@ -558,15 +558,28 @@ module.exports = {
 	addFileWatchers: function(context, platformType){
 		var that = this;
 		watch(context.destinationPath("src", "ui", "app"), {recursive: true}, function(filename){
-			switch(true){
-				case _.endsWith(filename, ".js") || _.endsWith(filename, ".html"):
-					that.bundleAppJS(context, platformType).then(function(){
-						that.bundleIndex(context, platformType);
-					});
-					break;
-				case _.endsWith(filename, ".scss"):
-					that.bundleAppSass(context, platformType);
-					break;
+			try {
+				switch (true) {
+					case _.endsWith(filename, ".js") || _.endsWith(filename, ".html"):
+						that.bundleAppJS(context, platformType).then(function () {
+							that.bundleIndex(context, platformType);
+						});
+						break;
+					case _.endsWith(filename, ".scss"):
+						that.bundleAppSass(context, platformType);
+						break;
+				}
+			} catch(e){
+				/*
+					Erroring on watcher usually happens because of EPERM which is collision of multiple changes
+					at once. This is here to account for it.
+				 */
+				setTimeout(function(e){
+					context.log("Watcher recompile error: ");
+					context.log(e);
+					context.log("Setting timer and recompiling code...");
+					that.addFileWatchers(context, platformType);
+				}, 1000);
 			}
 		});
 		/*
