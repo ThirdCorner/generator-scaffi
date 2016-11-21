@@ -30,10 +30,20 @@ module.exports = yeoman.Base.extend({
 				return helperFns.validateTagName(input);
 			}
 		}];
+		
+		prompts.push({
+			type: 'confirm',
+			name: 'splitControllers',
+			message: 'Do you need separate controllers for web and mobile?',
+			default: 0,
+			choices: ['No', 'Yes']
+		});
+		
 		this.prompt(prompts, function (props) {
 			this.props = props;
 			
 			this.factoryName = props.factoryName;
+			this.splitControllers = props.splitControllers;
 			
 			done();
 		}.bind(this));
@@ -50,10 +60,25 @@ module.exports = yeoman.Base.extend({
 		
 		var folderName = path.join(this.factoryName, this.factoryName);
 		
-		this.fs.copyTpl(
-			this.templatePath('factory.js'),
-			this.destinationPath(path.join("src", "ui", "app", "factories", folderName + ".factory.js")),
-			params);
+		if(this.splitControllers) {
+			this.fs.copyTpl(
+				this.templatePath('factory.abstract.js'),
+				this.destinationPath(path.join("src", "ui", "app", "factories", folderName + ".js")),
+				params);
+			this.fs.copyTpl(
+				this.templatePath('factory.web.js'),
+				this.destinationPath(path.join("src", "ui", "app", "factories", folderName + ".web.factory.js")),
+				params);
+			this.fs.copyTpl(
+				this.templatePath('factory.mobile.js'),
+				this.destinationPath(path.join("src", "ui", "app", "factories", folderName + ".mobile.factory.js")),
+				params);
+		} else {
+			this.fs.copyTpl(
+				this.templatePath('factory.js'),
+				this.destinationPath(path.join("src", "ui", "app", "factories", folderName + ".factory.js")),
+				params);
+		}
 		
 		
 	},

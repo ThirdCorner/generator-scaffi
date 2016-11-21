@@ -132,13 +132,12 @@ module.exports = yeoman.Base.extend({
 	end: function(){
 
 		buildHelpers.addFileWatchers(this, this.modeType);
-		
+
 		/*
 			This needs to be switched to the server, that way the paths seem to work then without starting
 			a bunch of watchers.
 		 */
 		process.chdir(this.destinationPath("src", "server"));
-
 
 		if(this.modeType == "web") {
 			nodemon({

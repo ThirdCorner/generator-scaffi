@@ -286,8 +286,20 @@ module.exports = {
 					throw new Error(name + " does not have a resolve or dist.shasum to track. Cannot build.");
 				}
 				config.build.packages[type].packages[name] = resolve;
-				if (npmPackageJson.main && _.endsWith(npmPackageJson.main, ".js")) {
-					config.build.packages[type].jsPackages[name] = resolve;
+				if (npmPackageJson.main) {
+					var main = npmPackageJson.main;
+					if(_.isString(npmPackageJson.main)) {
+						if(_.endsWith(main, ".js")) {
+							config.build.packages[type].jsPackages[name] = resolve;
+						}
+
+					} else if(_.isArray(npmPackageJson.main)) {
+						for(var i in main) {
+							if(_.endsWith(main[i], ".js")) {
+								config.build.packages[type].jsPackages[name] = resolve;
+							}
+						}
+					}
 				}
 			}
 			
@@ -497,6 +509,9 @@ module.exports = {
 					paths: [path.join(__dirname, "..", "node_modules")]
 				});
 
+
+				//buildDeps[buildDeps.length-1] += "/isteven-multi-select.js";
+
 				/*
 					Figure out which in the build json, are the js packages we need to compile, based on
 					the dependacies for the platform
@@ -508,13 +523,13 @@ module.exports = {
 					}
 				}
 
-
 				var buildHash = that.getRandomHash();
 
 				/*
 					On the transforms, because we're installing them in the generator, we need to require them so the resolve in relation to the generator's packgaes
 					On, presets, you don't want to say require().default, but plugins you need to do that.
 				 */
+
 				var fileStream = fs.createWriteStream(context.destinationPath("src", "ui", "build", platformType, ".vendor", "scripts", "vendor." + buildHash + ".js"));
 				bundleChain
 					//.plugin("minifyify", {map: 'bundle.js.map', output: 'bundle.js.map'})
@@ -557,30 +572,41 @@ module.exports = {
 	 */
 	addFileWatchers: function(context, platformType){
 		var that = this;
+		var isBuildingScripts = false;
 		watch(context.destinationPath("src", "ui", "app"), {recursive: true}, function(filename){
 			try {
 				switch (true) {
 					case _.endsWith(filename, ".js") || _.endsWith(filename, ".html"):
-						that.bundleAppJS(context, platformType).then(function () {
-							that.bundleIndex(context, platformType);
-						});
+						if(!isBuildingScripts) {
+							isBuildingScripts = true;
+							context.log("REBUILDING")
+							that.bundleAppJS(context, platformType).then(function () {
+								that.bundleIndex(context, platformType).then(function () {
+									isBuildingScripts = false;
+									context.log("DONE REBUILDNG")
+								});
+							});
+						}
 						break;
 					case _.endsWith(filename, ".scss"):
 						that.bundleAppSass(context, platformType);
 						break;
+					
 				}
-			} catch(e){
+				
+			} catch (e) {
 				/*
-					Erroring on watcher usually happens because of EPERM which is collision of multiple changes
-					at once. This is here to account for it.
+				 Erroring on watcher usually happens because of EPERM which is collision of multiple changes
+				 at once. This is here to account for it.
 				 */
-				setTimeout(function(e){
+				setTimeout(function (e) {
 					context.log("Watcher recompile error: ");
 					context.log(e);
 					context.log("Setting timer and recompiling code...");
 					that.addFileWatchers(context, platformType);
 				}, 1000);
 			}
+			
 		});
 		/*
 		 Need to add ability to watch package.json and build-resources so it will auto bundle vendors
@@ -631,17 +657,18 @@ module.exports = {
 					appChain = appChain.exclude(pkgName);
 				}
 			}
-
-
+			
 			/*
 				For ionic specifically with weird include paths, we have to make sure to ignore
 			 */
 
 			var ignores = that.getIgnoreDependencies(context, platformType);
+			
 			for(var i in ignores) {
 				appChain = appChain.ignore(ignores[i]);
 			}
 
+			
 
 			var buildHash = md5(Date().toString());
 			var fileStream = fs.createWriteStream(context.destinationPath(that.getPlatformOutputDir(context, platformType), "scripts", "app." + buildHash+ ".js"));
@@ -848,6 +875,20 @@ module.exports = {
 				})
 			}
 		});
+		
+		var ignoreType = "web";
+		if(platformType == "web") {
+			ignoreType = "mobile";
+		}
+		
+		var files = glob.sync(context.destinationPath("src", "ui", "app", "**", "*." + ignoreType +".*.js"));
+		if(files) {
+			files.forEach(function (item, index) {
+				returnDeps.push(path.join(item));
+			})
+		}
+		
+		console.log(files)
 
 		return returnDeps;
 	},

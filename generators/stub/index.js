@@ -70,8 +70,15 @@ module.exports = yeoman.Base.extend({
 			message: 'Which stub type would you like to add?',
 
 		});
-
-
+		
+		
+		prompts.push({
+			type: 'confirm',
+			name: 'splitControllers',
+			message: 'Do you need separate controllers for web and mobile?',
+			default: 0,
+			choices: ['No', 'Yes']
+		});
 
 		this.prompt(prompts, function (props) {
 
@@ -83,6 +90,7 @@ module.exports = yeoman.Base.extend({
 				this.route = this.route.substr(0, this.route.length -1);
 			}
 
+			this.splitControllers = props.splitControllers;
 			done();
 		}.bind(this));
 
@@ -118,11 +126,30 @@ module.exports = yeoman.Base.extend({
 			this.destinationPath(path.join("src", "ui", "app", "routes", filePath , name + ".html")),
 			htmlParams
 		);
-		this.fs.copyTpl(
-			path.join(templateUrl,  this.stubType + ".stub.js"),
-			this.destinationPath(path.join("src", "ui", "app", "routes", filePath, name + ".stub.js")),
-			jsParams
-		);
+		
+		if(this.splitControllers) {
+			this.fs.copyTpl(
+				path.join(templateUrl, this.stubType + ".abstract.stub.js"),
+				this.destinationPath(path.join("src", "ui", "app", "routes", filePath, name + ".js")),
+				jsParams
+			);
+			this.fs.copyTpl(
+				path.join(templateUrl, this.stubType + ".web.stub.js"),
+				this.destinationPath(path.join("src", "ui", "app", "routes", filePath, name + ".web.stub.js")),
+				jsParams
+			);
+			this.fs.copyTpl(
+				path.join(templateUrl, this.stubType + ".mobile.stub.js"),
+				this.destinationPath(path.join("src", "ui", "app", "routes", filePath, name + ".mobile.stub.js")),
+				jsParams
+			);
+		} else {
+			this.fs.copyTpl(
+				path.join(templateUrl, this.stubType + ".stub.js"),
+				this.destinationPath(path.join("src", "ui", "app", "routes", filePath, name + ".stub.js")),
+				jsParams
+			);
+		}
 
 
 
@@ -134,6 +161,6 @@ module.exports = yeoman.Base.extend({
 		var destPath = this.destinationPath(path.join("src", "ui", "app", "routes"));
 		helperFns.generateGenericScssInclude(destPath, "routes");
 
-		helperFns.generateGenericJsIncludes(destPath, done, "routes.js");
+		helperFns.generateGenericJsIncludes(destPath, done, "routes.js", ["page.js", "route.js", "stub.js"]);
 	},
 });

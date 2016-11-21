@@ -1,6 +1,6 @@
 {
   "name": "generator-scaffi",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "dependencies": {
     "@types/jasmine": {
       "version": "2.5.36",
@@ -1260,6 +1260,33 @@
       "version": "4.0.0",
       "from": "browserify-sign@>=4.0.0 <5.0.0",
       "resolved": "https://registry.npmjs.org/browserify-sign/-/browserify-sign-4.0.0.tgz"
+    },
+    "browserify-transform-tools": {
+      "version": "1.7.0",
+      "from": "browserify-transform-tools@latest",
+      "resolved": "https://registry.npmjs.org/browserify-transform-tools/-/browserify-transform-tools-1.7.0.tgz",
+      "dependencies": {
+        "acorn": {
+          "version": "3.3.0",
+          "from": "acorn@>=3.0.0 <4.0.0",
+          "resolved": "https://registry.npmjs.org/acorn/-/acorn-3.3.0.tgz"
+        },
+        "falafel": {
+          "version": "2.0.0",
+          "from": "falafel@>=2.0.0 <3.0.0",
+          "resolved": "https://registry.npmjs.org/falafel/-/falafel-2.0.0.tgz"
+        },
+        "isarray": {
+          "version": "0.0.1",
+          "from": "isarray@0.0.1",
+          "resolved": "https://registry.npmjs.org/isarray/-/isarray-0.0.1.tgz"
+        }
+      }
+    },
+    "browserify-transform-tools-exclude": {
+      "version": "0.1.1",
+      "from": "browserify-transform-tools-exclude@latest",
+      "resolved": "https://registry.npmjs.org/browserify-transform-tools-exclude/-/browserify-transform-tools-exclude-0.1.1.tgz"
     },
     "browserify-zlib": {
       "version": "0.1.4",
@@ -4428,6 +4455,11 @@
       "from": "nan@>=2.3.2 <3.0.0",
       "resolved": "https://registry.npmjs.org/nan/-/nan-2.4.0.tgz"
     },
+    "natives": {
+      "version": "1.1.0",
+      "from": "natives@>=1.1.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/natives/-/natives-1.1.0.tgz"
+    },
     "negotiator": {
       "version": "0.6.1",
       "from": "negotiator@0.6.1",
@@ -5458,6 +5490,11 @@
       "version": "0.5.3",
       "from": "shelljs@>=0.5.0 <0.6.0",
       "resolved": "https://registry.npmjs.org/shelljs/-/shelljs-0.5.3.tgz"
+    },
+    "sigmund": {
+      "version": "1.0.1",
+      "from": "sigmund@>=1.0.0 <1.1.0",
+      "resolved": "https://registry.npmjs.org/sigmund/-/sigmund-1.0.1.tgz"
     },
     "signal-exit": {
       "version": "2.1.2",

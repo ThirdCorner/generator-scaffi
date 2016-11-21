@@ -42,11 +42,23 @@ module.exports = yeoman.Base.extend({
 				}
 			]
 		});
+		
+		prompts.push({
+			type: 'confirm',
+			name: 'splitControllers',
+			message: 'Do you need separate controllers for web and mobile?',
+			default: 0,
+			choices: ['No', 'Yes'],
+			when: function(answers){
+				return answers.componentType == "ui";
+			}
+		});
 
 		this.prompt(prompts, function (props) {
 			this.props = props;
 			this.component = props.name;
 			this.componentType = props.componentType;
+			this.splitControllers = props.splitControllers;
 
 			done();
 		}.bind(this));
@@ -63,6 +75,7 @@ module.exports = yeoman.Base.extend({
 			this._writeServerComponent();
 		}
 	
+		console.log(this.splitControllers);
 	},
 	_writeServerComponent: function(){
 		var params = {
@@ -88,10 +101,31 @@ module.exports = yeoman.Base.extend({
 
 		var routeFilePath = path.join(this.component, this.component);
 		
-		this.fs.copyTpl(
-			this.templatePath(path.join("ui", 'component.js')),
-			this.destinationPath(path.join("src", "ui", "app", "components", routeFilePath + ".js")),
-			jsParams);
+		if(this.splitControllers) {
+			
+			this.fs.copyTpl(
+				this.templatePath(path.join("ui", 'component.abstract.js')),
+				this.destinationPath(path.join("src", "ui", "app", "components", routeFilePath + ".js")),
+				jsParams);
+			
+			this.fs.copyTpl(
+				this.templatePath(path.join("ui", 'component.web.js')),
+				this.destinationPath(path.join("src", "ui", "app", "components", routeFilePath + ".web.component.js")),
+				jsParams);
+			this.fs.copyTpl(
+				this.templatePath(path.join("ui", 'component.mobile.js')),
+				this.destinationPath(path.join("src", "ui", "app", "components", routeFilePath + ".mobile.component.js")),
+				jsParams);
+			
+		} else {
+			
+			this.fs.copyTpl(
+				this.templatePath(path.join("ui", 'component.js')),
+				this.destinationPath(path.join("src", "ui", "app", "components", routeFilePath + ".component.js")),
+				jsParams);
+			
+		}
+		
 		this.fs.copyTpl(
 			this.templatePath(path.join("ui", 'component.html')),
 			this.destinationPath(path.join("src", "ui", "app", "components", routeFilePath + ".html")),
@@ -105,7 +139,7 @@ module.exports = yeoman.Base.extend({
 			// in the writing phase
 			var destPath = this.destinationPath(path.join("src", "ui", "app", "components"));
 			helperFns.generateGenericScssInclude(destPath, "components");
-			helperFns.generateGenericJsIncludes(destPath, done, "components.js");
+			helperFns.generateGenericJsIncludes(destPath, done, "components.js", "component.js");
 		}
 	}
 });

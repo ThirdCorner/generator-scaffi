@@ -104,9 +104,15 @@ module.exports = yeoman.Base.extend({
 				return answers.pageType == 'form';
 			}
 		});
-
-
-
+		
+		
+		prompts.push({
+			type: 'confirm',
+			name: 'splitControllers',
+			message: 'Do you need separate controllers for web and mobile?',
+			default: 0,
+			choices: ['No', 'Yes']
+		});
 
 
 		this.prompt(prompts, function (props) {
@@ -120,6 +126,8 @@ module.exports = yeoman.Base.extend({
 			this.enableEdit = props.enableFormTypes && props.enableFormTypes.indexOf("edit") !== -1 ? true : false;
 			this.enableAdd = props.enableFormTypes  && props.enableFormTypes.indexOf("add") !== -1 ? true : false;
 			this.serviceName = props.serviceName ? props.serviceName : "";
+			
+			this.splitControllers = props.splitControllers;
 
 			done();
 		}.bind(this));
@@ -213,10 +221,29 @@ module.exports = yeoman.Base.extend({
 			this.templatePath(path.join(this.pageType, this.pageType + '.html')),
 			this.destinationPath(path.join("src", "ui", "app", "routes", routeFilePath, routeFileName + ".html")),
 			htmlParams);
-		this.fs.copyTpl(
-			this.templatePath(path.join(this.pageType, this.pageType + '.page.js')),
-			this.destinationPath(path.join("src", "ui", "app", "routes", routeFilePath, routeFileName + ".page.js")),
-			jsParams);
+		
+		if(this.splitControllers) {
+			this.fs.copyTpl(
+				this.templatePath(path.join(this.pageType, this.pageType + '.abstract.page.js')),
+				this.destinationPath(path.join("src", "ui", "app", "routes", routeFilePath, routeFileName + ".js")),
+				jsParams);
+			this.fs.copyTpl(
+				this.templatePath(path.join(this.pageType, this.pageType + '.web.page.js')),
+				this.destinationPath(path.join("src", "ui", "app", "routes", routeFilePath, routeFileName + ".web.page.js")),
+				jsParams);
+			this.fs.copyTpl(
+				this.templatePath(path.join(this.pageType, this.pageType + '.mobile.page.js')),
+				this.destinationPath(path.join("src", "ui", "app", "routes", routeFilePath, routeFileName + ".mobile.page.js")),
+				jsParams);
+			
+		} else  {
+			this.fs.copyTpl(
+				this.templatePath(path.join(this.pageType, this.pageType + '.page.js')),
+				this.destinationPath(path.join("src", "ui", "app", "routes", routeFilePath, routeFileName + ".page.js")),
+				jsParams);
+		}
+		
+		
 
 
 	},
@@ -226,6 +253,6 @@ module.exports = yeoman.Base.extend({
 		var done = this.async();
 		var destPath = this.destinationPath(path.join("src", "ui", "app", "routes"));
 		helperFns.generateGenericScssInclude(destPath, "routes");
-		helperFns.generateGenericJsIncludes(destPath, done, "routes.js");
+		helperFns.generateGenericJsIncludes(destPath, done, "routes.js", ["page.js", "route.js", "stub.js"]);
 	}
 });

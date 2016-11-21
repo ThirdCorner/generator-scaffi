@@ -30,10 +30,21 @@ module.exports = yeoman.Base.extend({
 				return helperFns.validateTagName(input);
 			}
 		}];
+		
+		
+		prompts.push({
+			type: 'confirm',
+			name: 'splitControllers',
+			message: 'Do you need separate controllers for web and mobile?',
+			default: 0,
+			choices: ['No', 'Yes']
+		});
+		
 		this.prompt(prompts, function (props) {
 			this.props = props;
 
 			this.directiveName = props.directiveName;
+			this.splitControllers = props.splitControllers;
 
 			done();
 		}.bind(this));
@@ -49,11 +60,30 @@ module.exports = yeoman.Base.extend({
 		};
 
 		var folderName = path.join(this.directiveName, this.directiveName);
-
-		this.fs.copyTpl(
-			this.templatePath('directive.js'),
-			this.destinationPath(path.join("src", "ui", "app", "directives", folderName + ".directive.js")),
-			params);
+		
+		if(this.splitControllers) {
+			
+			this.fs.copyTpl(
+				this.templatePath('directive.abstract.js'),
+				this.destinationPath(path.join("src", "ui", "app", "directives", folderName + ".js")),
+				params);
+			
+			this.fs.copyTpl(
+				this.templatePath('directive.web.js'),
+				this.destinationPath(path.join("src", "ui", "app", "directives", folderName + ".web.directive.js")),
+				params);
+			this.fs.copyTpl(
+				this.templatePath('directive.mobile.js'),
+				this.destinationPath(path.join("src", "ui", "app", "directives", folderName + ".mobile.directive.js")),
+				params);
+			
+		} else {
+			
+			this.fs.copyTpl(
+				this.templatePath('directive.js'),
+				this.destinationPath(path.join("src", "ui", "app", "directives", folderName + ".directive.js")),
+				params);
+		}
 
 
 	},

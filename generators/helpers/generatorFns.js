@@ -3,6 +3,7 @@
 var _ = require("lodash");
 var fs = require('fs-extra');
 var path = require('path');
+var file = require("fs");
 
 var helperFns = {
 	makeDisplayNameWithSpace: function(name) {
@@ -259,7 +260,7 @@ var helperFns = {
 
 
 			_.each(results, function(file) {
-				if(file != filename && !_.endsWith(file, ".e2e.js") && !_.endsWith(file, ".spec.js")) {
+				if(file != filename) {
 					output += "import './" + file + "';\n";
 				}
 
@@ -768,6 +769,35 @@ var helperFns = {
 					throw e;
 				}
 				
+				
+				return success;
+			},
+			// UP to 0.2.0 / structureVersion #4
+			function(){
+				var success = true;
+				var versionFolder = "2";
+				try {
+					var folderList = fs.readdirSync(context.destinationPath("src", "ui", "app", "components"));
+					folderList.forEach(function(item){
+						if(item.indexOf(".") === -1) {
+							fs.copySync(context.destinationPath("src", "ui", "app", "components", item, item + ".js"), context.destinationPath("src", "ui", "app", "components", item, item + ".component.js"));
+							fs.removeSync(context.destinationPath("src", "ui", "app", "components", item, item + ".js"));
+						}
+					});
+					
+					var destPath = context.destinationPath(path.join("src", "ui", "app", "components"));
+					helperFns.generateGenericJsIncludes(destPath, function(){}, "components.js", ".component.js");
+					
+					/*
+					 Update base level generator to latest
+					 */
+					context.spawnCommandSync('npm', ['install', 'generator-scaffi@0.2.0', "--save-dev"], {cwd: context.destinationPath()});
+							
+				} catch(e){
+					success = false;
+					context.log(e);
+					throw e;
+				}
 				
 				return success;
 			}
