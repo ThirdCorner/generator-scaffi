@@ -573,7 +573,7 @@ module.exports = {
 	addFileWatchers: function(context, platformType){
 		var that = this;
 		var isBuildingScripts = false;
-		watch(context.destinationPath("src", "ui", "app"), {recursive: true}, function(filename){
+		return watch(context.destinationPath("src", "ui", "app"), {recursive: true}, function(filename){
 			try {
 				switch (true) {
 					case _.endsWith(filename, ".js") || _.endsWith(filename, ".html"):

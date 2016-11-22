@@ -131,60 +131,83 @@ module.exports = yeoman.Base.extend({
 	},
 	end: function(){
 
-		buildHelpers.addFileWatchers(this, this.modeType);
+		this._launchSyncs();
 
-		/*
-			This needs to be switched to the server, that way the paths seem to work then without starting
-			a bunch of watchers.
-		 */
-		process.chdir(this.destinationPath("src", "server"));
-
-		if(this.modeType == "web") {
-			nodemon({
-				ignore: ["public"],
-				script: "index.js"
-			});
-
-
-			bs.init({
-				port: 4000,
-				uiPort: 4010,
-				reloadDelay: 1000, // So that index has time to regen before reloading
-				files: [
-					"index.html",
-					"public/**/*.css",
-					"public/**/*.js"
-				],
-				open: true,
-				server: {
-					baseDir: buildHelpers.getPlatformOutputDir(this, this.modeType),
-					middleware: [
-						modRewrite(['^([^.]+)$ /index.html [L]'])
-					]
-				},
-				browser: "chrome"
-			});
-
-		} else {
-			this.log("!!! Remember that you need to start a server if you're outside prototype mode, since you're running a mobile build !!!");
-			bs.init({
-				port: 4001,
-				uiPort: 4011,
-				reloadDelay: 1000, // So that index has time to regen before reloading
-				files: [
-					buildHelpers.getPlatformOutputDir(this, this.modeType) + "/index.html",
-					buildHelpers.getPlatformOutputDir(this, this.modeType) + "/**/*"
-				],
-				open: true,
-				server: {
-					baseDir: buildHelpers.getPlatformOutputDir(this, this.modeType),
-					middleware: [
-						modRewrite(['^([^.]+)$ /index.html [L]'])
-					]
-				},
-				browser: "chrome"
-			});
+	},
+	_launchSyncs: function(){
+		
+		var watcher = buildHelpers.addFileWatchers(this, this.modeType);
+		
+		var that = this;
+		watcher.on("error", function(err){
+			that._cleanupSyncs(watcher);
+		});
+		
+		
+		try {
+			
+			/*
+			 This needs to be switched to the server, that way the paths seem to work then without starting
+			 a bunch of watchers.
+			 */
+			process.chdir(this.destinationPath("src", "server"));
+			
+			if (this.modeType == "web") {
+				nodemon({
+					ignore: ["public"],
+					script: "index.js"
+				});
+				
+				
+				bs.init({
+					port: 4000,
+					uiPort: 4010,
+					reloadDelay: 1000, // So that index has time to regen before reloading
+					files: [
+						"index.html",
+						"public/**/*.css",
+						"public/**/*.js"
+					],
+					open: true,
+					server: {
+						baseDir: buildHelpers.getPlatformOutputDir(this, this.modeType),
+						middleware: [
+							modRewrite(['^([^.]+)$ /index.html [L]'])
+						]
+					},
+					browser: "chrome"
+				});
+				
+			} else {
+				this.log("!!! Remember that you need to start a server if you're outside prototype mode, since you're running a mobile build !!!");
+				bs.init({
+					port: 4001,
+					uiPort: 4011,
+					reloadDelay: 1000, // So that index has time to regen before reloading
+					files: [
+						buildHelpers.getPlatformOutputDir(this, this.modeType) + "/index.html",
+						buildHelpers.getPlatformOutputDir(this, this.modeType) + "/**/*"
+					],
+					open: true,
+					server: {
+						baseDir: buildHelpers.getPlatformOutputDir(this, this.modeType),
+						middleware: [
+							modRewrite(['^([^.]+)$ /index.html [L]'])
+						]
+					},
+					browser: "chrome"
+				});
+			}
+		} catch(e){
+			this._cleanupSyncs(watcher);
 		}
-
+	},
+	_cleanupSyncs: function(watcher){
+		if(watcher) {
+			watcher.close();
+		}
+		bs.exit();
+		this.log("Syncers have crashed.... Relaunching....");
+		this._launchSyncs();
 	}
 });
