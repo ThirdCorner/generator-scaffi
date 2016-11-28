@@ -31,16 +31,14 @@ module.exports = {
 			}).then(function(){
 				return that.changeUiPlatformType(context, platformType);
 			}).then(function(){
-				context.log("Bundling App Resources");
-
-				that.transferVendorBundle(context, platformType);
-
+				return that.transferVendorBundle(context, platformType);
+			}).then(function(){
 				return Promise.all([
 					that.bundleAppJS(context, platformType),
 					that.bundleAppSass(context, platformType),
 					that.bundleAppResources(context, platformType)
 				]).then(function(){
-
+					
 					context.log("Finished: Bundling App Resources");
 				});
 			}).then(function(){
@@ -164,7 +162,7 @@ module.exports = {
 			if(domain.indexOf("localhost") !== -1) {
 				domain = domain + ":" + publicUiJson.config.serverLocalhostPort;
 			}
-
+			
 			if(domain.indexOf("localhost") !== -1 && platformType !== "web") {
 				var localhostIp = nodeIp.address();
 				domain = domain.replace("localhost", localhostIp);
@@ -176,14 +174,15 @@ module.exports = {
 			
 			context.log("= Setting UI server domain to " + domain);
 			privateJson.config.domain = domain;
+			privateJson.config.platform = platformType;
 			
 			helperFns.saveJson(jsonPath, privateJson);
-
 			resolve();
 		});
 
 	},
 	changeUiPlatformType: function(context, platformType) {
+		var that = this;
 		return new Promise(function(resolve){
 			var jsonPath = context.destinationPath("src", "ui", "scaffi-ui.private.json");
 			var privateJson = helperFns.openJson(jsonPath);
@@ -191,8 +190,9 @@ module.exports = {
 			privateJson.config.platform = platformType;
 
 			helperFns.saveJson(jsonPath, privateJson);
-
+			
 			resolve();
+			
 		});
 	},
 	/*
@@ -570,7 +570,7 @@ module.exports = {
 	/*
 		CLI commands
 	 */
-	addFileWatchers: function(context, platformType){
+	addFileWatchers: function(context, platformTypes){
 		var that = this;
 		var isBuildingScripts = false;
 		return watch(context.destinationPath("src", "ui", "app"), {recursive: true}, function(filename){
@@ -579,17 +579,31 @@ module.exports = {
 					case _.endsWith(filename, ".js") || _.endsWith(filename, ".html"):
 						if(!isBuildingScripts) {
 							isBuildingScripts = true;
-							context.log("REBUILDING")
-							that.bundleAppJS(context, platformType).then(function () {
-								that.bundleIndex(context, platformType).then(function () {
-									isBuildingScripts = false;
-									context.log("DONE REBUILDNG")
+							var promise = Promise.resolve();
+							_.each(platformTypes, function(platformType){
+								promise = promise.then(function(){
+									return new Promise(function(res, rej){
+										context.log("REBUILDING "+ platformType)
+										that.changeUiDomain(context, platformType).then(function () {
+											that.bundleAppJS(context, platformType).then(function () {
+												that.bundleIndex(context, platformType).then(function () {
+													isBuildingScripts = false;
+													context.log("DONE REBUILDNG " + platformType);
+													res();
+												});
+											});
+										});
+									});
 								});
 							});
+							
+							
 						}
 						break;
 					case _.endsWith(filename, ".scss"):
-						that.bundleAppSass(context, platformType);
+						_.each(platformTypes, function(platformType) {
+							that.bundleAppSass(context, platformType);
+						});
 						break;
 					
 				}
@@ -599,12 +613,12 @@ module.exports = {
 				 Erroring on watcher usually happens because of EPERM which is collision of multiple changes
 				 at once. This is here to account for it.
 				 */
-				setTimeout(function (e) {
-					context.log("Watcher recompile error: ");
-					context.log(e);
-					context.log("Setting timer and recompiling code...");
-					that.addFileWatchers(context, platformType);
-				}, 1000);
+				 setTimeout(function (e) {
+				 	context.log("Watcher recompile error: ");
+				 	context.log(e);
+				// 	context.log("Setting timer and recompiling code...");
+				// 	that.addFileWatchers(context, platformType);
+				 }, 1000);
 			}
 			
 		});
@@ -632,6 +646,42 @@ module.exports = {
 			return context.destinationPath("src", "ui", "build", platformType, "public", "www");
 		}
 	},
+	bundleAppConfig: function(context, platformType){
+		
+		
+		var that = this;
+		return new Promise(function(resolve){
+			
+			context.log("Bundling App Config");
+			
+			// Clear out any
+			that.cleanScriptFile(context, context.destinationPath(that.getPlatformOutputDir(context, platformType), "scripts"), "config");
+			
+			// process.chdir(context.destinationPath("src", "ui"));
+			var bundleChain = browserify("./scaffi-ui.private.json",{
+				basedir: context.destinationPath("src", "ui")
+			});
+			
+			
+			var buildHash = that.getRandomHash();
+			
+			/*
+			 On the transforms, because we're installing them in the generator, we need to require them so the resolve in relation to the generator's packgaes
+			 On, presets, you don't want to say require().default, but plugins you need to do that.
+			 */
+			
+			var fileStream = fs.createWriteStream(context.destinationPath( that.getPlatformOutputBaseDir(context, platformType), "scripts", "config." + buildHash + ".js"));
+			bundleChain
+				.transform(babelify, {presets: [require("babel-preset-es2015"), require("babel-preset-stage-0")], plugins: [require("babel-plugin-transform-decorators-legacy").default, require("babel-plugin-transform-html-import-to-string").default]})
+				.bundle()
+				.pipe(fileStream)
+			
+			fileStream.on("finish", function(){
+				context.log("Finished: Bundling App Config JS");
+				resolve();
+			});
+		});
+	},
 	bundleAppJS: function(context, platformType) {
 
 		var that = this;
@@ -642,10 +692,10 @@ module.exports = {
 			var config = that.getScaffiPrivate(context);
 			var buildDeps = config.bundle[platformType].config.dependencies;
 
-			var appChain = browserify(context.destinationPath("src", "ui", "app", "app.js"), {
+			var appChain = browserify("./app/app.js", {
 				debug: true,
 				basedir: context.destinationPath("src", "ui"),
-				paths: [path.join(__dirname, "..", "node_modules")]
+				paths: [path.join(__dirname, "..", "node_modules"), path.join(that.getPlatformOutputDir(context, platformType), ".vendor")]
 			});
 
 			that.cleanScriptFile(context, context.destinationPath(that.getPlatformOutputDir(context, platformType), "scripts"), "app");
@@ -690,9 +740,6 @@ module.exports = {
 			});
 		});
 
-		/*
-		 Need to save this in private json so that it doesn't get committed.
-		 */
 	},
 	bundleAppResources: function(context, platformType){
 
@@ -769,7 +816,15 @@ module.exports = {
 
 
 			var vendor = that.getBundleFiles(context, outputDir, "scripts/vendor*");
+			var config = that.getBundleFiles(context, outputDir, "scripts/config*");
 			var app = that.getBundleFiles(context, outputDir, "scripts/app*");
+			
+			config.forEach(function(filePath){
+				if(_.startsWith(filePath, "/")) {
+					filePath = filePath.substr(1);
+				}
+				scriptTags += '<script src=' + filePath + '></script>';
+			});
 			
 			vendor.forEach(function(filePath){
 				if(_.startsWith(filePath, "/")) {
@@ -777,6 +832,7 @@ module.exports = {
 				}
 				scriptTags += '<script src=' + filePath + '></script>';
 			});
+		
 	
 			app.forEach(function(filePath){
 				if(_.startsWith(filePath, "/")) {

@@ -14,7 +14,6 @@ var fs = require("fs");
 var nodemon = require("nodemon");
 var modRewrite  = require('connect-modrewrite');
 
-var bs = require("browser-sync").create();
 
 module.exports = yeoman.Base.extend({
 	/*
@@ -25,7 +24,9 @@ module.exports = yeoman.Base.extend({
 		yeoman.Base.apply(this, arguments);
 
 		// This makes `appname` a required argument.
-		this.argument('mode', { type: String, required: false });
+		this.argument('mode1', { type: String, required: false });
+		this.argument('mode2', { type: String, required: false });
+		this.argument('mode3', { type: String, required: false });
 	},
 	prompting: function () {
 		var done = this.async();
@@ -41,8 +42,21 @@ module.exports = yeoman.Base.extend({
 			throw new Error("You need to run 'yo scaffi:mode' before you can start anything.");
 		}
 
-		if(this.mode && ["web", "ios", "android"].indexOf(this.mode.toLowerCase()) !== -1) {
-			this.modeType = this.mode;
+		if(this.mode1 && ["web", "mobile", "android"].indexOf(this.mode1.toLowerCase()) !== -1) {
+			var modes = [];
+			modes.push(this.mode1.toLowerCase());
+			
+			if(this.mode2 && ["web", "mobile", "android"].indexOf(this.mode2.toLowerCase()) !== -1) {
+				modes.push(this.mode2.toLowerCase());
+			}
+			if(this.mode3 && ["web", "mobile", "android"].indexOf(this.mode3.toLowerCase()) !== -1) {
+				modes.push(this.mode3.toLowerCase());
+			}
+			
+			modes = _.uniq(modes);
+			
+			
+			this.modeType = modes;
 			done();
 
 		} else {
@@ -80,50 +94,48 @@ module.exports = yeoman.Base.extend({
 			this.prompt(prompts, function (props) {
 				this.props = props;
 
-				this.modeType = props.modeType;
+				this.modeType = [props.modeType];
 
 				done();
 			}.bind(this));
 
 		}
 	},
-
-	configuring: function() {
-		var done = this.async();
-
-		try {
-
-			buildHelpers.changeUiDomain(this, this.modeType, this.options.localhost)
-				.then(function(){
-					done();
-				});
-
-		} catch(e){
-			console.log(e);
-			throw e;
-		}
-	},
-
+	
 	writing: function(){
 		var done = this.async();
 
+		var that = this;
 		try {
-
-			/*
-			 We want these steps:
-			 check for out of sync packages with package.json
-			 hash that check
-			 check if platform build hash matches
-			 rebuild vendor resources for platform if not
-			 bundle app resources
-			 write index.html
-			 */
-
-			buildHelpers.buildUi(this, this.modeType)
-				.then(function(){
-					done();
+			var promise = Promise.resolve();
+			_.each(this.modeType, function(mode){
+				promise = promise.then(function(){
+					return new Promise(function(res, rej){
+						that.log("========= Bundle " + mode + " ============");
+						buildHelpers.changeUiDomain(that, mode, that.options.localhost).then(function(){
+			
+							/*
+							 We want these steps:
+							 check for out of sync packages with package.json
+							 hash that check
+							 check if platform build hash matches
+							 rebuild vendor resources for platform if not
+							 bundle app resources
+							 write index.html
+							 */
+				
+							buildHelpers.buildUi(that, mode)
+							.then(function(){
+								res();
+							});
+						});
+					});
 				});
+			});
 
+			promise.then(function(){
+				done();
+			})
 		} catch(e){
 			console.log(e);
 			throw e;
@@ -139,10 +151,7 @@ module.exports = yeoman.Base.extend({
 		var watcher = buildHelpers.addFileWatchers(this, this.modeType);
 		
 		var that = this;
-		watcher.on("error", function(err){
-			that._cleanupSyncs(watcher);
-		});
-		
+		var bsInstances = [];
 		
 		try {
 			
@@ -152,62 +161,79 @@ module.exports = yeoman.Base.extend({
 			 */
 			process.chdir(this.destinationPath("src", "server"));
 			
-			if (this.modeType == "web") {
-				nodemon({
-					ignore: ["public"],
-					script: "index.js"
-				});
+			_.each(this.modeType, function(mode){
+				var bs = require("browser-sync").create(mode);
+				bsInstances.push(bs);
 				
+				if (mode == "web") {
+					
+					nodemon({
+						ignore: ["public"],
+						script: "index.js"
+					});
+					
+					
+					bs.init({
+						port: 4000,
+						uiPort: 4010,
+						reloadDelay: 1000, // So that index has time to regen before reloading
+						files: [
+							"index.html",
+							"public/**/*.css",
+							"public/**/*.js"
+						],
+						open: true,
+						server: {
+							baseDir: buildHelpers.getPlatformOutputDir(that, "web"),
+							middleware: [
+								modRewrite(['^([^.]+)$ /index.html [L]'])
+							]
+						},
+						browser: "chrome"
+					});
+					
+				}
 				
-				bs.init({
-					port: 4000,
-					uiPort: 4010,
-					reloadDelay: 1000, // So that index has time to regen before reloading
-					files: [
-						"index.html",
-						"public/**/*.css",
-						"public/**/*.js"
-					],
-					open: true,
-					server: {
-						baseDir: buildHelpers.getPlatformOutputDir(this, this.modeType),
-						middleware: [
-							modRewrite(['^([^.]+)$ /index.html [L]'])
-						]
-					},
-					browser: "chrome"
-				});
-				
-			} else {
-				this.log("!!! Remember that you need to start a server if you're outside prototype mode, since you're running a mobile build !!!");
-				bs.init({
-					port: 4001,
-					uiPort: 4011,
-					reloadDelay: 1000, // So that index has time to regen before reloading
-					files: [
-						buildHelpers.getPlatformOutputDir(this, this.modeType) + "/index.html",
-						buildHelpers.getPlatformOutputDir(this, this.modeType) + "/**/*"
-					],
-					open: true,
-					server: {
-						baseDir: buildHelpers.getPlatformOutputDir(this, this.modeType),
-						middleware: [
-							modRewrite(['^([^.]+)$ /index.html [L]'])
-						]
-					},
-					browser: "chrome"
-				});
-			}
+				else {
+					bs.init({
+						port: 4001,
+						uiPort: 4011,
+						reloadDelay: 1000, // So that index has time to regen before reloading
+						files: [
+							buildHelpers.getPlatformOutputDir(that, mode) + "/index.html",
+							buildHelpers.getPlatformOutputDir(that, mode) + "/**/*"
+						],
+						open: true,
+						server: {
+							baseDir: buildHelpers.getPlatformOutputDir(that, mode),
+							middleware: [
+								modRewrite(['^([^.]+)$ /index.html [L]'])
+							]
+						},
+						browser: "chrome"
+					});
+				}
+			});
 		} catch(e){
+			that.log(e);
 			this._cleanupSyncs(watcher);
 		}
+		//
+		watcher.on("error", function(err){
+			console.log("WATCHER ERROR")
+			console.log(err);
+			that._cleanupSyncs(watcher, bsInstances);
+		});
 	},
-	_cleanupSyncs: function(watcher){
+	_cleanupSyncs: function(watcher, bsInstances){
 		if(watcher) {
 			watcher.close();
 		}
-		bs.exit();
+		for(var i in bsInstances){
+			bsInstances[i].exit();
+		}
+		
 		this.log("Syncers have crashed.... Relaunching....");
-		this._launchSyncs();
+		//this._launchSyncs();
 	}
 });

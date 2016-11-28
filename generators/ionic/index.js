@@ -40,6 +40,7 @@ module.exports = yeoman.Base.extend({
 					}
 					this.processSrc = this.destinationPath("src", "ui", "build", this.platformType, "public");
 					break;
+				case "plugin":
 				case "platform":
 				case "browser":
 				case "info":
