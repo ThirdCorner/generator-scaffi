@@ -41,15 +41,16 @@ module.exports = yeoman.Base.extend({
 			this.log("You need to run 'yo scaffi:mode' before you can start anything.")
 			throw new Error("You need to run 'yo scaffi:mode' before you can start anything.");
 		}
+		var platforms = ["web", "ios", "android"];
 
-		if(this.mode1 && ["web", "mobile", "android"].indexOf(this.mode1.toLowerCase()) !== -1) {
+		if(this.mode1 && platforms.indexOf(this.mode1.toLowerCase()) !== -1) {
 			var modes = [];
 			modes.push(this.mode1.toLowerCase());
 			
-			if(this.mode2 && ["web", "mobile", "android"].indexOf(this.mode2.toLowerCase()) !== -1) {
+			if(this.mode2 && platforms.indexOf(this.mode2.toLowerCase()) !== -1) {
 				modes.push(this.mode2.toLowerCase());
 			}
-			if(this.mode3 && ["web", "mobile", "android"].indexOf(this.mode3.toLowerCase()) !== -1) {
+			if(this.mode3 && platforms.indexOf(this.mode3.toLowerCase()) !== -1) {
 				modes.push(this.mode3.toLowerCase());
 			}
 			
