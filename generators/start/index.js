@@ -162,16 +162,16 @@ module.exports = yeoman.Base.extend({
 			 */
 			process.chdir(this.destinationPath("src", "server"));
 			
+			nodemon({
+				ignore: ["public"],
+				script: "index.js"
+			});
+			
 			_.each(this.modeType, function(mode){
 				var bs = require("browser-sync").create(mode);
 				bsInstances.push(bs);
 				
 				if (mode == "web") {
-					
-					nodemon({
-						ignore: ["public"],
-						script: "index.js"
-					});
 					
 					
 					bs.init({
