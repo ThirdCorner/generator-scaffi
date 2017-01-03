@@ -145,34 +145,35 @@ module.exports = {
 			var publicUiJson = helperFns.openJson(context.destinationPath("src", "ui", "scaffi-ui.json"));
 
 
-			var domain;
+			var domain = null;
 			if(!setAsLocalhost) {
-				domain = envJson.config.domain;
+				domain = envJson.config.domain || null;
 			} else {
 				domain = "http://localhost";
-			}
-
-			if(!domain || domain.length == 0) {
-				throw new Error("No domain provided in config. Can't bundle.");
 			}
 
 			/*
 				Make sure we add port for server if it's localhost;
 			 */
-			if(domain.indexOf("localhost") !== -1) {
+			if(domain && domain.indexOf("localhost") !== -1 && domain.indexOf(":") === -1) {
 				domain = domain + ":" + publicUiJson.config.serverLocalhostPort;
 			}
 			
-			if(domain.indexOf("localhost") !== -1 && platformType !== "web") {
+			if(domain && domain.indexOf("localhost") !== -1 && platformType !== "web") {
 				var localhostIp = nodeIp.address();
 				domain = domain.replace("localhost", localhostIp);
 			}
 			
-			if(!_.startsWith(domain, "http")) {
+			if(domain && domain.length == 0) {
+				domain = null;
+			}
+			
+			if(domain && !_.startsWith(domain, "http")) {
 				throw new Error("Domain needs to start with http or https in the env config you're running");
 			}
 			
 			context.log("= Setting UI server domain to " + domain);
+			
 			privateJson.config.domain = domain;
 			privateJson.config.platform = platformType;
 			
