@@ -155,7 +155,7 @@ module.exports = {
 			/*
 				Make sure we add port for server if it's localhost;
 			 */
-			if(domain && domain.indexOf("localhost") !== -1 && domain.indexOf(":") === -1) {
+			if(domain && domain.indexOf("localhost") !== -1 && domain.indexOf("localhost:") === -1) {
 				domain = domain + ":" + publicUiJson.config.serverLocalhostPort;
 			}
 			
