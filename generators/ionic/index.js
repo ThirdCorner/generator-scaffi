@@ -75,9 +75,6 @@ module.exports = yeoman.Base.extend({
 					.then(function(){
 						return buildHelpers.buildUi(that, platformType)
 							.then(function(){
-								if(that.command != "build"){
-									buildHelpers.addFileWatchers(that, platformType);
-								}
 
 								// We're adding a timeout so that we can ensure index.html is compiled
 								setTimeout(function(){
@@ -98,7 +95,19 @@ module.exports = yeoman.Base.extend({
 
 	end: function(){
 		process.chdir(this.processSrc);
+		
+		var opts = {};
+		
+		if(["emulate", "run"].indexOf(this.command) !== -1) {
+			//buildHelpers.addFileWatchers(this, this.platformType);
+			this.arguments.push("-l");
+			this.arguments.push("-p");
+			this.arguments.push("4001");
+		}
+		
+		
 		this.spawnCommandSync('ionic', this.arguments, this.options);
+		
 		if(this.command == "build") {
 			this.fs.copy(this.destinationPath("src", "ui", "build", this.platformType, "platforms", this.platformType, "build", "outputs", "apk"))
 		}
