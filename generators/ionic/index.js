@@ -100,13 +100,13 @@ module.exports = yeoman.Base.extend({
 		
 		if(["emulate", "run"].indexOf(this.command) !== -1) {
 			//buildHelpers.addFileWatchers(this, this.platformType);
-			this.arguments.push("-l");
+			// this.arguments.push("-l");
 			this.arguments.push("-p");
 			this.arguments.push("4001");
 		}
 		
 		
-		this.spawnCommandSync('ionic', this.arguments, this.options);
+		this.spawnCommandSync('ionic', this.arguments, opts);
 		
 		if(this.command == "build") {
 			this.fs.copy(this.destinationPath("src", "ui", "build", this.platformType, "platforms", this.platformType, "build", "outputs", "apk"))
