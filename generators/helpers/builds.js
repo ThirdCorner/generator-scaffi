@@ -164,6 +164,10 @@ module.exports = {
 				domain = domain.replace("localhost", localhostIp);
 			}
 			
+			if(platformType != "web" && envJson.config.mobileDomain) {
+				domain = envJson.config.mobileDomain;
+			}
+			
 			if(domain && domain.length == 0) {
 				domain = null;
 			}
