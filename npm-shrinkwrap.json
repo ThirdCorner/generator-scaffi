@@ -873,6 +873,11 @@
       "from": "babel-plugin-transform-object-rest-spread@>=6.16.0 <7.0.0",
       "resolved": "https://registry.npmjs.org/babel-plugin-transform-object-rest-spread/-/babel-plugin-transform-object-rest-spread-6.16.0.tgz"
     },
+    "babel-plugin-transform-promise-to-bluebird": {
+      "version": "1.1.1",
+      "from": "babel-plugin-transform-promise-to-bluebird@latest",
+      "resolved": "https://registry.npmjs.org/babel-plugin-transform-promise-to-bluebird/-/babel-plugin-transform-promise-to-bluebird-1.1.1.tgz"
+    },
     "babel-plugin-transform-regenerator": {
       "version": "6.16.1",
       "from": "babel-plugin-transform-regenerator@>=6.16.0 <7.0.0",

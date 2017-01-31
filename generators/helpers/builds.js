@@ -538,7 +538,7 @@ module.exports = {
 				var fileStream = fs.createWriteStream(context.destinationPath("src", "ui", "build", platformType, ".vendor", "scripts", "vendor." + buildHash + ".js"));
 				bundleChain
 					//.plugin("minifyify", {map: 'bundle.js.map', output: 'bundle.js.map'})
-					.transform(babelify, {presets: [require("babel-preset-es2015"), require("babel-preset-stage-0")], plugins: [require("babel-plugin-transform-decorators-legacy").default, require("babel-plugin-transform-html-import-to-string").default]})
+					.transform(babelify, {presets: [require("babel-preset-es2015"), require("babel-preset-stage-0")], plugins: [require("babel-plugin-transform-decorators-legacy").default, require("babel-plugin-transform-html-import-to-string").default, require("babel-plugin-transform-promise-to-bluebird").default]})
 					.bundle()
 					.pipe(fileStream)
 
@@ -677,7 +677,7 @@ module.exports = {
 			
 			var fileStream = fs.createWriteStream(context.destinationPath( that.getPlatformOutputBaseDir(context, platformType), "scripts", "config." + buildHash + ".js"));
 			bundleChain
-				.transform(babelify, {presets: [require("babel-preset-es2015"), require("babel-preset-stage-0")], plugins: [require("babel-plugin-transform-decorators-legacy").default, require("babel-plugin-transform-html-import-to-string").default]})
+				.transform(babelify, {presets: [require("babel-preset-es2015"), require("babel-preset-stage-0")], plugins: [require("babel-plugin-transform-decorators-legacy").default, require("babel-plugin-transform-html-import-to-string").default, require("babel-plugin-transform-promise-to-bluebird").default]})
 				.bundle()
 				.pipe(fileStream)
 			
@@ -735,7 +735,7 @@ module.exports = {
 			 */
 
 			appChain
-				.transform(babelify, {presets: [require("babel-preset-es2015"), require("babel-preset-stage-0")], plugins: [require("babel-plugin-transform-decorators-legacy").default, require("babel-plugin-transform-html-import-to-string").default]})
+				.transform(babelify, {presets: [require("babel-preset-es2015"), require("babel-preset-stage-0")], plugins: [require("babel-plugin-transform-decorators-legacy").default, require("babel-plugin-transform-html-import-to-string").default, require("babel-plugin-transform-promise-to-bluebird").default]})
 				.bundle()
 				.pipe(fileStream);
 
