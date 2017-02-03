@@ -6,7 +6,10 @@ var helperFns = require('../helpers/generatorFns');
 var _ = require("lodash");
 var path = require("path");
 var fs = require("fs-extra");
+var fsNode = require("fs");
 var buildHelpers = require("../helpers/builds");
+
+var xml2js = require("xml2js");
 
 module.exports = yeoman.Base.extend({
 	initializing: function(){
@@ -38,7 +41,18 @@ module.exports = yeoman.Base.extend({
 					this.options.version = json.version;
 				}
 			}
-
+			if(this.platformType !== "web" && !this.options.namespace){
+				this.log.error("You need to provide a namespace for your mobile build: ie com.*.*");
+				throw new Error("You need to provide a namespace for your mobile build: ie com.*.*");
+				return false;
+			}
+			
+			if(this.platformType !== "web" && !this.options.name){
+				this.log.error("You need to provide a name for your app");
+				throw new Error("You need to provide a name for your app");
+				return false;
+			}
+			
 			this.log("BUILDING VERSION: " + this.options.version);
 		} catch (e) {
 			this.log(e);
@@ -55,14 +69,14 @@ module.exports = yeoman.Base.extend({
 			var that = this;
 
 			buildHelpers.changeMode(this, this.mode).then(function(){
-				
+
 				helperFns.updateConfig(that.destinationPath("src", "ui"), "scaffi-ui", {version: that.options.version});
 				helperFns.updateConfig(that.destinationPath("src", "server"), "scaffi-server", {version: that.options.version});
-				
+
 				buildHelpers.changeUiDomain(that, that.platformType)
 					.then(function () {
 						done();
-					});				
+					});
 			});
 
 		} catch (e) {
@@ -99,7 +113,9 @@ module.exports = yeoman.Base.extend({
 
 	},
 	install: function(){
-
+		
+		var done = this.async();
+		
 		try {
 
 			if (this.platformType == "web") {
@@ -112,10 +128,58 @@ module.exports = yeoman.Base.extend({
 				/*
 					We don't want to call ionic here because the build machine might not be able to build it; ie ios
 				 */
-				this.log("Moving ionic build folder to build/" + this.platformType);
+				this.log("Prepping and Building");
 				//process.chdir(this.destinationPath("src", "ui", "build", this.platformType, "public"));
-				this.spawnCommandSync('ionic', ['build', this.platformType], {cwd: this.destinationPath('src', 'ui', "build", this.platformType, "public")});
-				//fs.copySync(this.destinationPath('src', 'ui', "build", this.platformType, "public"), this.destinationPath('builds', this.platformType));
+				
+				fs.emptyDirSync(this.destinationPath('src', 'ui', "build", this.platformType, "public", "platforms", this.platformType));
+				/*
+					Change config properly
+				 */
+				var config = helperFns.openJson(this.destinationPath('src', 'ui', "build", this.platformType, "public", "ionic.config.json")) || {};
+				config.name = this.options.name.replace(" ", "");
+				config["app_id"] = this.options.namespace;
+				helperFns.saveJson(this.destinationPath('src', 'ui', "build", this.platformType, "public", "ionic.config.json"), config);
+				helperFns.saveJson(this.destinationPath('src', 'ui', "build", this.platformType, "public", "ionic.project"), config);
+				
+				/*
+					Change config.xml
+				 */
+				
+				var that = this;
+				var xmlString =  fs.readFileSync(this.destinationPath('src', 'ui', "build", this.platformType, "public", "config.xml"));
+				xml2js.parseString(xmlString, function(err, result){
+					if(err) console.log(err);
+					
+					var json = result;
+					
+					
+					json.widget["$"].id = that.options.namespace;
+					json.widget["$"].version = that.options.version;
+					json.widget.name = that.options.name;
+				
+					// create a new builder object and then convert
+					// our json back to xml.
+					var builder = new xml2js.Builder();
+					var xml = builder.buildObject(json);
+					
+					fs.writeFile(that.destinationPath('src', 'ui', "build", that.platformType, "public", "config.xml"), xml, function(err, data){
+						if (err) that.log(err);
+						
+						that.spawnCommandSync('ionic', ['platform', "remove", that.platformType], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
+						that.spawnCommandSync('ionic', ['platform', "add", that.platformType], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
+						that.spawnCommandSync('ionic', ['platform', "resources"], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
+						if(that.platformType == "ios") {
+							that.spawnCommandSync('cordova', ['platform', "update", "ios"], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
+						}
+						
+						that.spawnCommandSync('ionic', ['build', that.platformType], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
+						
+						done();
+					})
+					
+				});
+
+				
 
 			}
 		} catch (e) {
@@ -130,6 +194,7 @@ module.exports = yeoman.Base.extend({
 				this.log("Deleting config directory in Server");
 				fs.removeSync(this.destinationPath('builds', "web", "server", "config"));
 			} else if(this.platformType == "android") {
+
 				this.log("Copying outputted apk to build/" + this.platformType + "/apk folder");
 				this.fs.copy(this.destinationPath("src", "ui", "build", this.platformType, "public", "platforms", this.platformType, "build", "outputs", "apk"), this.destinationPath('builds', this.platformType));
 			}
