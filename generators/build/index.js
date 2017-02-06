@@ -135,6 +135,7 @@ module.exports = yeoman.Base.extend({
 				/*
 					Change config properly
 				 */
+				this.log("Changing Config Params for build");
 				var config = helperFns.openJson(this.destinationPath('src', 'ui', "build", this.platformType, "public", "ionic.config.json")) || {};
 				config.name = this.options.name.replace(" ", "");
 				config["app_id"] = this.options.namespace;
@@ -165,13 +166,15 @@ module.exports = yeoman.Base.extend({
 					fs.writeFile(that.destinationPath('src', 'ui', "build", that.platformType, "public", "config.xml"), xml, function(err, data){
 						if (err) that.log(err);
 						
+						that.log("Running ionic platform commands (remove / add / resources)");
 						that.spawnCommandSync('ionic', ['platform', "remove", that.platformType], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
 						that.spawnCommandSync('ionic', ['platform', "add", that.platformType], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
 						that.spawnCommandSync('ionic', ['platform', "resources"], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
 						if(that.platformType == "ios") {
+							that.log("Running cordova platform update for ios");
 							that.spawnCommandSync('cordova', ['platform', "update", "ios"], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
 						}
-						
+						that.log("Running ionic build")
 						that.spawnCommandSync('ionic', ['build', that.platformType], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
 						
 						done();
