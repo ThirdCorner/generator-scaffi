@@ -98,7 +98,7 @@ module.exports = yeoman.Base.extend({
 				],
 				"resources": {
 					"css": {
-						"bootstrap/dist/css/*.min.css": "css",
+						"angular-material/*.min.css": "css",
 						"ng-table": "css"
 					}
 				}

@@ -31,6 +31,8 @@ module.exports = yeoman.Base.extend({
 		this.projectDetails = this.config.get("projectDetails") || null;
 
 		this.defaultDataOptions = {
+			serverLocalhostPort: 3020,
+			uiLocalhostPort: 4000,
 			variedIdName: false,
 			idName: "id",
 			tableNameStandard: "pascalCase",
@@ -234,44 +236,44 @@ module.exports = yeoman.Base.extend({
 			return answers.mainOption == "add" && (answers.addFeature == "both" || answers.addFeature == 'server' )
 		};
 
-		/*
-			UI Specific questions
-		 */
-		prompts.push({
-			type: 'input',
-			message: 'What\'s the localhost port you want to have your UI at?',
-			name: 'uiLocalhostPort',
-			default: 5000,
-			validate: function(input){
-				if(isNaN(input)) {
-					return 'You must provide a valid number for your port.';
-				}
-				return input.length > 0;
-			},
-			when: function(answers){
-				return isSettingUi(answers);
-			}
-		});
-
-
-		/*
-			Server Specific questions
-		 */
-		prompts.push({
-			type: 'input',
-			message: 'What\'s the localhost port you want to have your Server at?',
-			name: 'serverLocalhostPort',
-			default: 3000,
-			validate: function(input){
-				if(isNaN(input)) {
-					return 'You must provide a valid number for your port.';
-				}
-				return input.length > 0;
-			},
-			when: function(answers){
-				return isSettingServer(answers) ;
-			}
-		});
+		// /*
+		// 	UI Specific questions
+		//  */
+		// prompts.push({
+		// 	type: 'input',
+		// 	message: 'What\'s the localhost port you want to have your UI at?',
+		// 	name: 'uiLocalhostPort',
+		// 	default: 5000,
+		// 	validate: function(input){
+		// 		if(isNaN(input)) {
+		// 			return 'You must provide a valid number for your port.';
+		// 		}
+		// 		return input.length > 0;
+		// 	},
+		// 	when: function(answers){
+		// 		return isSettingUi(answers);
+		// 	}
+		// });
+		//
+		//
+		// /*
+		// 	Server Specific questions
+		//  */
+		// prompts.push({
+		// 	type: 'input',
+		// 	message: 'What\'s the localhost port you want to have your Server at?',
+		// 	name: 'serverLocalhostPort',
+		// 	default: 3000,
+		// 	validate: function(input){
+		// 		if(isNaN(input)) {
+		// 			return 'You must provide a valid number for your port.';
+		// 		}
+		// 		return input.length > 0;
+		// 	},
+		// 	when: function(answers){
+		// 		return isSettingServer(answers) ;
+		// 	}
+		// });
 
 		/*
 			Setup the data structures
