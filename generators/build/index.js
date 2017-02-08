@@ -121,7 +121,7 @@ module.exports = yeoman.Base.extend({
 			if (this.platformType == "web") {
 				this.log("Copying Server to Build Folder");
 				fs.copySync(this.destinationPath('src', 'server'), this.destinationPath('builds', this.platformType, "server"));
-				if (!fs.existsSync(this.destinationPath('build', this.platformType, "server", "web.config"))) {
+				if (!fs.existsSync(this.destinationPath('builds', this.platformType, "server", "web.config"))) {
 					fs.copySync(this.templatePath('iis', 'web.config'), this.destinationPath('builds', "web", "server", "web.config"));
 				}
 			} else {
