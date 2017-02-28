@@ -38,7 +38,7 @@ module.exports = {
 					that.bundleAppSass(context, platformType),
 					that.bundleAppResources(context, platformType)
 				]).then(function(){
-					
+
 					context.log("Finished: Bundling App Resources");
 				});
 			}).then(function(){
@@ -46,7 +46,7 @@ module.exports = {
 				return that.bundleIndex(context, platformType);
 			})
 	},
-	
+
 	/*
 		Config FNS
 	 */
@@ -56,7 +56,7 @@ module.exports = {
 		if(helperFns.exists(context.destinationPath("scaffi.private.json"))) {
 			buildInfo = helperFns.openJson(context.destinationPath("scaffi.private.json"));
 		}
-		
+
 		var defaultStructure = {
 			build: {
 				packages: {
@@ -158,29 +158,29 @@ module.exports = {
 			if(domain && domain.indexOf("localhost") !== -1 && domain.indexOf("localhost:") === -1) {
 				domain = domain + ":" + publicUiJson.config.serverLocalhostPort;
 			}
-			
+
 			if(domain && domain.indexOf("localhost") !== -1 && platformType !== "web") {
 				var localhostIp = nodeIp.address();
 				domain = domain.replace("localhost", localhostIp);
 			}
-			
+
 			if(platformType != "web" && envJson.config.mobileDomain) {
 				domain = envJson.config.mobileDomain;
 			}
-			
+
 			if(domain && domain.length == 0) {
 				domain = null;
 			}
-			
+
 			if(domain && !_.startsWith(domain, "http")) {
 				throw new Error("Domain needs to start with http or https in the env config you're running");
 			}
-			
+
 			context.log("= Setting UI server domain to " + domain);
-			
+
 			privateJson.config.domain = domain;
 			privateJson.config.platform = platformType;
-			
+
 			helperFns.saveJson(jsonPath, privateJson);
 			resolve();
 		});
@@ -195,17 +195,17 @@ module.exports = {
 			privateJson.config.platform = platformType;
 
 			helperFns.saveJson(jsonPath, privateJson);
-			
+
 			resolve();
-			
+
 		});
 	},
 	/*
-		This is here because composeWith is screwing up my process steps. 	
+		This is here because composeWith is screwing up my process steps.
 	 */
 	changeMode: function(context, mode) {
 		return new Promise(function(resolve){
-			
+
 			context.log("Switching Mode to: " + mode);
 			/*
 			 Making sure localhost configs exist, otherwise we can assume this is a fresh checkout
@@ -215,7 +215,7 @@ module.exports = {
 			 Delete the private configs so we can replace
 			 */
 			helperFns.deletePrivateConfigs(context);
-			
+
 			var serverJsonName, uiJsonName;
 			if (mode == "localhost") {
 				serverJsonName = "scaffi-server." + mode + ".private.json";
@@ -224,10 +224,10 @@ module.exports = {
 				serverJsonName = "scaffi-server." + mode + ".json";
 				uiJsonName = "scaffi-ui." + mode + ".json";
 			}
-			
+
 			fsExtra.copySync(context.destinationPath("src", "server", "config", serverJsonName), context.destinationPath("src", "server", "scaffi-server.private.json"));
 			fsExtra.copySync(context.destinationPath("src", "ui", "config", uiJsonName), context.destinationPath("src", "ui", "scaffi-ui.private.json"));
-			
+
 			resolve();
 		});
 	},
@@ -278,13 +278,13 @@ module.exports = {
 	},
 	updateScaffiPrivateInstalledPackages: function(context, type){
 		var config = this.getScaffiPrivate(context);
-		
+
 		config.build.packages[type].hash = this.getRandomHash();
 		config.build.packages[type].packages = {};
 		config.build.packages[type].jsPackages = {};
-		
+
 		this.parseInstalledPackages(context, type, function(npmPackageJson, name){
-			
+
 			if(npmPackageJson) {
 				var resolve = npmPackageJson._resolved || npmPackageJson._shasum;
 				if(!resolve) {
@@ -307,10 +307,10 @@ module.exports = {
 					}
 				}
 			}
-			
+
 		});
-		
-		
+
+
 		this.saveScaffiPrivate(context, config);
 	},
 	installPackages: function(context, type){
@@ -358,7 +358,7 @@ module.exports = {
 				if(pkg.indexOf(":") !== -1) {
 					pkg = pkg.substr(pkg.indexOf(":") + 1);
 				}
-				
+
 				if(pkg.indexOf("/") !== -1) {
 					pkg = pkg.substr(pkg.indexOf("/") + 1);
 				}
@@ -368,9 +368,9 @@ module.exports = {
 				if(pkg.indexOf("#") !== -1) {
 					pkg = pkg.substr(0, pkg.indexOf("#"));
 				}
-				
+
 				var buildJson = that.getBuildResourceJson(context);
-				
+
 				switch(platformType) {
 					case "ui":
 						if(buildJson.common.dependencies.indexOf(pkg) === -1){
@@ -396,9 +396,9 @@ module.exports = {
 							buildJson[platformType].dependencies.push(pkg);
 						}
 						break;
-					
+
 				}
-				
+
 				that.saveBuildResourceJson(context, buildJson);
 			}
 
@@ -443,7 +443,7 @@ module.exports = {
 						buildJson[platform].dependencies.splice(key, 1);
 					}
 				});
-				
+
 				that.saveBuildResourceJson(context, buildJson);
 			}
 
@@ -454,7 +454,7 @@ module.exports = {
 		Sync Platform Vendors
 	 */
 	/**
-	 * 
+	 *
 	 * @param context - this from generator
 	 * @param platformType = [web, ios, android]
 	 */
@@ -571,7 +571,7 @@ module.exports = {
 			fsExtra.copySync(context.destinationPath("src", "ui", "build", platformType, ".vendor"), this.getPlatformOutputDir(context, platformType));
 		}
 	},
-	
+
 	/*
 		CLI commands
 	 */
@@ -601,8 +601,8 @@ module.exports = {
 									});
 								});
 							});
-							
-							
+
+
 						}
 						break;
 					case _.endsWith(filename, ".scss"):
@@ -610,9 +610,9 @@ module.exports = {
 							that.bundleAppSass(context, platformType);
 						});
 						break;
-					
+
 				}
-				
+
 			} catch (e) {
 				/*
 				 Erroring on watcher usually happens because of EPERM which is collision of multiple changes
@@ -625,13 +625,13 @@ module.exports = {
 				// 	that.addFileWatchers(context, platformType);
 				 }, 1000);
 			}
-			
+
 		});
 		/*
 		 Need to add ability to watch package.json and build-resources so it will auto bundle vendors
 		 */
-	
-		
+
+
 	},
 
 	/*
@@ -652,35 +652,35 @@ module.exports = {
 		}
 	},
 	bundleAppConfig: function(context, platformType){
-		
-		
+
+
 		var that = this;
 		return new Promise(function(resolve){
-			
+
 			context.log("Bundling App Config");
-			
+
 			// Clear out any
 			that.cleanScriptFile(context, context.destinationPath(that.getPlatformOutputDir(context, platformType), "scripts"), "config");
-			
+
 			// process.chdir(context.destinationPath("src", "ui"));
 			var bundleChain = browserify("./scaffi-ui.private.json",{
 				basedir: context.destinationPath("src", "ui")
 			});
-			
-			
+
+
 			var buildHash = that.getRandomHash();
-			
+
 			/*
 			 On the transforms, because we're installing them in the generator, we need to require them so the resolve in relation to the generator's packgaes
 			 On, presets, you don't want to say require().default, but plugins you need to do that.
 			 */
-			
+
 			var fileStream = fs.createWriteStream(context.destinationPath( that.getPlatformOutputBaseDir(context, platformType), "scripts", "config." + buildHash + ".js"));
 			bundleChain
 				.transform(babelify, {presets: [require("babel-preset-es2015"), require("babel-preset-stage-0")], plugins: [require("babel-plugin-transform-decorators-legacy").default, require("babel-plugin-transform-html-import-to-string").default, require("babel-plugin-transform-promise-to-bluebird").default]})
 				.bundle()
 				.pipe(fileStream)
-			
+
 			fileStream.on("finish", function(){
 				context.log("Finished: Bundling App Config JS");
 				resolve();
@@ -712,18 +712,18 @@ module.exports = {
 					appChain = appChain.exclude(pkgName);
 				}
 			}
-			
+
 			/*
 				For ionic specifically with weird include paths, we have to make sure to ignore
 			 */
 
 			var ignores = that.getIgnoreDependencies(context, platformType);
-			
+
 			for(var i in ignores) {
 				appChain = appChain.ignore(ignores[i]);
 			}
 
-			
+
 
 			var buildHash = md5(Date().toString());
 			var fileStream = fs.createWriteStream(context.destinationPath(that.getPlatformOutputDir(context, platformType), "scripts", "app." + buildHash+ ".js"));
@@ -770,7 +770,7 @@ module.exports = {
 				}
 
 				var buildHash = md5(Date().toString());
-				
+
 				// BrowserSync will auto inject css without reload
 
 				var filename = "app.css";
@@ -781,7 +781,7 @@ module.exports = {
 				context.log("Finished: Bundling App Sass");
 				resolve();
 			});
-			
+
 
 		});
 
@@ -813,7 +813,7 @@ module.exports = {
 			// Mobile only stuff
 			if(platformType !== "web") {
 				outputLinkTags += '<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">';
-				outputLinkTags += ' <meta http-equiv="Content-Security-Policy" content="default-src *; gap://ready file://* *; img-src \'self\' data:; style-src \'self\' \'unsafe-inline\'; script-src \'self\' \'unsafe-inline\' \'unsafe-eval\'">';
+				outputLinkTags += ' <meta http-equiv="Content-Security-Policy" content="frame-src * gap://ready; default-src *; gap://ready file://* *; img-src \'self\' data:; style-src \'self\' \'unsafe-inline\'; script-src \'self\' \'unsafe-inline\' \'unsafe-eval\'">';
 				outputLinkTags += '<script src="cordova.js"></script>';
 			} else {
 				outputLinkTags = '<base href="/">' + outputLinkTags;
@@ -823,40 +823,40 @@ module.exports = {
 			var vendor = that.getBundleFiles(context, outputDir, "scripts/vendor*");
 			var config = that.getBundleFiles(context, outputDir, "scripts/config*");
 			var app = that.getBundleFiles(context, outputDir, "scripts/app*");
-			
+
 			config.forEach(function(filePath){
 				if(_.startsWith(filePath, "/")) {
 					filePath = filePath.substr(1);
 				}
 				scriptTags += '<script src=' + filePath + '></script>';
 			});
-			
+
 			vendor.forEach(function(filePath){
 				if(_.startsWith(filePath, "/")) {
 					filePath = filePath.substr(1);
 				}
 				scriptTags += '<script src=' + filePath + '></script>';
 			});
-		
-	
+
+
 			app.forEach(function(filePath){
 				if(_.startsWith(filePath, "/")) {
 					filePath = filePath.substr(1);
 				}
 				scriptTags += '<script src=' + filePath + '></script>';
 			});
-	
+
 			context.fs.copyTpl(context.destinationPath("src", "ui", "app", "index.html"), context.destinationPath(outputDir, "index.html"),
 				{
 					head: outputLinkTags,
 					body: scriptTags
 				});
-			
+
 			resolve();
 		});
-		
+
 	},
-	
+
 	getGlobFilePath: function(type){
 		var typeToExtension = {
 			"font": "/**/*.{eot,svg,ttf,woff,woff2}",
@@ -936,19 +936,19 @@ module.exports = {
 				})
 			}
 		});
-		
+
 		var ignoreType = "web";
 		if(platformType == "web") {
 			ignoreType = "mobile";
 		}
-		
+
 		var files = glob.sync(context.destinationPath("src", "ui", "app", "**", "*." + ignoreType +".*.js"));
 		if(files) {
 			files.forEach(function (item, index) {
 				returnDeps.push(path.join(item));
 			})
 		}
-		
+
 		console.log(files)
 
 		return returnDeps;
@@ -997,16 +997,16 @@ module.exports = {
 	},
 	getUiPackageDependencies: function(context, platformType) {
 		var deps = helperFns.openJson(context.destinationPath("src", "ui", "package.json"));
-		
+
 		var name = platformType + "Dependencies";
 		var buildDeps = deps[name] || [];
-		
+
 		if(!buildDeps.length) {
 			throw new Error("No dependencies found in " + name + ". Can't build");
 		}
-		
+
 		return buildDeps
-		
+
 	},
 	getBuildResourcesByPlatform: function(context, platformType){
 		var buildJson = this.getBuildResourceJson(context);
