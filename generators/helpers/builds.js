@@ -813,7 +813,7 @@ module.exports = {
 			// Mobile only stuff
 			if(platformType !== "web") {
 				outputLinkTags += '<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">';
-				outputLinkTags += ' <meta http-equiv="Content-Security-Policy" content="default-src *; img-src \'self\' data:; style-src \'self\' \'unsafe-inline\'; script-src \'self\' \'unsafe-inline\' \'unsafe-eval\'">';
+				outputLinkTags += ' <meta http-equiv="Content-Security-Policy" content="default-src *; gap://ready file://* *; img-src \'self\' data:; style-src \'self\' \'unsafe-inline\'; script-src \'self\' \'unsafe-inline\' \'unsafe-eval\'">';
 				outputLinkTags += '<script src="cordova.js"></script>';
 			} else {
 				outputLinkTags = '<base href="/">' + outputLinkTags;
