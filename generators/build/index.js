@@ -169,7 +169,7 @@ module.exports = yeoman.Base.extend({
 						that.log("Running ionic platform commands (remove / add / resources)");
 						that.spawnCommandSync('ionic', ['platform', "remove", that.platformType], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
 						that.spawnCommandSync('ionic', ['platform', "add", that.platformType], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
-						that.spawnCommandSync('ionic', ['platform', "resources"], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
+						that.spawnCommandSync('ionic', ["resources"], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
 						if(that.platformType == "ios") {
 							that.log("Running cordova platform update for ios");
 							that.spawnCommandSync('cordova', ['platform', "update", "ios"], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});

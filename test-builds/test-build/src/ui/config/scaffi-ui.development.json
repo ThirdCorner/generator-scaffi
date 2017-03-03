@@ -1,6 +1,0 @@
-{
-	"config": {
-		"environment": "development",
-		"domain": "http://localhost"
-	}
-}

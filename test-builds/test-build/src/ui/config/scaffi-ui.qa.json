@@ -1,6 +1,0 @@
-{
-	"config": {
-		"environment": "qa",
-		"domain": "http://localhost"
-	}
-}

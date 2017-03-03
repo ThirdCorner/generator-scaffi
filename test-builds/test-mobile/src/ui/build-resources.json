@@ -1,9 +1,0 @@
-{
-  "styles": [
-    "bootstrap*/css/*.min.css",
-    "ionic-bower*/css/ionic.min.css",
-    "angular-loading*/build/loading-bar.min.css",
-    "font-awesome",
-    "ng-table"
-  ]
-}

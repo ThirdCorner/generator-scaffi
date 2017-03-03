@@ -1,7 +1,0 @@
-{
-  "config": {
-    "environment": "localhost",
-    "platform": "android",
-    "domain": "http://192.168.3.50:3006"
-  }
-}
