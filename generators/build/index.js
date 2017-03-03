@@ -197,9 +197,10 @@ module.exports = yeoman.Base.extend({
 				this.log("Deleting config directory in Server");
 				fs.removeSync(this.destinationPath('builds', "web", "server", "config"));
 			} else if(this.platformType == "android") {
-
-				this.log("Copying outputted apk to build/" + this.platformType + "/apk folder");
-				this.fs.copy(this.destinationPath("src", "ui", "build", this.platformType, "public", "platforms", this.platformType, "build", "outputs", "apk", "android-debug.apk"), this.destinationPath('builds', this.platformType, this.options.name + "-" + this.options.version + ".apk"));
+				
+				var outputFilename = this.options.name + "-" + this.mode + "-" + this.options.version + ".apk";
+				this.log("Copying outputted apk to builds/" + this.platformType + "/" + outputFilename);
+				this.fs.copy(this.destinationPath("src", "ui", "build", this.platformType, "public", "platforms", this.platformType, "build", "outputs", "apk", "android-debug.apk"), this.destinationPath('builds', this.platformType, outputFilename));
 			}
 		} catch(e){
 			this.log(e);
