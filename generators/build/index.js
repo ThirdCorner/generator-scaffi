@@ -175,6 +175,9 @@ module.exports = yeoman.Base.extend({
 							platformAddPackage = that.platformType + "@4.2.1";
 						}
 						that.spawnCommandSync('ionic', ['platform', "remove", that.platformType], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
+						
+						that.log("Adding cordova package: " + platformAddPackage);
+						
 						that.spawnCommandSync('ionic', ['platform', "add", platformAddPackage], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
 						that.spawnCommandSync('ionic', ["resources"], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
 						if(that.platformType == "ios") {
