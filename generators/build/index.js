@@ -167,8 +167,15 @@ module.exports = yeoman.Base.extend({
 						if (err) that.log(err);
 						
 						that.log("Running ionic platform commands (remove / add / resources)");
+						var platformAddPackage = that.platformType;
+						/*
+							We're getting an error as is for some reason, so we're locking it in
+						 */
+						if(that.platformType == "ios") {
+							platformAddPackage = that.platformType + "@4.2.1";
+						}
 						that.spawnCommandSync('ionic', ['platform', "remove", that.platformType], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
-						that.spawnCommandSync('ionic', ['platform', "add", that.platformType], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
+						that.spawnCommandSync('ionic', ['platform', "add", platformAddPackage], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
 						that.spawnCommandSync('ionic', ["resources"], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
 						if(that.platformType == "ios") {
 							that.log("Running cordova platform update for ios");
