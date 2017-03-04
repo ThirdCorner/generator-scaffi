@@ -166,6 +166,15 @@ module.exports = yeoman.Base.extend({
 					fs.writeFile(that.destinationPath('src', 'ui', "build", that.platformType, "public", "config.xml"), xml, function(err, data){
 						if (err) that.log(err);
 						
+						that.log("Transferring package.json from UI folder");
+						
+						var packageConfig = helperFns.openJson(that.destinationPath('src', 'ui', "package.json")) || {};
+						packageConfig.devDependencies = {};
+						packageConfig.dependencies = {};
+						packageConfig.platforms = [that.platformType];
+						helperFns.saveJson(that.destinationPath('src', 'ui', "build", that.platformType, "public", "package.json"), packageConfig);
+						
+						
 						that.log("Running ionic platform commands (remove / add / resources)");
 						var platformAddPackage = that.platformType;
 						/*
@@ -176,7 +185,7 @@ module.exports = yeoman.Base.extend({
 						}
 						that.spawnCommandSync('ionic', ['platform', "remove", that.platformType], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
 						
-						that.log("Adding cordova package: " + platformAddPackage);
+						 that.log("Adding cordova package: " + platformAddPackage);
 						
 						that.spawnCommandSync('ionic', ['platform', "add", platformAddPackage], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
 						that.spawnCommandSync('ionic', ["resources"], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
