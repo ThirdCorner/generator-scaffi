@@ -181,7 +181,7 @@ module.exports = yeoman.Base.extend({
 							We're getting an error as is for some reason, so we're locking it in
 						 */
 						if(that.platformType == "ios") {
-							platformAddPackage = that.platformType + "@4.2.1";
+							//platformAddPackage = that.platformType + "@4.2.1";
 						}
 						that.spawnCommandSync('ionic', ['platform', "remove", that.platformType], {cwd: that.destinationPath('src', 'ui', "build", that.platformType, "public")});
 						
