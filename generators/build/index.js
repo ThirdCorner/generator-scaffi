@@ -220,6 +220,9 @@ module.exports = yeoman.Base.extend({
 				var outputFilename = this.options.name + "-" + this.mode + "-" + this.options.version + ".apk";
 				this.log("Copying outputted apk to builds/" + this.platformType + "/" + outputFilename);
 				this.fs.copy(this.destinationPath("src", "ui", "build", this.platformType, "public", "platforms", this.platformType, "build", "outputs", "apk", "android-debug.apk"), this.destinationPath('builds', this.platformType, outputFilename));
+			} else {
+				// src/ui/build/ios/public/platforms/ios/build/device/{{this.options.name}}
+				//Name is
 			}
 		} catch(e){
 			this.log(e);
