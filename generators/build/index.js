@@ -34,6 +34,11 @@ module.exports = yeoman.Base.extend({
 				return false;
 			}
 
+			if(!this.options.name) {
+				this.log("App name not passed");
+				throw new Error("NAME not passed");
+				return false;
+			}
 			if (!this.options.version) {
 				this.log("VERSION NOT PASSED, USING ui/package.json VERSION.");
 				var json = helperFns.openJson(this.destinationPath("package.json"));
