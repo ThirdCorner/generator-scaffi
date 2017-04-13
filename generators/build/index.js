@@ -161,6 +161,10 @@ module.exports = yeoman.Base.extend({
 					
 					json.widget["$"].id = that.options.namespace;
 					json.widget["$"].version = that.options.version;
+					
+					json.widget["$"]["android-versionName"] = that.options.version + "8";
+					json.widget["$"]["android-versionCode"] = that.options.version.replace(/\./g, "") + "8";
+					
 					json.widget.name = that.options.name;
 				
 					// create a new builder object and then convert
