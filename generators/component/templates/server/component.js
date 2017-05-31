@@ -1,17 +1,16 @@
 'use strict';
 
+import {app, AbstractComponent} from 'scaffi-server-core';
 import ScaffiServer from 'scaffi-server-core';
+
 import _ from 'lodash';
 
 
-class <%= className %> extends ScaffiServer.Extends.AbstractComponent {
-	setup(app) {
-		
-	}
-	run(){
+class <%= className %> extends AbstractComponent {
+	setup() {
 		
 	}
 	
 }
 
-export default <%= className %>;
+export default new <%= className %>();

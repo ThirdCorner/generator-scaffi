@@ -86,11 +86,7 @@ module.exports = yeoman.Base.extend({
 
 		this.fs.copyTpl(
 			this.templatePath(path.join("server", 'component.js')),
-			this.destinationPath(path.join("src", "server", "components", routeFilePath + ".js")),
-			params);
-		this.fs.copyTpl(
-			this.templatePath(path.join("server", 'component.json')),
-			this.destinationPath(path.join("src", "server", "components", routeFilePath + ".json")),
+			this.destinationPath(path.join("src", "server", "components", routeFilePath + ".component.js")),
 			params);
 	},
 	_writeUiComponent: function(){
@@ -117,15 +113,7 @@ module.exports = yeoman.Base.extend({
 				this.destinationPath(path.join("src", "ui", "app", "components", routeFilePath + ".mobile.component.js")),
 				jsParams);
 			
-		} else {
-			
-			this.fs.copyTpl(
-				this.templatePath(path.join("ui", 'component.js')),
-				this.destinationPath(path.join("src", "ui", "app", "components", routeFilePath + ".component.js")),
-				jsParams);
-			
 		}
-		
 		this.fs.copyTpl(
 			this.templatePath(path.join("ui", 'component.html')),
 			this.destinationPath(path.join("src", "ui", "app", "components", routeFilePath + ".html")),
@@ -140,6 +128,12 @@ module.exports = yeoman.Base.extend({
 			var destPath = this.destinationPath(path.join("src", "ui", "app", "components"));
 			helperFns.generateGenericScssInclude(destPath, "components");
 			helperFns.generateGenericJsIncludes(destPath, done, "components.js", "component.js");
+		} else {
+			var done = this.async();
+			// This needs to be here because copyTpl is async and includes won't find new files if run
+			// in the writing phase
+			var destPath = this.destinationPath(path.join("src", "server", "components"));
+			helperFns.generateGenericJsIncludes(destPath, done, "index.js", "component.js");
 		}
 	}
 });
