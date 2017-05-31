@@ -27,7 +27,16 @@ module.exports = yeoman.Base.extend({
 		this.argument('mode1', { type: String, required: false });
 		this.argument('mode2', { type: String, required: false });
 		this.argument('mode3', { type: String, required: false });
+		
+		this.option("skip-server");
+		
 	},
+	initializing: function(){
+		
+		this.runServer = this.options["skip-server"] ? false : true;
+		
+	},
+
 	prompting: function () {
 		var done = this.async();
 
@@ -46,17 +55,17 @@ module.exports = yeoman.Base.extend({
 		if(this.mode1 && platforms.indexOf(this.mode1.toLowerCase()) !== -1) {
 			var modes = [];
 			modes.push(this.mode1.toLowerCase());
-			
+
 			if(this.mode2 && platforms.indexOf(this.mode2.toLowerCase()) !== -1) {
 				modes.push(this.mode2.toLowerCase());
 			}
 			if(this.mode3 && platforms.indexOf(this.mode3.toLowerCase()) !== -1) {
 				modes.push(this.mode3.toLowerCase());
 			}
-			
+
 			modes = _.uniq(modes);
-			
-			
+
+
 			this.modeType = modes;
 			done();
 
@@ -102,7 +111,7 @@ module.exports = yeoman.Base.extend({
 
 		}
 	},
-	
+
 	writing: function(){
 		var done = this.async();
 
@@ -114,7 +123,7 @@ module.exports = yeoman.Base.extend({
 					return new Promise(function(res, rej){
 						that.log("========= Bundle " + mode + " ============");
 						buildHelpers.changeUiDomain(that, mode, that.options.localhost).then(function(){
-			
+
 							/*
 							 We want these steps:
 							 check for out of sync packages with package.json
@@ -124,7 +133,7 @@ module.exports = yeoman.Base.extend({
 							 bundle app resources
 							 write index.html
 							 */
-				
+
 							buildHelpers.buildUi(that, mode)
 							.then(function(){
 								res();
@@ -148,32 +157,34 @@ module.exports = yeoman.Base.extend({
 
 	},
 	_launchSyncs: function(){
-		
+
 		var watcher = buildHelpers.addFileWatchers(this, this.modeType);
-		
+
 		var that = this;
 		var bsInstances = [];
-		
+
 		try {
-			
+
 			/*
 			 This needs to be switched to the server, that way the paths seem to work then without starting
 			 a bunch of watchers.
 			 */
 			process.chdir(this.destinationPath("src", "server"));
-			
-			nodemon({
-				ignore: ["public"],
-				script: "index.js"
-			});
-			
+
+			if(this.runServer) {
+				nodemon({
+					ignore: ["public"],
+					script: "index.js"
+				});
+			}
+
 			_.each(this.modeType, function(mode){
 				var bs = require("browser-sync").create(mode);
 				bsInstances.push(bs);
-				
+
 				if (mode == "web") {
-					
-					
+
+
 					bs.init({
 						port: 4000,
 						uiPort: 4010,
@@ -192,9 +203,9 @@ module.exports = yeoman.Base.extend({
 						},
 						browser: "chrome"
 					});
-					
+
 				}
-				
+
 				else {
 					bs.init({
 						port: 4001,
@@ -233,7 +244,7 @@ module.exports = yeoman.Base.extend({
 		for(var i in bsInstances){
 			bsInstances[i].exit();
 		}
-		
+
 		this.log("Syncers have crashed.... Relaunching....");
 		//this._launchSyncs();
 	}
