@@ -1,6 +1,6 @@
 {
   "name": "generator-scaffi",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Overall scaffold generator for Third Corner/Scaffi",
   "homepage": "www.thirdcorner.com",
   "engines" : { "node" : "~4.4.2" },
