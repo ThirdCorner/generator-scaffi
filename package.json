@@ -3,6 +3,7 @@
   "version": "0.2.1",
   "description": "Overall scaffold generator for Third Corner/Scaffi",
   "homepage": "www.thirdcorner.com",
+  "engines" : { "node" : "~4.4.2" },
   "author": {
     "name": "Joseph Blake",
     "email": "jblake@thirdcorner.com",

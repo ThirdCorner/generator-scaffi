@@ -68,8 +68,8 @@ module.exports = yeoman.Base.extend({
 				return answers.serviceType == "ui";
 			}
 		});
-		
-		
+
+
 	},
 
 	writing: function () {
@@ -78,16 +78,16 @@ module.exports = yeoman.Base.extend({
 		this.className = className;
 		var folderName = this.serviceName;
 
-		
+
 		if(this.serviceType == "ui") {
 			// Generate Fixtures
 			this.fs.copyTpl(
 				this.templatePath(path.join("ui", "service.fixtures.js")),
 				this.destinationPath(path.join("src", "ui", "app", "services", folderName, this.serviceName + ".fixtures.js")),
 				{});
-			
+
 			// Generate Service
-			
+
 			var serviceParams = {
 				className: className, // UserProfile
 				restRoute: this.restRoute, // user-profiles
@@ -99,18 +99,18 @@ module.exports = yeoman.Base.extend({
 				this.templatePath(path.join("ui", "service.service.js")),
 				this.destinationPath(path.join("src", "ui", "app", "services", folderName, serviceFilename + ".service.js")),
 				serviceParams);
-			
+
 			// Generate Mock Service
 			var mockParams = {
 				className: className, // UserProfile
 				serviceFileName: this.serviceName // user-profile
 			};
-			
+
 			this.fs.copyTpl(
 				this.templatePath(path.join("ui", "service.mock.js")),
 				this.destinationPath(path.join("src", "ui", "app", "services", folderName, this.serviceName + ".mock.js")),
 				mockParams);
-			
+
 		} else {
 			var serviceParams = {
 				className: className, // UserProfile
@@ -118,27 +118,31 @@ module.exports = yeoman.Base.extend({
 			};
 
 			this.fs.copyTpl(
-				this.templatePath(path.join("server", "service.service.js")),
-				this.destinationPath(path.join("src", "server", "services", folderName, this.serviceName + ".js")),
+				this.templatePath(path.join("server", "service.js")),
+				this.destinationPath(path.join("src", "server", "services", folderName, this.serviceName + ".service.js")),
 				serviceParams);
 
-			this.fs.copyTpl(
-				this.templatePath(path.join("server", "service.json")),
-				this.destinationPath(path.join("src", "server", "services", folderName, this.serviceName + ".json")),
-				serviceParams);
+			// this.fs.copyTpl(
+			// 	this.templatePath(path.join("server", "service.json")),
+			// 	this.destinationPath(path.join("src", "server", "services", folderName, this.serviceName + ".json")),
+			// 	serviceParams);
 
 		}
 	},
 	install: function(){
 		// This needs to be here because copyTpl is async and includes won't find new files if run
 		// in the writing phase
-		if(this.serviceType == "ui") {
-			var done = this.async();
+    var done = this.async();
+    if(this.serviceType == "ui") {
 			var done2 = this.async();
 			var destPath = this.destinationPath(path.join("src", "ui", "app", "services"));
 			helperFns.generateGenericJsIncludes(destPath, done, 'services.js', 'service.js');
 			helperFns.generateGenericJsIncludes(destPath, done2, 'mock-services.js', 'mock.js');
-		}
+		} else {
+
+      var destPath = this.destinationPath(path.join("src", "server", "services"));
+      helperFns.generateGenericJsIncludes(destPath, done, "index.js", "service.js");
+    }
 	},
 	end: function(){
 		if(this.serviceType == "ui") {

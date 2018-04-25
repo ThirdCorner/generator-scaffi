@@ -2,17 +2,32 @@ require("babel-register")({
 	presets: [ 'es2015' ]
 });
 
-var path = require('path');
+var ScaffiServer = require("scaffi-server-core");
 
-var opts = {
-	config: {},
-	components: {
-		"app": {
-			"port": process.env.PORT
-		}
-	},
-	services: {}
-};
+var ScaffiConfig = require("./scaffi-server.json");
+var ScaffiPrivate = require("./scaffi-server.private.json");
 
+require("./components");
+require("./models");
+require("./routes");
+require("./services");
 
-require('scaffi-server-core').initialize(opts);
+try {
+
+  ScaffiServer.initialize({
+    config: ScaffiConfig,
+    private: ScaffiPrivate,
+    override: {
+      params: {
+        "app": {
+          "version": "0.0.0",
+          "port": process.env.PORT
+        }
+      }
+    }
+  });
+
+} catch(e){
+  console.log('server process exception.', e);
+  throw e;
+}

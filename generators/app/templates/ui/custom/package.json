@@ -46,7 +46,7 @@
     "ionic-angular": "~1.3.1",
     "lodash": "~4.16.4",
     "moment": "~2.10.6",
-    "scaffi-ui-core": "~0.1.5",
+    "scaffi-ui-core": "~0.1.7",
     "walkdir": "~0.0.10"
   },
   "engines": {
