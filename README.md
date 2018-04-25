@@ -25,6 +25,7 @@ See [Getting Started](http://scaffi-docs.azurewebsites.net/overview/getting-star
  
 ## Known Issues
 > Example code in the Getting Started is out-of-date with the es6 syntax changes for server
+
 > After Bootstrapping a project, you'll have to run this to get an index page made:
 ```bash
 yo scaffi:route
@@ -35,12 +36,14 @@ no
 basic
 no
 ```
+
 > If you get an error on going to the site, you'll have to refresh once or twice because there's an outstanding warm-up error with the docs site.
+
 > If you get a "TypeError: Cannot read property 'dependencies' of undefined", "Error: File to import not found or unreadable: ./theme/styles/theme" error, run:
 ```bash
 yo scaffi:theme
 ```
-and reselect the theme engine you want to you.
+> and reselect the theme engine you want to you.
 
 ## Developing and Testing
 If you make changes to this generator and need to test, run the following while in generator-scaffi:
